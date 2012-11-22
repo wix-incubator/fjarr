@@ -32,13 +32,6 @@ public class RpcOverHttpClientProxy<T> implements MethodInterceptor
 
     private final RpcOverHttpClient client;
 
-    @Deprecated
-    private RpcOverHttpClientProxy(Class<T> serviceInterface, String serviceUrl,
-                                   RpcProtocolClient protocol, HttpClientConfig httpClientConfig,
-                                   RpcOverHttpClientEventHandler eventHandler, RetryStrategy retryStrategy)
-    {
-       this(serviceInterface, serviceUrl, protocol, httpClientConfig, eventHandler);
-    }
 
     private RpcOverHttpClientProxy(Class<T> serviceInterface, String serviceUrl,
                                    RpcProtocolClient protocol, HttpClientConfig httpClientConfig,
@@ -129,16 +122,9 @@ public class RpcOverHttpClientProxy<T> implements MethodInterceptor
 
     public static <T> T create(Class<T> serviceInterface, String serviceUrl, RpcProtocolClient protocol)
     {
-        return create(serviceInterface, serviceUrl, protocol, defaults(), null, null);
+        return create(serviceInterface, serviceUrl, protocol, defaults(), null);
     }
 
-    @Deprecated
-    public static <T> T create(Class<T> serviceInterface, String serviceUrl, RpcProtocolClient protocol,
-                               HttpClientConfig httpClientConfig, RpcOverHttpClientEventHandler eventHandler,
-                               RetryStrategy retryStrategy)
-    {
-        return create(serviceInterface, serviceUrl, protocol, httpClientConfig, eventHandler);
-    }
 
     public static <T> T create(Class<T> serviceInterface, String serviceUrl, RpcProtocolClient protocol,
                                HttpClientConfig httpClientConfig, RpcOverHttpClientEventHandler eventHandler)
@@ -149,43 +135,10 @@ public class RpcOverHttpClientProxy<T> implements MethodInterceptor
         return ProxyFactory.getProxy(serviceInterface, clientProxy);
     }
 
-    @Deprecated
-    public static <T> T create(Class<T> serviceInterface, String serviceUrl, RpcProtocolClient protocol,
-                               int connectionTimeoutInSeconds)
-    {
-        return create(serviceInterface, serviceUrl, protocol,
-                defaults().withConnectionTimeoutMillis(secondsToMillis(connectionTimeoutInSeconds)),
-                null);
-    }
 
     private static int secondsToMillis(int connectionTimeoutInSeconds)
     {
         return connectionTimeoutInSeconds * 1000;
-    }
-
-    @Deprecated
-    public static <T> T create(Class<T> serviceInterface, String serviceUrl,
-                               RpcProtocolClient protocol, int connectionTimeoutInSeconds,
-                               RpcOverHttpClientEventHandler eventHandler)
-    {
-
-        return create(serviceInterface, serviceUrl, protocol,
-                defaults().withConnectionTimeoutMillis(secondsToMillis(connectionTimeoutInSeconds)),
-                eventHandler);
-    }
-
-    @Deprecated
-    public static <T> T create(Class<T> serviceInterface, String serviceUrl, RpcProtocolClient protocol,
-                               int connectionTimeoutInSeconds, RpcOverHttpClientEventHandler eventHandler,
-                               RetryStrategy retryStrategy)
-    {
-
-        RpcOverHttpClientProxy<T> clientProxy = new RpcOverHttpClientProxy<T>(
-                serviceInterface, serviceUrl, protocol,
-                defaults().withConnectionTimeoutMillis(secondsToMillis(connectionTimeoutInSeconds)),
-                eventHandler);
-
-        return ProxyFactory.getProxy(serviceInterface, clientProxy);
     }
 
     private Object executeLocally(MethodInvocation invocation) throws Exception

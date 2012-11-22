@@ -78,57 +78,8 @@ public class RpcOverHttpClient
         this.config = config;
         this.eventHandler = eventHandler;
     }
-    @Deprecated
-    public RpcOverHttpClient(URI serviceUrl, RpcProtocolClient protocol, HttpClientConfig config, RetryStrategy retryStrategy)
-    {
-        this(serviceUrl, protocol, config, (RpcOverHttpClientEventHandler)null);
-    }
-
-    @Deprecated
-    public RpcOverHttpClient(URI serviceUrl, RpcProtocolClient protocol, RetryStrategy retryStrategy)
-    {
-        this(serviceUrl, protocol, defaults());
-    }
-
-    @Deprecated
-    public RpcOverHttpClient(URI serviceUrl, RpcProtocolClient protocol, int connectionTimeout)
-    {
-        this(serviceUrl,
-                protocol,
-                defaults().withConnectionTimeoutMillis(connectionTimeout));
-
-    }
-
-    @Deprecated
-    public RpcOverHttpClient(URI serviceUrl, RpcProtocolClient protocol, int connectionTimeout, RpcOverHttpClientEventHandler eventHandler)
-    {
-        this(serviceUrl,
-                protocol,
-                defaults()
-                        .withConnectionTimeoutMillis(connectionTimeout),
-                eventHandler);
-    }
-
-    @Deprecated
-    public RpcOverHttpClient(URI serviceUrl, RpcProtocolClient protocol, HttpClientConfig config, RpcOverHttpClientEventHandler eventHandler, RetryStrategy retryStrategy)
-    {
-        this(serviceUrl,protocol, config,eventHandler);
 
 
-//        this.connectionManager = buildConnectionManager();
-//        this.httpClient = createHttpClient();
-    }
-
-    @Deprecated
-    public RpcOverHttpClient(URI serviceUrl, RpcProtocolClient protocol, int connectionTimeout, RpcOverHttpClientEventHandler eventHandler, final RetryStrategy retryStrategy)
-    {
-        this(serviceUrl,
-                protocol,
-                defaults()
-                        .withConnectionTimeoutMillis(connectionTimeout),
-                eventHandler
-                );
-    }
 
     private HttpClient createHttpClient()
     {
@@ -147,51 +98,6 @@ public class RpcOverHttpClient
         return new SingleClientConnManager();
     }
 
-//    private HttpClient createHttpClient()
-//    {
-//        DefaultHttpClient hc = new DefaultHttpClient(connectionManager);
-//
-//        HttpParams params = hc.getParams();
-//        HttpConnectionParams.setConnectionTimeout(params, config.getConnectionTimeoutMillis());
-//        HttpConnectionParams.setSoTimeout(params, config.getSocketTimeoutMillis());
-//
-//        if (config.isUseConnectionPool())
-//        {
-//            params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-//            hc.setReuseStrategy(new DefaultConnectionReuseStrategy());
-//        }
-//        else
-//        {
-//            params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0);
-//            hc.setReuseStrategy(new NoConnectionReuseStrategy());
-//        }
-//        return hc;
-//    }
-
-
-//    private ClientConnectionManager buildConnectionManager() {
-//        // init the http client
-//        SchemeRegistry schemeRegistry = new SchemeRegistry();
-//        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-//
-//        ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager(schemeRegistry, config.getPoolConnectionTTLMillis(), TimeUnit.MILLISECONDS);
-//        connManager.setDefaultMaxPerRoute(config.getPoolDefaultMaxPerHost());
-//        connManager.setMaxTotal(config.getPoolMaxTotal());
-//
-//        return connManager;
-//    }
-
-//    private void registerRetryStrategy(final RetryStrategy retryStrategy)
-//    {
-//        ((DefaultHttpClient) httpClient).setHttpRequestRetryHandler(new HttpRequestRetryHandler()
-//        {
-//            @Override
-//            public boolean retryRequest(IOException exception, int executionCount, HttpContext context)
-//            {
-//                return retryStrategy.processConnectionError(exception, executionCount);
-//            }
-//        });
-//    }
 
     public Object invoke(Method method, Object[] arguments) throws Throwable
     {
@@ -207,17 +113,12 @@ public class RpcOverHttpClient
                 catch (Exception e)
                 {
                         throw e;
-//                     THIS CODE IS DEPRECATED
-//                    if (retryStrategy == null || !retryStrategy.processProtocolError(e, attempt))
-//                        throw e;
                 }
             }
         }
         finally
         {
             httpClient.getConnectionManager().shutdown();
-//            connectionManager.closeExpiredConnections();
-//            connectionManager.closeIdleConnections(5, TimeUnit.SECONDS);
         }
     }
 
@@ -227,8 +128,6 @@ public class RpcOverHttpClient
         HttpPost p = new HttpPost(serviceUrl);
         if (!config.isUseConnectionPool())
             p.addHeader(CONNECTION_CLOSE_HEADER);
-
-        //p.addHeader("Accept",protocol.getAcceptType());
 
         StringWriter stringWriter = new StringWriter();
         // write request
@@ -344,18 +243,4 @@ public class RpcOverHttpClient
     {
         return "SingleClientConnManager";
     }
-
-//    String getConnectionPoolStateString()
-//    {
-//        String result = StringUtils.EMPTY;
-//
-//        if (connectionManager instanceof ThreadSafeClientConnManager)
-//        {
-//            ThreadSafeClientConnManager manager = (ThreadSafeClientConnManager) connectionManager;
-//            result = format("{inPool=%d,maxTotal=%d,defaultMaxPerHost=%d}",
-//                    manager.getConnectionsInPool(), manager.getMaxTotal(), manager.getDefaultMaxPerRoute());
-//        }
-//
-//        return result;
-//    }
 }

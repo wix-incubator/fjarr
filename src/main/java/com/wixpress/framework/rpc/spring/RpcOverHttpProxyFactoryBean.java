@@ -71,18 +71,8 @@ public class RpcOverHttpProxyFactoryBean<T> extends UrlBasedRemoteAccessor imple
         this.protocol = protocol;
     }
 
-    @Deprecated
-    public void setConnectionTimeoutSeconds(int connectionTimeoutSeconds) {
-        this.httpClientConfig = this.httpClientConfig.withConnectionTimeoutMillis(connectionTimeoutSeconds * 1000);
-    }
-
     public void setEventHandler(RpcOverHttpClientEventHandler eventHandler) {
         this.eventHandler = eventHandler;
-    }
-
-    @Deprecated
-    public void setRetryStrategy(RetryStrategy retryStrategy) {
-
     }
 
     public void setHttpClientConfig(HttpClientConfig httpClientConfig) {
