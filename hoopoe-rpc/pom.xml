@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.wixpress.hoopoe</groupId>
+    <artifactId>hoopoe-rpc</artifactId>
+    <version>2.73.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Hoopoe Rpc</name>
+    <url>${project_url}/${artifactId}</url>
+    <parent>
+        <artifactId>wix-framework-parent</artifactId>
+        <groupId>com.wixpress.common</groupId>
+        <version>2.73.0-SNAPSHOT</version>
+        <relativePath>../wix-framework-parent/pom.xml</relativePath>
+    </parent>
+
+    <properties>
+        <org.springframework.version>3.1.1.RELEASE</org.springframework.version>
+        <org.apache.httpcomponents.version>4.1.2</org.apache.httpcomponents.version>
+        <com.fasterxml.jackson.version>2.1.0</com.fasterxml.jackson.version>
+    </properties>
+
+    <scm>
+        <developerConnection>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</developerConnection>
+        <url>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</url>
+    </scm>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${com.fasterxml.jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wixpress.hoopoe</groupId>
+            <artifactId>hoopoe-core</artifactId>
+            <version>2.73.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wixpress.hoopoe</groupId>
+            <artifactId>hoopoe-reflection</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${org.apache.httpcomponents.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.httpcomponents</groupId>-->
+            <!--<artifactId>httpmime</artifactId>-->
+            <!--<version>${org.apache.httpcomponents.version}</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>1.6.1</version>     <!-- TODO: Upgrade to latest -->
+        </dependency>
+
+    </dependencies>
+    <distributionManagement>
+        <site>
+            <id>apidocs</id>
+            <url>${site_full_path}/${artifactId}</url>
+        </site>
+    </distributionManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
