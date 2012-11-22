@@ -72,11 +72,11 @@
             <artifactId>httpclient</artifactId>
             <version>${org.apache.httpcomponents.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-            <version>${org.apache.httpcomponents.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.httpcomponents</groupId>-->
+            <!--<artifactId>httpmime</artifactId>-->
+            <!--<version>${org.apache.httpcomponents.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>qdox</groupId>
             <artifactId>qdox</artifactId>
