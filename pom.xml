@@ -4,10 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.wixpress.hoopoe</groupId>
     <artifactId>hoopoe-rpc-modules</artifactId>
-    <version>2.73.0-SNAPSHOT</version>
+    <version>2.76.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Hoopoe Rpc Modules</name>
     <url>${project_url}/${artifactId}</url>
+
+    <parent>
+        <artifactId>wix-framework-parent</artifactId>
+        <groupId>com.wixpress.common</groupId>
+        <version>2.76.0-SNAPSHOT</version>
+    </parent>
 
     <scm>
         <developerConnection>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</developerConnection>
