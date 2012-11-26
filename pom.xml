@@ -13,6 +13,13 @@
         <developerConnection>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</developerConnection>
         <url>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</url>
     </scm>
+    <distributionManagement>
+        <site>
+            <id>apidocs</id>
+            <url>${site_full_path}/${artifactId}</url>
+        </site>
+    </distributionManagement>
+
     <modules>
         <module>hoopoe-rpc</module>
     </modules>
