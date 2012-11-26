@@ -4,20 +4,22 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.wixpress.hoopoe</groupId>
     <artifactId>hoopoe-rpc</artifactId>
-    <version>2.76.0-SNAPSHOT</version>
+    <version>2.76.0</version>
     <packaging>jar</packaging>
     <name>Hoopoe Rpc</name>
     <url>${project_url}/${artifactId}</url>
     <parent>
         <groupId>com.wixpress.common</groupId>
         <artifactId>wix-framework-parent</artifactId>
-        <version>2.76.0-SNAPSHOT</version>
+        <version>2.75.0</version>
     </parent>
 
     <properties>
         <org.springframework.version>3.1.1.RELEASE</org.springframework.version>
         <org.apache.httpcomponents.version>4.1.2</org.apache.httpcomponents.version>
         <com.fasterxml.jackson.version>2.1.0</com.fasterxml.jackson.version>
+        <com.wixpress.hoopoe_hoopoe-core>2.74.0</com.wixpress.hoopoe_hoopoe-core>
+        <com.wixpress.hoopoe_hoopoe-reflection>2.66.0</com.wixpress.hoopoe_hoopoe-reflection>
     </properties>
 
     <scm>
@@ -45,11 +47,12 @@
         <dependency>
             <groupId>com.wixpress.hoopoe</groupId>
             <artifactId>hoopoe-core</artifactId>
-            <version>2.73.0-SNAPSHOT</version>
+            <version>2.74.0</version>
         </dependency>
         <dependency>
             <groupId>com.wixpress.hoopoe</groupId>
             <artifactId>hoopoe-reflection</artifactId>
+            <version>2.66.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
