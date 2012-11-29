@@ -28,6 +28,11 @@
 
     <modules>
         <module>hoopoe-rpc</module>
+        <module>hoopoe-rpc-server-components</module>
+        <module>hoopoe-json-rpc-protocol</module>
+        <module>hoopoe-rpc-servlet-server</module>
+        <module>hoopoe-rpc-spring-mvc-server</module>
+
     </modules>
 
 </project>
