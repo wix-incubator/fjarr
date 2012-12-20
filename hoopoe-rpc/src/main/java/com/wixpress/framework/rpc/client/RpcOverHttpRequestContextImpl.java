@@ -1,6 +1,6 @@
 package com.wixpress.framework.rpc.client;
 
-import com.wixpress.hoopoe.monads.Pair;
+import com.wixpress.fjarr.monads.Pair;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpRequestBase;

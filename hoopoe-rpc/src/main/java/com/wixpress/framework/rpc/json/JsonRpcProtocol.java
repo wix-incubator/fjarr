@@ -10,8 +10,8 @@ import com.wixpress.framework.rpc.server.exceptions.BadRequestException;
 import com.wixpress.framework.rpc.server.exceptions.HttpMethodNotAllowedException;
 import com.wixpress.framework.rpc.server.exceptions.MethodNotFoundException;
 import com.wixpress.framework.rpc.server.exceptions.UnsupportedContentTypeException;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
-import com.wixpress.hoopoe.reflection.parameters.ParameterNameDiscoverer;
+import com.wixpress.fjarr.reflection.parameters.AnnotationParameterNameDiscoverer;
+import com.wixpress.fjarr.reflection.parameters.ParameterNameDiscoverer;
 import org.apache.commons.io.IOUtils;
 
 import javax.servlet.http.HttpServletRequest;

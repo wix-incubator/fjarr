@@ -4,7 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.wixpress.framework.rpc.client.exceptions.RpcClientInitializationException;
 import com.wixpress.framework.rpc.client.exceptions.RpcInvocationException;
-import com.wixpress.hoopoe.monads.Pair;
+import com.wixpress.fjarr.monads.Pair;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;

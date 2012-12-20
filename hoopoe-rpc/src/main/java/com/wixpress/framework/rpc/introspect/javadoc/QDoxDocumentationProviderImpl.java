@@ -4,9 +4,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.*;
-import com.wixpress.hoopoe.memoize.Memoize;
-import com.wixpress.hoopoe.monads.Option;
-import com.wixpress.hoopoe.reflection.MethodReflector;
+import com.wixpress.fjarr.memoize.Memoize;
+import com.wixpress.fjarr.monads.Option;
+import com.wixpress.fjarr.reflection.MethodReflector;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.google.common.collect.Lists.transform;
-import static com.wixpress.hoopoe.monads.Option.*;
+import static com.wixpress.fjarr.monads.Option.*;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.*;
 

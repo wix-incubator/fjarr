@@ -1,7 +1,7 @@
 package com.wixpress.framework.rpc.client;
 
-import com.wixpress.hoopoe.monads.Either;
-import com.wixpress.hoopoe.monads.Pair;
+import com.wixpress.fjarr.monads.Either;
+import com.wixpress.fjarr.monads.Pair;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 

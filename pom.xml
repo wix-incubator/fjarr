@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.wixpress.hoopoe</groupId>
-    <artifactId>hoopoe-rpc-modules</artifactId>
-    <version>2.77.0-SNAPSHOT</version>
+    <groupId>com.wixpress</groupId>
+    <artifactId>fjarr-modules</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Hoopoe Rpc Modules</name>
+    <name>Fjarr Modules pom</name>
     <url>${project_url}/${artifactId}</url>
 
-    <parent>
-        <artifactId>wix-framework-parent</artifactId>
-        <groupId>com.wixpress.common</groupId>
-        <version>2.76.0-SNAPSHOT</version>
-    </parent>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</developerConnection>
+        <developerConnection>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc
+        </developerConnection>
         <url>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</url>
     </scm>
     <distributionManagement>
@@ -27,12 +24,60 @@
     </distributionManagement>
 
     <modules>
-        <module>hoopoe-rpc</module>
-        <module>hoopoe-rpc-server-components</module>
-        <module>hoopoe-json-rpc-protocol</module>
-        <module>hoopoe-rpc-servlet-server</module>
-        <module>hoopoe-rpc-spring-mvc-server</module>
+        <!--<module>fjarr-rpc</module>-->
+        <module>fjarr-common</module>
+        <module>fjarr-test-common</module>
+        <!-- server modules -->
+        <module>fjarr-server-components</module>
+        <module>fjarr-servlet-server</module>
+        <module>fjarr-spring-mvc-server</module>
+        <!-- client modules -->
+        <module>fjarr-client-components</module>
+
+        <!-- json-rpc modules -->
+        <module>fjarr-json-common</module>
+        <module>fjarr-json-rpc-server-protocol</module>
+        <module>fjarr-json-rpc-client-protocol</module>
+
 
     </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <!-- enable assertions -->
+                    <target>1.6</target>
+                    <excludes> <!-- exclude tests here -->
+                        <exclude>**/*Test.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes> <!-- select only tests -->
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <mode>development</mode>
+                            <url>${pom.url}</url>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

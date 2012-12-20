@@ -1,6 +1,6 @@
 package com.wixpress.framework.rpc.introspect;
 
-import com.wixpress.hoopoe.reflection.genericTypes.GenericType;
+import com.wixpress.fjarr.reflection.genericTypes.GenericType;
 
 import java.util.List;
 

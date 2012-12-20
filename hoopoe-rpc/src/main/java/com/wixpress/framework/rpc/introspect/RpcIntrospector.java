@@ -7,11 +7,11 @@ import com.google.common.collect.Iterables;
 import com.wixpress.framework.rpc.client.RpcProtocolClient;
 import com.wixpress.framework.rpc.introspect.javadoc.DocumentationProvider;
 import com.wixpress.framework.rpc.json.JsonRpcProtocolClient;
-import com.wixpress.hoopoe.reflection.MethodReflector;
-import com.wixpress.hoopoe.reflection.Reflectors;
-import com.wixpress.hoopoe.reflection.genericTypes.GenericType;
-import com.wixpress.hoopoe.reflection.reflectorsImpl.CachedReflectors;
-import com.wixpress.hoopoe.url.Url;
+import com.wixpress.fjarr.reflection.MethodReflector;
+import com.wixpress.fjarr.reflection.Reflectors;
+import com.wixpress.fjarr.reflection.genericTypes.GenericType;
+import com.wixpress.fjarr.reflection.reflectorsImpl.CachedReflectors;
+import com.wixpress.fjarr.url.Url;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;

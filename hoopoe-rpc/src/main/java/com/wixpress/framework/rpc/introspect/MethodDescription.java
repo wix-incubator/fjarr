@@ -1,10 +1,10 @@
 package com.wixpress.framework.rpc.introspect;
 
 import com.wixpress.framework.rpc.introspect.javadoc.DocumentationProvider;
-import com.wixpress.hoopoe.monads.Option;
+import com.wixpress.fjarr.monads.Option;
 
 import static com.wixpress.framework.rpc.introspect.javadoc.DocumentationProvider.MethodJavaDoc;
-import static com.wixpress.hoopoe.monads.Option.None;
+import static com.wixpress.fjarr.monads.Option.None;
 
 /**
 * @author shaiyallin

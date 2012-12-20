@@ -1,11 +1,11 @@
 package com.wixpress.framework.rpc.introspect;
 
-import com.wixpress.hoopoe.monads.Option;
-import com.wixpress.hoopoe.url.Url;
+import com.wixpress.fjarr.monads.Option;
+import com.wixpress.fjarr.url.Url;
 
 import java.util.List;
 
-import static com.wixpress.hoopoe.monads.Option.None;
+import static com.wixpress.fjarr.monads.Option.None;
 
 /**
 * @author shaiyallin

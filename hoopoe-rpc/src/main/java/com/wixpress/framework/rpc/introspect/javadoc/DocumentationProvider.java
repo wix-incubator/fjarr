@@ -1,7 +1,7 @@
 package com.wixpress.framework.rpc.introspect.javadoc;
 
-import com.wixpress.hoopoe.monads.Option;
-import com.wixpress.hoopoe.reflection.MethodReflector;
+import com.wixpress.fjarr.monads.Option;
+import com.wixpress.fjarr.reflection.MethodReflector;
 
 import java.net.URL;
 import java.util.List;

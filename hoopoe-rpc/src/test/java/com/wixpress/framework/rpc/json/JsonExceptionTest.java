@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wixpress.framework.rpc.client.exceptions.InvalidRpcResponseException;
 import com.wixpress.framework.rpc.client.exceptions.RpcInvocationException;
 import com.wixpress.framework.rpc.server.RpcInvocation;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
-import com.wixpress.hoopoe.reflection.parameters.ParameterNameDiscoverer;
+import com.wixpress.fjarr.reflection.parameters.AnnotationParameterNameDiscoverer;
+import com.wixpress.fjarr.reflection.parameters.ParameterNameDiscoverer;
 import org.junit.Test;
 
 import java.io.IOException;

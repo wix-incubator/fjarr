@@ -1,10 +1,10 @@
 package com.wixpress.framework.rpc.introspect.javadoc;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
-import com.wixpress.hoopoe.monads.Option;
-import com.wixpress.hoopoe.reflection.ClassReflector;
-import com.wixpress.hoopoe.reflection.StaticReflectors;
-import com.wixpress.hoopoe.reflection.genericTypes.GenericType;
+import com.wixpress.fjarr.monads.Option;
+import com.wixpress.fjarr.reflection.ClassReflector;
+import com.wixpress.fjarr.reflection.StaticReflectors;
+import com.wixpress.fjarr.reflection.genericTypes.GenericType;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.wixpress.framework.rpc.introspect.javadoc.DocumentationProvider.*;
-import static com.wixpress.hoopoe.monads.Option.Some;
+import static com.wixpress.fjarr.monads.Option.Some;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 

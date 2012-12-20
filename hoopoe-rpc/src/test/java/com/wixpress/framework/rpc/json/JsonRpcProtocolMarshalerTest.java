@@ -9,8 +9,8 @@ import com.wixpress.framework.rpc.server.PositionalRpcParameters;
 import com.wixpress.framework.rpc.server.RpcInvocation;
 import com.wixpress.framework.rpc.server.RpcRequest;
 import com.wixpress.framework.rpc.server.exceptions.BadRequestException;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
-import com.wixpress.hoopoe.reflection.parameters.ParameterNameDiscoverer;
+import com.wixpress.fjarr.reflection.parameters.AnnotationParameterNameDiscoverer;
+import com.wixpress.fjarr.reflection.parameters.ParameterNameDiscoverer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

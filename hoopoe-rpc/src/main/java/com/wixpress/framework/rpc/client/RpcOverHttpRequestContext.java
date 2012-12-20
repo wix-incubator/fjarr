@@ -1,6 +1,6 @@
 package com.wixpress.framework.rpc.client;
 
-import com.wixpress.hoopoe.monads.Pair;
+import com.wixpress.fjarr.monads.Pair;
 
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.wixpress</groupId>
+    <artifactId>fjarr-json-rpc-server-protocol</artifactId>
+    <description>Fjarr JSON-RPC server protocol implementation</description>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>com.wixpress</groupId>
+        <artifactId>fjarr-modules</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wixpress</groupId>
+            <artifactId>fjarr-server-components</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wixpress</groupId>
+            <artifactId>fjarr-json-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wixpress.hoopoe</groupId>
+            <artifactId>hoopoe-reflection</artifactId>
+            <version>2.68.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.wixpress</groupId>
+            <artifactId>fjarr-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
