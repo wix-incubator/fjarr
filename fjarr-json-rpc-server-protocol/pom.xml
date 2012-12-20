@@ -6,7 +6,7 @@
 
     <groupId>com.wixpress</groupId>
     <artifactId>fjarr-json-rpc-server-protocol</artifactId>
-    <description>Fjarr JSON-RPC server protocol implementation</description>
+    <name>Fjarr JSON-RPC server protocol implementation</name>
     <version>1.0.0-SNAPSHOT</version>
 
     <parent>

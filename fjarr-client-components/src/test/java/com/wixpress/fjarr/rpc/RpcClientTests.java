@@ -4,6 +4,8 @@ import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.client.exceptions.InvalidRpcResponseException;
 import com.wixpress.fjarr.client.exceptions.RpcInvocationException;
 import com.wixpress.fjarr.client.exceptions.RpcTransportException;
+import com.wixpress.fjarr.example.DataStruct;
+import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.util.MultiMap;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -27,10 +30,12 @@ import static org.mockito.Mockito.*;
  * @since 12/10/12 5:07 PM
  */
 
-public class RpcClientTests {
+public class RpcClientTests
+{
 
     @Test
-    public void testClient() throws Throwable {
+    public void testClient() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -63,7 +68,8 @@ public class RpcClientTests {
 
 
     @Test
-    public void testClientHttpError() throws Throwable {
+    public void testClientHttpError() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -82,13 +88,18 @@ public class RpcClientTests {
 
         RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
-        try {
+        try
+        {
             Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
-        } catch (RpcTransportException e) {
+        }
+        catch (RpcTransportException e)
+        {
 
             assertThat(e.getStatusCode(), is(400));
             assertThat(e.getMessage(), Matchers.startsWith("Unexpected server HTTP status code [endpoint={url='www.example.com',service='testService',method='testMethod'},httpStatusLine='400 ERROR'"));
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             fail("Shouldn't throw this exception");
         }
 
@@ -104,7 +115,8 @@ public class RpcClientTests {
 
 
     @Test
-    public void testClientEmptyResponse() throws Throwable {
+    public void testClientEmptyResponse() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -123,13 +135,18 @@ public class RpcClientTests {
 
         RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
-        try {
+        try
+        {
             Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
-        } catch (RpcTransportException e) {
+        }
+        catch (RpcTransportException e)
+        {
 
             assertThat(e.getStatusCode(), is(200));
             assertThat(e.getMessage(), Matchers.startsWith("Empty HTTP response [endpoint={url='www.example.com',service='testService',method='testMethod'},httpStatusLine='200 OK'"));
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             fail("Shouldn't throw this exception");
         }
 
@@ -145,7 +162,8 @@ public class RpcClientTests {
 
 
     @Test
-    public void testClientInvokerException() throws Throwable {
+    public void testClientInvokerException() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -165,14 +183,19 @@ public class RpcClientTests {
 
         RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
-        try {
+        try
+        {
             Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
-        } catch (RpcTransportException e) {
+        }
+        catch (RpcTransportException e)
+        {
 
             assertThat(e.getStatusCode(), is(0));
             assertThat(e.getMessage(), Matchers.startsWith("Exception while communicating with server [endpoint={url='www.example.com',service='testService',method='testMethod'}"));
             assertThat(e.getCause(), sameInstance(mockInvokerException));
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             fail("Shouldn't throw this exception");
         }
 
@@ -188,7 +211,8 @@ public class RpcClientTests {
 
 
     @Test
-    public void testClientWriteRequest() throws Throwable {
+    public void testClientWriteRequest() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -205,10 +229,13 @@ public class RpcClientTests {
 
         RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
-        try {
+        try
+        {
             Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
 
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             assertThat(t, sameInstance(mockProtocolException));
         }
 
@@ -218,10 +245,9 @@ public class RpcClientTests {
     }
 
 
-
-
     @Test
-    public void testClientReadResponseException() throws Throwable {
+    public void testClientReadResponseException() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -247,9 +273,12 @@ public class RpcClientTests {
 
         RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
-        try {
+        try
+        {
             Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             assertThat(t, sameInstance(mockProtocolException));
         }
 
@@ -266,7 +295,8 @@ public class RpcClientTests {
 
 
     @Test
-    public void testClientInvalidResponseException() throws Throwable {
+    public void testClientInvalidResponseException() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -292,9 +322,12 @@ public class RpcClientTests {
 
         RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
-        try {
+        try
+        {
             Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             assertThat(t, sameInstance(mockProtocolException));
         }
 
@@ -310,10 +343,9 @@ public class RpcClientTests {
     }
 
 
-
-
     @Test
-    public void testClientWithMethod() throws Throwable {
+    public void testClientWithMethod() throws Throwable
+    {
         RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
@@ -347,7 +379,75 @@ public class RpcClientTests {
     }
 
 
-    public List<String> t1(Integer a) {
+    @Test
+    public void testProxyWithRemote() throws Throwable
+    {
+        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
+
+        final String methodName = "getData";
+        final String requestBody = "request";
+        final String responseBody = "response";
+
+        final DataStruct ds = new DataStruct(1, "a", 0.1, UUID.randomUUID());
+        when(protocolClient.writeRequest(methodName, null)).thenReturn(requestBody);
+        when(protocolClient.readResponse(DataStruct.class, responseBody)).thenReturn(ds);
+
+        RpcInvoker invoker = mock(RpcInvoker.class);
+        when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "", responseBody,
+                new MultiMap<String, String>()
+                        .with("header", "value")));
+
+
+        DataStructService dss = RpcClientProxy.create(DataStructService.class, "www.example.com", invoker, protocolClient);
+
+        DataStruct actual = dss.getData();
+        assertThat(actual, sameInstance(ds));
+
+        InOrder io = inOrder(protocolClient, invoker);
+        io.verify(protocolClient).writeRequest(methodName, null);
+        io.verify(invoker).invoke(eq(new RpcInvocation(new URI("www.example.com"), requestBody)));
+        io.verify(protocolClient).readResponse(DataStruct.class, responseBody);
+        io.verifyNoMoreInteractions();
+
+    }
+
+
+    @Test
+    public void testProxyWithLocal() throws Throwable
+    {
+        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
+
+        final String methodName = "getData";
+        final String requestBody = "request";
+        final String responseBody = "response";
+
+        final DataStruct ds = new DataStruct(1, "a", 0.1, UUID.randomUUID());
+        when(protocolClient.writeRequest(methodName, new Object[]{})).thenReturn(requestBody);
+        when(protocolClient.readResponse(DataStruct.class, responseBody)).thenReturn(ds);
+
+        RpcInvoker invoker = mock(RpcInvoker.class);
+        when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "", responseBody,
+                new MultiMap<String, String>()
+                        .with("header", "value")));
+
+
+        DataStructService dss = RpcClientProxy.create(DataStructService.class, "www.example.com", invoker, protocolClient);
+
+
+        String s = dss.toString();
+
+        InOrder io = inOrder(protocolClient, invoker);
+        io.verifyNoMoreInteractions();
+
+    }
+
+
+    public List<String> t1(Integer a)
+    {
         return null;
     }
+
+
 }

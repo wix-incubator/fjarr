@@ -33,4 +33,6 @@ public interface DataStructService
 
     public void withInputThatNeedsValidation(InputDTO dto);
 
+    public String toString();
+
 }
