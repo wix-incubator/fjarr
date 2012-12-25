@@ -31,6 +31,9 @@ public class DisjointUnionTests
         assertThat(du.is(String.class), is(true));
         assertThat(du.is(Long.class), is(false));
 
+
+
+
     }
 
 }

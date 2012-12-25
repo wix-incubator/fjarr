@@ -20,6 +20,7 @@ public class DataStructServiceImpl implements DataStructService
         return new DataStruct(10, "test with no children", 0, TEST_UUID);
     }
 
+
     public DataStruct getDataWithChildrenMap()
     {
         DataStruct ds = new DataStruct(20, "test with children in map", 2., TEST_UUID);

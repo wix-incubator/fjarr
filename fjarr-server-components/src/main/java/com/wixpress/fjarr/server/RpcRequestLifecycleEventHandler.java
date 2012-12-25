@@ -7,26 +7,48 @@ package com.wixpress.fjarr.server;
 
 public interface RpcRequestLifecycleEventHandler
 {
-    void handleRecievedRequest(RpcRequest request, RpcResponse response);
-
-    void handleRequestParsed(ParsedRpcRequest request, RpcResponse response, Class<?> serviceInterface);
+    /**
+     * Request was recieved by the server
+     */
+    LifecycleEventFlow handleReceivedRequest(RpcRequest request, RpcResponse response);
 
     /**
-     * Event is fired when the method is invoked, even if the invocation failed. All implementations should check whether the invocation.error != null
-     * to see whether the resolving succeeded
-     *
-     * @param request
-     * @param response
-     * @param invocation
+     * Request have been parsed sucessfully
      */
-    void handleRpcInvocationMethodResolved(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation);
+    LifecycleEventFlow handleRequestParsed(ParsedRpcRequest request, RpcResponse response, Class<?> serviceInterface);
 
-    void handleRpcInvocationMethodInvoked(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation);
+    /**
+     * Event is fired just before the method is invoked. If an implementation needs to perform a last minute activity,
+     * such as parameter validation - this event is the place for it.
+     */
+    LifecycleEventFlow handleRpcInvocationMethodResolved(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation);
 
-    void handleRpcResponseWriting(ParsedRpcRequest request, RpcResponse response);
 
-    void handleRpcResponseWritten(ParsedRpcRequest request, RpcResponse response);
+    /**
+     *  MEthod resolving have failed.
+     */
+    LifecycleEventFlow handleRpcInvocationMethodResolvingError(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation);
 
-    void handleRpcResponseWriteError(RpcRequest request, RpcResponse response, Exception exception, RpcRequestStatistics statistics);
+    /**
+     *  Rpc method was invoked
+     */
+    LifecycleEventFlow handleRpcInvocationMethodInvoked(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation);
+
+    /**
+     *  The response is about to be written to the output-stream. If an implementation needs to override the output,
+     *  this event is the last place to do it
+     */
+    LifecycleEventFlow handleRpcResponseWriting(ParsedRpcRequest request, RpcResponse response);
+
+    /**
+     *  The response was written to the output-stream
+     */
+    LifecycleEventFlow handleRpcResponseWritten(ParsedRpcRequest request, RpcResponse response);
+
+    /**
+     * Generic server error have occured. One example of such error is when the server tries to write to an output stream
+     * that was already closed by the client.
+     */
+    LifecycleEventFlow handleRpcServerError(RpcRequest request, RpcResponse response, Exception exception, RpcRequestStatistics statistics);
 
 }

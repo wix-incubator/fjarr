@@ -55,13 +55,13 @@ public class MockHttpServletRequest implements HttpServletRequest
     @Override
     public String getAuthType()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public Cookie[] getCookies()
     {
-        return new Cookie[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new Cookie[0]; 
     }
 
     @Override
@@ -110,115 +110,116 @@ public class MockHttpServletRequest implements HttpServletRequest
     @Override
     public String getPathInfo()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getPathTranslated()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getContextPath()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getQueryString()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getRemoteUser()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public boolean isUserInRole(String role)
     {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false; 
     }
 
     @Override
     public Principal getUserPrincipal()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getRequestedSessionId()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getRequestURI()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public StringBuffer getRequestURL()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getServletPath()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public HttpSession getSession(boolean create)
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public HttpSession getSession()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public boolean isRequestedSessionIdValid()
     {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false; 
     }
 
     @Override
     public boolean isRequestedSessionIdFromCookie()
     {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false; 
     }
 
     @Override
     public boolean isRequestedSessionIdFromURL()
     {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false; 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isRequestedSessionIdFromUrl()
     {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false; 
     }
 
     @Override
     public Object getAttribute(String name)
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public Enumeration getAttributeNames()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
@@ -230,13 +231,13 @@ public class MockHttpServletRequest implements HttpServletRequest
     @Override
     public void setCharacterEncoding(String env) throws UnsupportedEncodingException
     {
-        //To change body of implemented methods use File | Settings | File Templates.
+       
     }
 
     @Override
     public int getContentLength()
     {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0; 
     }
 
     @Override
@@ -258,133 +259,134 @@ public class MockHttpServletRequest implements HttpServletRequest
     @Override
     public String getParameter(String name)
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public Enumeration getParameterNames()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String[] getParameterValues(String name)
     {
-        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new String[0]; 
     }
 
     @Override
     public Map getParameterMap()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getProtocol()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getScheme()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getServerName()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public int getServerPort()
     {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0; 
     }
 
     @Override
     public BufferedReader getReader() throws IOException
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getRemoteAddr()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getRemoteHost()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public void setAttribute(String name, Object o)
     {
-        //To change body of implemented methods use File | Settings | File Templates.
+       
     }
 
     @Override
     public void removeAttribute(String name)
     {
-        //To change body of implemented methods use File | Settings | File Templates.
+       
     }
 
     @Override
     public Locale getLocale()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public Enumeration getLocales()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public boolean isSecure()
     {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false; 
     }
 
     @Override
     public RequestDispatcher getRequestDispatcher(String path)
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public String getRealPath(String path)
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public int getRemotePort()
     {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0; 
     }
 
     @Override
     public String getLocalName()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getLocalAddr()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public int getLocalPort()
     {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0; 
     }
 
 

@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 public class MockRpcResponse implements RpcResponse {
     private ByteArrayOutputStream stream = new ByteArrayOutputStream();
     private String responseContentType;
+    private int statusCode;
 
 
     @Override
@@ -28,6 +29,18 @@ public class MockRpcResponse implements RpcResponse {
     public void setContentType(String responseContentType) {
 
         this.responseContentType = responseContentType;
+    }
+
+    @Override
+    public void setStatusCode(int statusCode)
+    {
+
+        this.statusCode = statusCode;
+    }
+
+    public int getStatusCode()
+    {
+        return statusCode;
     }
 
     public String getResponseContentType() {

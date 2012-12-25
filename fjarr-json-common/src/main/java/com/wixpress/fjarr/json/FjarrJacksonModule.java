@@ -20,7 +20,7 @@ import org.joda.time.Period;
 public class FjarrJacksonModule extends SimpleModule
 {
     private static final String MODULE_NAME = FjarrJacksonModule.class.getName();
-    private static final Version MODULE_VERSION = new Version(1, 0, 0, null);
+    private static final Version MODULE_VERSION = new Version(1, 0, 0, null, "com.wixpress.fjarr","fjarr-json-common" );
 
     public FjarrJacksonModule()
     {

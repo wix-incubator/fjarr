@@ -13,4 +13,6 @@ public interface RpcResponse
     OutputStream getOutputStream() throws IOException;
 
     void setContentType(String responseContentType);
+
+    void setStatusCode(int statusCode);
 }

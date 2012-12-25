@@ -27,4 +27,10 @@ public class RpcServletResponse implements RpcResponse
     {
         response.setContentType(responseContentType);
     }
+
+    @Override
+    public void setStatusCode(int statusCode)
+    {
+        response.setStatus(statusCode);
+    }
 }

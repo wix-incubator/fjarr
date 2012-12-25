@@ -35,9 +35,12 @@ public class RpcServletRequest implements RpcRequest
         rawRequestBody = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
         headers = convertHeaders(request);
         cookies = new HashMap<String, RpcCookie>();
-        for (Cookie c : baseRequest.getCookies())
+        if (baseRequest.getCookies() != null)
         {
-            cookies.put(c.getName(), new CookieAdapter(c));
+            for (Cookie c : baseRequest.getCookies())
+            {
+                cookies.put(c.getName(), new CookieAdapter(c));
+            }
         }
 
 
