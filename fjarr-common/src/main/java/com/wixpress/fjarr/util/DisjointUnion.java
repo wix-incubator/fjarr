@@ -1,5 +1,7 @@
 package com.wixpress.fjarr.util;
 
+import com.wixpress.fjarr.exceptions.TypeMismatch;
+
 /**
  * @author AlexeyR
  * @since 12/6/12 6:55 PM

@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.util;
+package com.wixpress.fjarr.exceptions;
 
 /**
  * @author AlexeyR

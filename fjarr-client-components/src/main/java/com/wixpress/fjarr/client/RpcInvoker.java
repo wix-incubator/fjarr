@@ -1,5 +1,7 @@
 package com.wixpress.fjarr.client;
 
+import java.io.IOException;
+
 /**
  * @author AlexeyR
  * @since 12/6/12 5:49 PM
@@ -7,9 +9,6 @@ package com.wixpress.fjarr.client;
 
 public interface RpcInvoker
 {
-    String urlEncode(String name);
+    RpcInvocationResponse invoke(RpcInvocation invocation) throws IOException;
 
-    RpcInvocationResponse invoke(RpcInvocation invocation);
-
-    void abort(RpcInvocation invocation);
 }

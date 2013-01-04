@@ -73,7 +73,7 @@ public class RpcRequestContext
 
     public void setUrlParam(String name, String value) throws URISyntaxException
     {
-        invocation.withQueryParameter(invoker.urlEncode(name),invoker.urlEncode(value));
+        invocation.withQueryParameter(name,value);
     }
 
     public RpcInvocation getRpcInvocation() {

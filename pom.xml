@@ -38,6 +38,7 @@
         <module>fjarr-json-common</module>
         <module>fjarr-json-rpc-server-protocol</module>
         <module>fjarr-json-rpc-client-protocol</module>
+        <module>fjarr-ahc-client</module>
 
 
     </modules>

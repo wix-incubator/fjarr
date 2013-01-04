@@ -1,7 +1,7 @@
 package com.wixpress.fjarr.rpc.util;
 
 import com.wixpress.fjarr.util.DisjointUnion;
-import com.wixpress.fjarr.util.TypeMismatch;
+import com.wixpress.fjarr.exceptions.TypeMismatch;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;

@@ -12,6 +12,7 @@ public class StringUtils
 {
     /**
      * Copied from Spring's StringUtils
+     *
      * @param collection
      * @param delimiter
      * @return
@@ -33,4 +34,16 @@ public class StringUtils
         }
         return sb.toString();
     }
+
+    public static boolean isBlank(String s)
+    {
+        return s == null || s.trim().equals("");
+
+    }
+
+    public static boolean isNotBlank(String s)
+    {
+        return !(s == null || s.trim().equals(""));
+    }
+
 }

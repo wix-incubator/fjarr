@@ -107,7 +107,6 @@ public class RpcClientTests
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
         final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
         io.verify(invoker).invoke(eq(rpcInvocation));
-        io.verify(invoker).abort(eq(rpcInvocation));
 
 
         io.verifyNoMoreInteractions();
@@ -154,7 +153,6 @@ public class RpcClientTests
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
         final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
         io.verify(invoker).invoke(eq(rpcInvocation));
-        io.verify(invoker).abort(eq(rpcInvocation));
 
 
         io.verifyNoMoreInteractions();
@@ -203,7 +201,6 @@ public class RpcClientTests
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
         final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
         io.verify(invoker).invoke(eq(rpcInvocation));
-        io.verify(invoker).abort(eq(rpcInvocation));
 
 
         io.verifyNoMoreInteractions();
@@ -287,7 +284,6 @@ public class RpcClientTests
         final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
         io.verify(invoker).invoke(eq(new RpcInvocation(client.getServiceUrl(), requestBody)));
         io.verify(protocolClient).readResponse(List.class, responseBody);
-        io.verify(invoker).abort(rpcInvocation);
 
 
         io.verifyNoMoreInteractions();
@@ -336,7 +332,6 @@ public class RpcClientTests
         final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
         io.verify(invoker).invoke(eq(new RpcInvocation(client.getServiceUrl(), requestBody)));
         io.verify(protocolClient).readResponse(List.class, responseBody);
-        io.verify(invoker).abort(rpcInvocation);
 
 
         io.verifyNoMoreInteractions();
