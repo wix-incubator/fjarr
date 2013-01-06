@@ -10,11 +10,15 @@
     <name>Fjarr Modules pom</name>
     <url>${project_url}/${artifactId}</url>
 
+    <properties>
+        <com.fasterxml.jackson.version>2.1.0</com.fasterxml.jackson.version>
+        <org.apache.httpcomponents.version>4.1.2</org.apache.httpcomponents.version>
+        <org.springframework.version>3.1.1.RELEASE</org.springframework.version>
+    </properties>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc
-        </developerConnection>
-        <url>scm:git:ssh://git@git.wixpress.com/wix-framework/wix-framework.git/hoopoe-rpc</url>
+        <developerConnection>scm:git:ssh://git@github.com:wix/fjarr.git</developerConnection>
+        <url>scm:git:ssh://git@github.com:wix/fjarr.git</url>
     </scm>
     <distributionManagement>
         <site>
@@ -39,6 +43,7 @@
         <module>fjarr-json-rpc-server-protocol</module>
         <module>fjarr-json-rpc-client-protocol</module>
         <module>fjarr-ahc-client</module>
+        <module>fjarr-integration-tests</module>
 
 
     </modules>

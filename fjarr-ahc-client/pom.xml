@@ -2,6 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>fjarr-ahc-client</artifactId>
+    <name>Fjarr Apache Http Components Client</name>
+    <packaging>jar</packaging>
+
     <parent>
         <artifactId>fjarr-modules</artifactId>
         <groupId>com.wixpress</groupId>
@@ -9,10 +13,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fjarr-ahc-client</artifactId>
-    <properties>
-        <org.apache.httpcomponents.version>4.1.2</org.apache.httpcomponents.version>
-    </properties>
+
 
     <dependencies>
         <dependency>

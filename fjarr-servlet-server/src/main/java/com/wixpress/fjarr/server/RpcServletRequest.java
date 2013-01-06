@@ -8,6 +8,7 @@ import com.wixpress.fjarr.util.ReadOnlyMultiMap;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -32,7 +33,10 @@ public class RpcServletRequest implements RpcRequest
     public RpcServletRequest(HttpServletRequest request) throws IOException
     {
         this.baseRequest = request;
-        rawRequestBody = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
+        final String characterEncoding = request.getCharacterEncoding() != null ?
+                request.getCharacterEncoding() : Charset.defaultCharset().name();
+
+        rawRequestBody = IOUtils.toString(request.getInputStream(), characterEncoding);
         headers = convertHeaders(request);
         cookies = new HashMap<String, RpcCookie>();
         if (baseRequest.getCookies() != null)
@@ -100,9 +104,10 @@ public class RpcServletRequest implements RpcRequest
     {
         MultiMap<String, String> mmap = new MultiMap<String, String>();
 
-        while (request.getHeaderNames().hasMoreElements())
+        final Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements())
         {
-            String headerName = (String) request.getHeaderNames().nextElement();
+            String headerName = (String) headerNames.nextElement();
             Enumeration enumeration = request.getHeaders(headerName);
             while (enumeration.hasMoreElements())
             {

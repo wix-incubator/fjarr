@@ -62,10 +62,11 @@ public class RpcClientProxy<T> implements InvocationHandler
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
     {
+        Object[] _args = args != null ? args : new Object[0];
         for (InvocationExecutor executor : invocationExecutors)
         {
             if (executor.matches(method))
-                return executor.invoke(method, args);
+                return executor.invoke(method, _args);
         }
         // will never happen since the last executor is a catch-all
         return null;
@@ -120,7 +121,6 @@ public class RpcClientProxy<T> implements InvocationHandler
                 new Class[]{serviceInterface},
                 new RpcClientProxy(serviceInterface, serviceUrl, protocol, invoker, eventHandler));
     }
-
 
 
     public Class<T> getServiceInterface()
