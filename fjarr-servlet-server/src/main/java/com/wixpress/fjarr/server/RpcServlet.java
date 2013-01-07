@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 
 /**
- * Implements an Hoopoe-Rpc Server as a servlet
+ * Implements an Fjarr-Rpc Server as a servlet
  */
 public class RpcServlet extends HttpServlet
 {

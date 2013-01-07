@@ -2,6 +2,7 @@ package com.wixpress.fjarr.matchers;
 
 import com.wixpress.fjarr.util.MultiMap;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
 
@@ -70,24 +71,24 @@ public class IsMultiMapcontining<K, V> extends TypeSafeMatcher<MultiMap<K, V>>
     @org.hamcrest.Factory
     public static <K, V> org.hamcrest.Matcher<MultiMap<K, V>> hasKey(org.hamcrest.Matcher<K> keyMatcher)
     {
-        return new IsMultiMapcontining<K, V>(keyMatcher, IsAnything.<V>anything());
+        return new IsMultiMapcontining<K, V>(keyMatcher,(Matcher<V>)IsAnything.anything());
     }
 
     @org.hamcrest.Factory
     public static <K, V> org.hamcrest.Matcher<MultiMap<K, V>> hasKey(K key)
     {
-        return new IsMultiMapcontining<K, V>(is(key), IsAnything.<V>anything());
+        return new IsMultiMapcontining<K, V>(is(key), (Matcher<V>)IsAnything.anything());
     }
 
     @org.hamcrest.Factory
     public static <K, V> org.hamcrest.Matcher<MultiMap<K, V>> hasValue(org.hamcrest.Matcher<V> valueMatcher)
     {
-        return new IsMultiMapcontining<K, V>(IsAnything.<K>anything(), valueMatcher);
+        return new IsMultiMapcontining<K, V>((Matcher<K>)IsAnything.anything(), valueMatcher);
     }
 
     @org.hamcrest.Factory
     public static <K, V> org.hamcrest.Matcher<MultiMap<K, V>> hasValue(V value)
     {
-        return new IsMultiMapcontining<K, V>(IsAnything.<K>anything(), is(value));
+        return new IsMultiMapcontining<K, V>((Matcher<K>)IsAnything.anything(), is(value));
     }
 }

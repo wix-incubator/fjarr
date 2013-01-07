@@ -118,7 +118,8 @@ public class InvokerTest
 
                 HttpPost post = (HttpPost) invocationOnMock.getArguments()[0];
 
-                assertThat(post.getAllHeaders(), allOf(hasItemInArray(isHeader("Test-Header", "header value")),
+                assertThat(post.getAllHeaders(), allOf(
+                        hasItemInArray(isHeader("Test-Header", "header value")),
                         hasItemInArray(isHeader("Connection", "close"))));
 
                 assertThat(post.getURI(), isUri(new URI("www.example.com?a+b=b+c&a=b")));
