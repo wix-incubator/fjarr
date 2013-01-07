@@ -4,22 +4,24 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.IntNode;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
-import com.wixpress.hoopoe.reflection.parameters.ParameterNameDiscoverer;
-import com.wixpress.fjarr.server.NamedRpcParameters;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.wixpress.fjarr.server.ObjectRpcParameters;
 import com.wixpress.fjarr.server.ParsedRpcRequest;
 import com.wixpress.fjarr.server.PositionalRpcParameters;
 import com.wixpress.fjarr.server.RpcRequest;
 import com.wixpress.fjarr.server.exceptions.BadRequestException;
 import com.wixpress.fjarr.util.ReflectionUtils;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.hamcrest.core.StringContains.containsString;
+import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -28,15 +30,16 @@ import static org.mockito.Mockito.mock;
  * @since 6/15/11 10:29 PM
  */
 
-public class JsonRpcProtocolParserTest {
+public class JsonRpcProtocolParserTest
+{
 
     private ObjectMapper mapper = new ObjectMapper();
-    private ParameterNameDiscoverer d = new AnnotationParameterNameDiscoverer();
-    JsonRpcProtocol protocol = new JsonRpcProtocol(mapper, d);
+    JsonRpcProtocol protocol = new JsonRpcProtocol(mapper);
 
 
     @Test
-    public void testPositionalParamsParseSuccess() throws IOException, BadRequestException {
+    public void testPositionalParamsParseSuccess() throws IOException, BadRequestException
+    {
         String json = "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": \"1\"}";
         RpcRequest r = mock(RpcRequest.class);
         ParsedRpcRequest request = protocol.parseRequestJson(r, mapper.readTree(json));
@@ -49,35 +52,49 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test
-    public void testNamedParamsParseSuccess() throws IOException, BadRequestException {
+    public void testNamedParamsParseSuccess() throws IOException, BadRequestException
+    {
         String json = "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": {\"a\":42, \"b\" : 23}, \"id\": 1}";
         RpcRequest r = mock(RpcRequest.class);
         ParsedRpcRequest request = protocol.parseRequestJson(r, mapper.readTree(json));
         assertThat(request.getInvocations().size(), is(1));
         assertThat(request.getInvocations().get(0).getMethodName(), is("subtract"));
-        assertThat(request.getInvocations().get(0).getParameters(), instanceOf(NamedRpcParameters.class));
-        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("a")).intValue(), is(42));
-        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("b")).intValue(), is(23));
+//        assertThat(request.getInvocations().get(0).getParameters(), instanceOf(NamedRpcParameters.class));
+//        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("a")).intValue(), is(42));
+//        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("b")).intValue(), is(23));
+
+        assertThat(request.getInvocations().get(0).getParameters(), instanceOf(ObjectRpcParameters.class));
+        ObjectNode on = (ObjectNode) ((ObjectRpcParameters) request.getInvocations().get(0).getParameters()).getParameters();
+        assertThat(on.get("a").intValue(), is(42));
+        assertThat(on.get("b").intValue(), is(23));
         assertThat(((JsonNode) request.getInvocations().get(0).getValueFromContext("id")).intValue(), is(1));
+
+
     }
 
     @Test
-    public void testNotificationParseSuccess() throws IOException, BadRequestException {
+    public void testNotificationParseSuccess() throws IOException, BadRequestException
+    {
         String json = "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": {\"a\":42, \"b\" : 23}}";
         RpcRequest r = mock(RpcRequest.class);
         ParsedRpcRequest request = protocol.parseRequestJson(r, mapper.readTree(json));
         assertThat(request.getInvocations().size(), is(1));
         assertThat(request.getInvocations().get(0).getMethodName(), is("subtract"));
-        assertThat(request.getInvocations().get(0).getParameters(), instanceOf(NamedRpcParameters.class));
-        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("a")).intValue(), is(42));
-        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("b")).intValue(), is(23));
-        assertThat(request.getInvocations().get(0).getValueFromContext("id"), Matchers.<Object>nullValue());
+//        assertThat(request.getInvocations().get(0).getParameters(), instanceOf(NamedRpcParameters.class));
+//        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("a")).intValue(), is(42));
+//        assertThat(((IntNode) ((NamedRpcParameters) request.getInvocations().get(0).getParameters()).getParameters().get("b")).intValue(), is(23));
+        assertThat(request.getInvocations().get(0).getParameters(), instanceOf(ObjectRpcParameters.class));
+        ObjectNode on = (ObjectNode) ((ObjectRpcParameters) request.getInvocations().get(0).getParameters()).getParameters();
+        assertThat(on.get("a").intValue(), is(42));
+        assertThat(on.get("b").intValue(), is(23));
+        assertThat(request.getInvocations().get(0).getValueFromContext("id"), nullValue());
         assertThat((Boolean) request.getInvocations().get(0).getValueFromContext("notification"), is(true));
     }
 
 
     @Test
-    public void testBatchRequestParseSuccess() throws IOException, BadRequestException {
+    public void testBatchRequestParseSuccess() throws IOException, BadRequestException
+    {
         String json = "[{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": 1}," +
                 "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23]}," +
                 "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": 2}]";
@@ -91,7 +108,8 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test
-    public void testBatchRequest() throws IOException, BadRequestException {
+    public void testBatchRequest() throws IOException, BadRequestException
+    {
         String json = "[{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": 1}," +
                 "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23]}," +
                 "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": \"2\"}]";
@@ -106,7 +124,8 @@ public class JsonRpcProtocolParserTest {
 
 
     @Test(expected = BadRequestException.class)
-    public void testBadJsonNodeInt() throws IOException, BadRequestException {
+    public void testBadJsonNodeInt() throws IOException, BadRequestException
+    {
         String json = "1";
 
         RpcRequest r = mock(RpcRequest.class);
@@ -114,14 +133,16 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test(expected = BadRequestException.class)
-    public void testBadJsonNodeString() throws IOException, BadRequestException {
+    public void testBadJsonNodeString() throws IOException, BadRequestException
+    {
         String json = "\"aaa\"";
         RpcRequest r = mock(RpcRequest.class);
         ParsedRpcRequest request = protocol.parseRequestJson(r, mapper.readTree(json));
     }
 
     @Test
-    public void testEmptyArray() throws IOException, BadRequestException {
+    public void testEmptyArray() throws IOException, BadRequestException
+    {
         String json = "[]";
 
         RpcRequest r = mock(RpcRequest.class);
@@ -133,7 +154,8 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test(expected = JsonParseException.class)
-    public void testInvalidJson() throws IOException, BadRequestException {
+    public void testInvalidJson() throws IOException, BadRequestException
+    {
         String json = "{\"jsonrpc\": \"2.0\", \"method\": \"foobar, \"params\": \"bar\", \"baz]";
 
         RpcRequest r = mock(RpcRequest.class);
@@ -145,7 +167,8 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test
-    public void testInvalidRequest() throws IOException, BadRequestException {
+    public void testInvalidRequest() throws IOException, BadRequestException
+    {
 
         String json = "{\"jsonrpc\": \"2.0\", \"method\": 1, \"params\": \"bar\"}";
 
@@ -158,7 +181,8 @@ public class JsonRpcProtocolParserTest {
 
 
     @Test
-    public void testBatchWithInvalidItems() throws IOException, BadRequestException {
+    public void testBatchWithInvalidItems() throws IOException, BadRequestException
+    {
         String json = "[1,{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": 1},2,3]";
 
         RpcRequest r = mock(RpcRequest.class);
@@ -179,7 +203,8 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test
-    public void testResponse() throws IOException, BadRequestException, NoSuchMethodException {
+    public void testResponse() throws IOException, BadRequestException, NoSuchMethodException
+    {
         String json = "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": \"1\"}";
 
         List<Method> methods = ReflectionUtils.findMethods(Calculator.class, "subtract");
@@ -199,7 +224,8 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test
-    public void testStringResponse() throws IOException, BadRequestException, NoSuchMethodException {
+    public void testStringResponse() throws IOException, BadRequestException, NoSuchMethodException
+    {
         String json = "{\"jsonrpc\": \"2.0\", \"method\": \"getName\", \"params\": [], \"id\": \"1\"}";
 
         List<Method> methods = ReflectionUtils.findMethods(Calculator.class, "getName");
@@ -219,7 +245,8 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test
-    public void testBatchResponse() throws IOException, BadRequestException, NoSuchMethodException {
+    public void testBatchResponse() throws IOException, BadRequestException, NoSuchMethodException
+    {
         String json = "[{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": \"1\"}," +
                 "{\"jsonrpc\": \"2.0\", \"method\": \"add\", \"params\": [42, 23], \"id\": \"2\"}]";
 
@@ -245,7 +272,8 @@ public class JsonRpcProtocolParserTest {
 
 
     @Test
-    public void testErrorResponse() throws IOException, BadRequestException, NoSuchMethodException {
+    public void testErrorResponse() throws IOException, BadRequestException, NoSuchMethodException
+    {
         String json = "{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": \"1\"}";
 
         List<Method> methods = ReflectionUtils.findMethods(Calculator.class, "subtract");
@@ -269,7 +297,8 @@ public class JsonRpcProtocolParserTest {
     }
 
     @Test
-    public void testBatchWithErrorResponse() throws IOException, BadRequestException, NoSuchMethodException {
+    public void testBatchWithErrorResponse() throws IOException, BadRequestException, NoSuchMethodException
+    {
         String json = "[{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": \"1\"}," +
                 "{\"jsonrpc\": \"2.0\", \"method\": \"add\", \"params\": [42, 23], \"id\": \"2\"}]";
 
@@ -299,8 +328,8 @@ public class JsonRpcProtocolParserTest {
     }
 
 
-
-    public static interface Calculator {
+    public static interface Calculator
+    {
 
         int subtract(int i, int j);
 
@@ -313,8 +342,10 @@ public class JsonRpcProtocolParserTest {
         public String getName();
     }
 
-    public static class CalculatorException extends Exception {
-        public CalculatorException(String message) {
+    public static class CalculatorException extends Exception
+    {
+        public CalculatorException(String message)
+        {
             super(message);
         }
     }

@@ -13,7 +13,6 @@ import com.wixpress.fjarr.json.JsonRpcClientProtocol;
 import com.wixpress.fjarr.json.JsonRpcProtocol;
 import com.wixpress.fjarr.server.RpcServer;
 import com.wixpress.fjarr.server.RpcServlet;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -35,8 +34,7 @@ public class ServletWithHttpClientTest extends BaseItTest
         Servlet servlet = new RpcServlet(
                 new RpcServer(
                         new JsonRpcProtocol(
-                                mapper,
-                                new AnnotationParameterNameDiscoverer()),
+                                mapper),
                         new DataStructServiceImpl(),
                         DataStructService.class));
 

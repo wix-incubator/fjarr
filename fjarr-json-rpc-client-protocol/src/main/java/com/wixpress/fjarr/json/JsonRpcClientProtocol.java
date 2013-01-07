@@ -19,7 +19,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 6/30/11 5:40 PM
  */
 
-public class JsonRpcClientProtocol implements RpcClientProtocol {
+public class JsonRpcClientProtocol implements RpcClientProtocol
+{
     private static final String JSON_RPC_VERSION = "2.0";
     public static final String CONTENT_TYPE = "application/json-rpc";
     public static final String ACCCEPT_HEADER = "application/json";
@@ -29,21 +30,34 @@ public class JsonRpcClientProtocol implements RpcClientProtocol {
 
     private AtomicLong messageId = new AtomicLong(0);
 
-    public JsonRpcClientProtocol(ObjectMapper mapper) {
+    public JsonRpcClientProtocol(ObjectMapper mapper)
+    {
 
         this.mapper = mapper;
     }
 
     @Override
-    public String writeRequest(String methodName, Object[] arguments) throws IOException {
+    public String writeRequest(String methodName, Object[] arguments) throws IOException
+    {
         // reset the messageId if needed
         messageId.compareAndSet(Long.MAX_VALUE, 0l);
 
-        // create an array node of params and manually map each param to a JsonNode in order to avoid weird type info property of Object[]
-        ArrayNode params = mapper.createArrayNode();
-        for (Object argument : arguments) {
-            params.add(mapper.valueToTree(argument));
+        JsonNode params = null;
+
+        if (arguments.length == 1)
+        {
+            params = mapper.valueToTree(arguments[0]);
         }
+        else
+        {
+            // create an array node of params and manually map each param to a JsonNode in order to avoid weird type info property of Object[]
+            params = mapper.createArrayNode();
+            for (Object argument : arguments)
+            {
+                ((ArrayNode) params).add(mapper.valueToTree(argument));
+            }
+        }
+
 
         ObjectNode request = mapper.createObjectNode();//writer. createObjectNode();
         request.put("id", messageId.getAndIncrement());
@@ -56,21 +70,26 @@ public class JsonRpcClientProtocol implements RpcClientProtocol {
     }
 
     @Override
-    public <T> T readResponse(Type returnType, String response) throws RpcInvocationException {
-        try {
+    public <T> T readResponse(Type returnType, String response) throws RpcInvocationException
+    {
+        try
+        {
             // read the response
             JsonNode root = mapper.readTree(response);
 
             // bail on invalid response
-            if (!root.isObject()) {
+            if (!root.isObject())
+            {
                 throw new InvalidRpcResponseException(String.format("Invalid JSON-RPC response - expected a JSON object but got [%s]", response));
             }
             ObjectNode jsonObject = ObjectNode.class.cast(root);
 
             // detect errors
-            if (jsonObject.has("error") && !jsonObject.get("error").isNull()) {
+            if (jsonObject.has("error") && !jsonObject.get("error").isNull())
+            {
                 handleExceptionFromServer(jsonObject);
-            } else if (jsonObject.has("result")) // convert it to a return object
+            }
+            else if (jsonObject.has("result")) // convert it to a return object
             {
                 if (returnType.equals(void.class))
                     return null;
@@ -81,19 +100,23 @@ public class JsonRpcClientProtocol implements RpcClientProtocol {
 
             throw new InvalidRpcResponseException(String.format(
                     "Invalid JSON-RPC response - expected either 'result' or 'error' but got [%s]", jsonObject));
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             throw new InvalidRpcResponseException("Failed reading response", ex);
         }
     }
 
 
     @Override
-    public String getContentType() {
+    public String getContentType()
+    {
         return CONTENT_TYPE;
     }
 
     @Override
-    public String getAcceptType() {
+    public String getAcceptType()
+    {
         return ACCCEPT_HEADER;
     }
 
@@ -103,16 +126,20 @@ public class JsonRpcClientProtocol implements RpcClientProtocol {
      *
      * @param jsonObject
      */
-    private void handleExceptionFromServer(ObjectNode jsonObject) {
+    private void handleExceptionFromServer(ObjectNode jsonObject)
+    {
         ObjectNode errorObject = ObjectNode.class.cast(jsonObject.get("error"));
 
         Exception e;
-        try {
+        try
+        {
             e = getReader().readValue(getReader().treeAsTokens(errorObject.get("data")), Exception.class);
-            if (e instanceof RuntimeException) {
+            if (e instanceof RuntimeException)
+            {
                 e.setStackTrace(Thread.currentThread().getStackTrace());
             }
-        } catch (Exception mappingException) // either we can't deserialize the exception or we're not familiar with it
+        }
+        catch (Exception mappingException) // either we can't deserialize the exception or we're not familiar with it
         {
             throw new RpcInvocationException(
                     "JSON-RPC Error " + errorObject.get("code") + ": " +
@@ -124,7 +151,8 @@ public class JsonRpcClientProtocol implements RpcClientProtocol {
 
     // delaying the instanciation of ObjectReader till the first actual usage, because ObjectMapper is configured after the
     // this
-    private ObjectReader getReader() {
+    private ObjectReader getReader()
+    {
         return mapper.reader().without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 

@@ -3,12 +3,11 @@ package com.wixpress.fjarr.server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.wixpress.fjarr.example.*;
 import com.wixpress.fjarr.json.FjarrJacksonModule;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
 import com.wixpress.fjarr.json.JsonRpcProtocol;
 import com.wixpress.fjarr.server.util.MockHttpServletRequest;
 import com.wixpress.fjarr.server.util.MockHttpServletResponse;
-import com.wixpress.fjarr.example.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,8 +42,7 @@ public class RpcTest
         servlet = new RpcServlet(
                 new RpcServer(
                         new JsonRpcProtocol(
-                                objectMapper,
-                                new AnnotationParameterNameDiscoverer()),
+                                objectMapper),
                         new DataStructServiceImpl(),
                         DataStructService.class));
     }
@@ -243,6 +241,20 @@ public class RpcTest
             assertThat(e, instanceOf(NullPointerException.class));
         }
     }
+
+
+    private HttpServletRequest mockJsonRpcRequest(String method, Object param) throws IOException
+     {
+
+         StringBuilder body = new StringBuilder("{ \"id\" : 0, \"jsonrpc\" : \"2.0\",  \"method\" : \"" + method + "\",\"params\" : ");
+         body.append(objectMapper.writeValueAsString(param));
+         body.append("}");
+         return MockHttpServletRequest.post()
+                 .withHeader("Host", "www.example.com")
+                 .withHeader("Content-Type", "application/json-rpc")
+                 .withBody(body.toString())
+                 .build();
+     }
 
     private HttpServletRequest mockJsonRpcRequest(String method, Object... params) throws IOException
     {

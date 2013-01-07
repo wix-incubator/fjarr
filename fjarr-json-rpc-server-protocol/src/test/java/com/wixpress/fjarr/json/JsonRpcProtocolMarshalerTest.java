@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
-import com.wixpress.hoopoe.reflection.parameters.ParameterNameDiscoverer;
 import com.wixpress.fjarr.server.ParsedRpcRequest;
 import com.wixpress.fjarr.server.PositionalRpcParameters;
 import com.wixpress.fjarr.server.RpcInvocation;
@@ -17,8 +15,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -31,8 +29,8 @@ public class JsonRpcProtocolMarshalerTest
 {
 
     private static ObjectMapper mapper = new ObjectMapper();
-    private ParameterNameDiscoverer d = new AnnotationParameterNameDiscoverer();
-    JsonRpcProtocol protocol = new JsonRpcProtocol(mapper, d);
+    //private ParameterNameDiscoverer d = new AnnotationParameterNameDiscoverer();
+    JsonRpcProtocol protocol = new JsonRpcProtocol(mapper);
 
     private interface substracter
     {

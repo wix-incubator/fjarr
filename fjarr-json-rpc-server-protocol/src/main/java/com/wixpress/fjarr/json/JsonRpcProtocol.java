@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
-import com.wixpress.hoopoe.reflection.parameters.ParameterNameDiscoverer;
 import com.wixpress.fjarr.server.*;
 import com.wixpress.fjarr.server.exceptions.BadRequestException;
 import com.wixpress.fjarr.server.exceptions.HttpMethodNotAllowedException;
@@ -18,7 +16,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author alexeyr
@@ -37,24 +37,40 @@ public class JsonRpcProtocol implements RpcProtocol
 
     ObjectReader objectReader;
     ObjectMapper mapper;
-    ParameterNameDiscoverer parameterNameDiscoverer = new AnnotationParameterNameDiscoverer();
+    //    ParameterNameDiscoverer parameterNameDiscoverer = new AnnotationParameterNameDiscoverer();
     public static final List<String> allowedMethods = Arrays.asList("POST");
 
-    public JsonRpcProtocol(ObjectMapper mapper, ParameterNameDiscoverer parameterNameDiscoverer)
+    public JsonRpcProtocol(ObjectMapper mapper)
     {
         this.objectReader = mapper.reader().without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         this.mapper = mapper;
-        this.parameterNameDiscoverer = parameterNameDiscoverer;
 
-//        configureObjectMapper(this.mapper);
+        //        configureObjectMapper(this.mapper);
 
-//        StdTypeResolverBuilder r = new StdTypeResolverBuilder();
-//        r.init(JsonTypeInfo.Id.MINIMAL_CLASS, null);
-//        r.inclusion(JsonTypeInfo.As.PROPERTY);
-//        mapper.setDefaultTyping(r);
-//        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, JsonTypeInfo.As.PROPERTY);
+        //        StdTypeResolverBuilder r = new StdTypeResolverBuilder();
+        //        r.init(JsonTypeInfo.Id.MINIMAL_CLASS, null);
+        //        r.inclusion(JsonTypeInfo.As.PROPERTY);
+        //        mapper.setDefaultTyping(r);
+        //        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, JsonTypeInfo.As.PROPERTY);
 
     }
+
+
+//    public JsonRpcProtocol(ObjectMapper mapper, ParameterNameDiscoverer parameterNameDiscoverer)
+//    {
+//        this.objectReader = mapper.reader().without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+//        this.mapper = mapper;
+//        this.parameterNameDiscoverer = parameterNameDiscoverer;
+//
+////        configureObjectMapper(this.mapper);
+//
+////        StdTypeResolverBuilder r = new StdTypeResolverBuilder();
+////        r.init(JsonTypeInfo.Id.MINIMAL_CLASS, null);
+////        r.inclusion(JsonTypeInfo.As.PROPERTY);
+////        mapper.setDefaultTyping(r);
+////        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, JsonTypeInfo.As.PROPERTY);
+//
+//    }
 
     public ParsedRpcRequest parseRequest(RpcRequest request) throws IOException, HttpMethodNotAllowedException, UnsupportedContentTypeException, BadRequestException
     {
@@ -84,53 +100,44 @@ public class JsonRpcProtocol implements RpcProtocol
         RpcParameters<?> parameters = invocation.getParameters();
         if (parameters instanceof PositionalRpcParameters)
             resolveMethodPositional(methods, invocation, request);
-        else if (parameters instanceof NamedRpcParameters)
-            resolveMethodNamed(methods, invocation, request);
+//        else if (parameters instanceof NamedRpcParameters)
+//            resolveMethodNamed(methods, invocation, request);
+        else if (parameters instanceof ObjectRpcParameters)
+            resolveMethodObject(methods, invocation, request);
     }
 
-    protected void resolveMethodNamed(List<Method> methods, RpcInvocation invocation, ParsedRpcRequest request)
+
+    protected void resolveMethodObject(List<Method> methods, RpcInvocation invocation, ParsedRpcRequest request)
     {
         try
         {
-            Map<String, Object> params = ((NamedRpcParameters) invocation.getParameters()).getParameters();
+            ObjectNode param = (ObjectNode) ((ObjectRpcParameters) invocation.getParameters()).getParameters();
+
             for (Method method : methods)
             {
 
-                List<JsonNode> nonResolvedParams = new ArrayList<JsonNode>(params.size());
-                for (String paramName : parameterNameDiscoverer.getParameterNames(method))
+                Type[] parameterTypes = method.getGenericParameterTypes();
+                if (parameterTypes.length == 1)
                 {
-                    if (paramName == null)
+                    try
                     {
-                        nonResolvedParams = null;
-                        break;
-                    }
+                        Object value = (param.get("@class") != null) ?
+                                objectReader.readValue(objectReader.treeAsTokens(param), Object.class) :
+                                objectReader.readValue(objectReader.treeAsTokens(param), mapper.getTypeFactory().constructType(parameterTypes[0]));
 
-                    if (params.containsKey(paramName))
-                    {
-                        nonResolvedParams.add((JsonNode) params.get(paramName));
-                    }
-                }
-                // this resolvedMethod is the correct one
-                if (nonResolvedParams != null)
-                {
-                    Object[] convertedParams = new Object[nonResolvedParams.size()];
-                    Type[] parameterTypes = method.getGenericParameterTypes();
 
-                    // convert the parameters
-                    for (int i = 0; i < parameterTypes.length; i++)
-                    {
-                        if (nonResolvedParams.get(i).get("@class") != null)
-                            convertedParams[i] = objectReader.readValue(objectReader.treeAsTokens(nonResolvedParams.get(i)), Object.class);
-                        else
-                            convertedParams[i] = objectReader.readValue(objectReader.treeAsTokens(nonResolvedParams.get(i)), mapper.getTypeFactory().constructType(parameterTypes[i]));
+                        invocation.setResolvedMethod(method);
+                        invocation.setResolvedParameters(new Object[]{value});
+                        return;
                     }
-                    invocation.setResolvedMethod(method);
-                    invocation.setResolvedParameters(convertedParams);
-                    return;
+                    catch (Exception e)
+                    {
+                        // ignore
+                    }
                 }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
             return;
@@ -138,15 +145,87 @@ public class JsonRpcProtocol implements RpcProtocol
         invocation.setError(new MethodNotFoundException("Method [%s] was not found \n %s", invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
     }
 
+
+//    protected void resolveMethodNamed(List<Method> methods, RpcInvocation invocation, ParsedRpcRequest request)
+//    {
+//        try
+//        {
+//            Map<String, Object> params = ((NamedRpcParameters) invocation.getParameters()).getParameters();
+//            for (Method method : methods)
+//            {
+//
+//                List<JsonNode> nonResolvedParams = new ArrayList<JsonNode>(params.size());
+//                for (String paramName : parameterNameDiscoverer.getParameterNames(method))
+//                {
+//                    if (paramName == null)
+//                    {
+//                        nonResolvedParams = null;
+//                        break;
+//                    }
+//
+//                    if (params.containsKey(paramName))
+//                    {
+//                        nonResolvedParams.add((JsonNode) params.get(paramName));
+//                    }
+//                }
+//                // this resolvedMethod is the correct one
+//                if (nonResolvedParams != null)
+//                {
+//                    Object[] convertedParams = new Object[nonResolvedParams.size()];
+//                    Type[] parameterTypes = method.getGenericParameterTypes();
+//
+//                    // convert the parameters
+//                    for (int i = 0; i < parameterTypes.length; i++)
+//                    {
+//                        if (nonResolvedParams.get(i).get("@class") != null)
+//                            convertedParams[i] = objectReader.readValue(objectReader.treeAsTokens(nonResolvedParams.get(i)), Object.class);
+//                        else
+//                            convertedParams[i] = objectReader.readValue(objectReader.treeAsTokens(nonResolvedParams.get(i)), mapper.getTypeFactory().constructType(parameterTypes[i]));
+//                    }
+//                    invocation.setResolvedMethod(method);
+//                    invocation.setResolvedParameters(convertedParams);
+//                    return;
+//                }
+//            }
+//        }
+//        catch (IOException e)
+//        {
+//            invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
+//            return;
+//        }
+//        invocation.setError(new MethodNotFoundException("Method [%s] was not found \n %s", invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
+//    }
+
     protected void resolveMethodPositional(List<Method> methods, RpcInvocation invocation, ParsedRpcRequest request)
     {
-        Object[] parameters = ((PositionalRpcParameters) invocation.getParameters()).getParameters();
+        JsonNode[] parameters = (JsonNode[]) ((PositionalRpcParameters) invocation.getParameters()).getParameters();
         try
         {
             for (Method method : methods)
             {
+                if ( method.getGenericParameterTypes().length == 1 &&
+                        ((method.getParameterTypes()[0]).isArray() || (Collection.class.isAssignableFrom(method.getParameterTypes()[0]))))
+                {
+
+                    ArrayNode param = mapper.createArrayNode();
+                    for (JsonNode node : parameters)
+                    {
+                        param.add(node);
+                    }
+
+                    Object value = (param.get("@class") != null) ?
+                            objectReader.readValue(objectReader.treeAsTokens(param), Object.class) :
+                            objectReader.readValue(objectReader.treeAsTokens(param), mapper.getTypeFactory().constructType(method.getGenericParameterTypes()[0]));
+
+
+                    invocation.setResolvedMethod(method);
+                    invocation.setResolvedParameters(new Object[]{value});
+                    return;
+                }
+
                 if (parameters.length == method.getParameterTypes().length)
                 {
+
 
                     Object[] convertedParams = new Object[parameters.length];
                     Type[] parameterTypes = method.getGenericParameterTypes();
@@ -377,14 +456,18 @@ public class JsonRpcProtocol implements RpcProtocol
         else if (params.isObject())
         {
             // handle named params
-            Map<String, Object> ret = new HashMap<String, Object>(params.size());
-            Iterator<String> fieldNames = params.fieldNames();
-            while (fieldNames.hasNext())
-            {
-                String fieldName = fieldNames.next();
-                ret.put(fieldName, params.get(fieldName));
-            }
-            return new NamedRpcParameters(ret);
+//            Map<String, Object> ret = new HashMap<String, Object>(params.size());
+//            Iterator<String> fieldNames = params.fieldNames();
+//            while (fieldNames.hasNext())
+//            {
+//                String fieldName = fieldNames.next();
+//                ret.put(fieldName, params.get(fieldName));
+//            }
+//            return new NamedRpcParameters(ret);
+
+            //handle ObjectParams
+
+            return new ObjectRpcParameters(params);
         }
         return null;
     }

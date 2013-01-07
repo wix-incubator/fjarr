@@ -8,7 +8,6 @@ import com.wixpress.fjarr.json.FjarrJacksonModule;
 import com.wixpress.fjarr.json.JsonRpcProtocol;
 import com.wixpress.fjarr.server.*;
 import com.wixpress.fjarr.validation.SpringValidatorRpcEventHandler;
-import com.wixpress.hoopoe.reflection.parameters.AnnotationParameterNameDiscoverer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Errors;
@@ -62,8 +61,7 @@ public class ITServerConfig
         mapper.registerModule(new FjarrJacksonModule());
 
         return new JsonRpcProtocol(
-                mapper,
-                new AnnotationParameterNameDiscoverer());
+                mapper);
     }
 
     @Bean
