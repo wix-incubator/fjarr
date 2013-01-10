@@ -3,6 +3,7 @@ package com.wixpress.fjarr.IT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.IT.util.ITServer;
 import com.wixpress.fjarr.example.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +18,6 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author alex
@@ -56,7 +55,7 @@ public abstract class BaseItTest
 
 
         @Test
-    //    @Ignore("Fails inconsistently with java.net.SocketException: Unexpected end of file from server")
+        @Ignore("Fails inconsistently with java.net.SocketException: Unexpected end of file from server")
         public void testInvalidJsonReturnsHttpStatus400() throws Exception
         {
             RestTemplate template = new RestTemplate();
