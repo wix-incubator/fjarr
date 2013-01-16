@@ -2,21 +2,21 @@ package com.wixpress.fjarr.IT.servletwithhttpclient;
 
 import com.wixpress.fjarr.IT.BaseItTest;
 import com.wixpress.fjarr.IT.util.ITServer;
-import com.wixpress.fjarr.client.ApacheHttpClient4Factory;
-import com.wixpress.fjarr.client.HttpClientConfig;
-import com.wixpress.fjarr.client.HttpComponentsInvoker;
-import com.wixpress.fjarr.client.RpcClientProxy;
+import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.example.DataStructServiceImpl;
 import com.wixpress.fjarr.json.FjarrJacksonModule;
 import com.wixpress.fjarr.json.JsonRpcClientProtocol;
+import com.wixpress.fjarr.json.JsonRpcExtensionMethodExecutor;
 import com.wixpress.fjarr.json.JsonRpcProtocol;
+import com.wixpress.fjarr.json.extensionmethods.ServiceNameExtensionMethod;
 import com.wixpress.fjarr.server.RpcServer;
 import com.wixpress.fjarr.server.RpcServlet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import javax.servlet.Servlet;
+import java.net.URI;
 
 /**
  * @author alex
@@ -36,18 +36,25 @@ public class ServletWithHttpClientTest extends BaseItTest
                         new JsonRpcProtocol(
                                 mapper),
                         new DataStructServiceImpl(),
-                        DataStructService.class));
+                        DataStructService.class,
+                        new JsonRpcExtensionMethodExecutor(
+                                new ServiceNameExtensionMethod(DataStructService.class)
+                        )));
 
         server = new ITServer(9191, new ITServer.ServletPair("/*", servlet));
 
         serviceRoot = "http://127.0.0.1:9191/DataStructService";
 
+        final JsonRpcClientProtocol protocol = new JsonRpcClientProtocol(mapper);
+        final HttpComponentsInvoker invoker = new HttpComponentsInvoker(
+                new ApacheHttpClient4Factory(
+                        HttpClientConfig.defaults()));
         service = RpcClientProxy.create(DataStructService.class,
                 serviceRoot,
-                new HttpComponentsInvoker(
-                        new ApacheHttpClient4Factory(
-                                HttpClientConfig.defaults())),
-                new JsonRpcClientProtocol(mapper));
+                invoker,
+                protocol);
+
+        client = new RpcClient(new URI(serviceRoot), protocol, invoker, null);
 
         server.start();
 

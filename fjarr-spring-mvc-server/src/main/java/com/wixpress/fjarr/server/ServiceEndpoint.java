@@ -1,27 +1,39 @@
 package com.wixpress.fjarr.server;
 
 /**
-* @author alexeyr
-* @since 7/5/11 3:51 PM
-*/
+ * @author alexeyr
+ * @since 7/5/11 3:51 PM
+ */
 public class ServiceEndpoint
 {
     private String name;
     private Class<?> serviceInterface;
     private Object serviceImplementation;
+    private RpcRequestLifecycleEventHandler[] eventHandlers;
     private String url;
 
     public ServiceEndpoint(Class<?> serviceInterface, Object serviceImplementation)
     {
-        this.serviceInterface = serviceInterface;
-        this.serviceImplementation = serviceImplementation;
+        this(null, serviceInterface, serviceImplementation, new RpcRequestLifecycleEventHandler[0]);
+    }
+
+    public ServiceEndpoint(Class<?> serviceInterface, Object serviceImplementation, RpcRequestLifecycleEventHandler... eventHandlers)
+    {
+        this(null, serviceInterface, serviceImplementation, eventHandlers);
+
     }
 
     public ServiceEndpoint(String name, Class<?> serviceInterface, Object serviceImplementation)
     {
+        this(name, serviceInterface, serviceImplementation, new RpcRequestLifecycleEventHandler[0]);
+    }
+
+    public ServiceEndpoint(String name, Class<?> serviceInterface, Object serviceImplementation, RpcRequestLifecycleEventHandler... eventHandlers)
+    {
         this.name = name;
         this.serviceInterface = serviceInterface;
         this.serviceImplementation = serviceImplementation;
+        this.eventHandlers = eventHandlers;
     }
 
     public String getName()
@@ -62,5 +74,15 @@ public class ServiceEndpoint
     public void setUrl(String url)
     {
         this.url = url;
+    }
+
+    public RpcRequestLifecycleEventHandler[] getEventHandlers()
+    {
+        return eventHandlers;
+    }
+
+    public void setEventHandlers(RpcRequestLifecycleEventHandler[] eventHandlers)
+    {
+        this.eventHandlers = eventHandlers;
     }
 }

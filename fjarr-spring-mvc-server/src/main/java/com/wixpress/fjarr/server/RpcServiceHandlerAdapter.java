@@ -21,11 +21,10 @@ import java.util.Map;
 /**
  * @author Alexeyr
  * @since Jul 5, 2011
- *
- * This is a reference implementation of a Spring's HandlerAdapter wrapping an RPC server.
- * Note - the handler adapter does not returns an error view, it just sets the response status and in some cases prints out
- * error details to the response opdybody
- *
+ *        <p/>
+ *        This is a reference implementation of a Spring's HandlerAdapter wrapping an RPC server.
+ *        Note - the handler adapter does not returns an error view, it just sets the response status and in some cases prints out
+ *        error details to the response opdybody
  */
 public class RpcServiceHandlerAdapter implements HandlerAdapter
 {
@@ -102,6 +101,10 @@ public class RpcServiceHandlerAdapter implements HandlerAdapter
         else
         {
             RpcServer server = new RpcServer(protocol, endpoint.getServiceImplementation(), endpoint.getServiceInterface());
+            for (RpcRequestLifecycleEventHandler eh : endpoint.getEventHandlers())
+            {
+                server.addLifecycleEventHandler(eh);
+            }
             if (validator != null)
             {
                 SpringValidatorRpcEventHandler vh = new SpringValidatorRpcEventHandler(validator);

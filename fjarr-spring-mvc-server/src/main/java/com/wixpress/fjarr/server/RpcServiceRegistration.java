@@ -20,9 +20,19 @@ public abstract class RpcServiceRegistration
         endpoints.add(new ServiceEndpoint(serviceInterface, serviceImplementation));
     }
 
+    public void registerEndpoint(Class<?> serviceInterface, Object serviceImplementation, RpcRequestLifecycleEventHandler... eventHandlers)
+    {
+        endpoints.add(new ServiceEndpoint(serviceInterface, serviceImplementation, eventHandlers));
+    }
+
     public void registerEndpoint(Class<?> serviceInterface, Object serviceImplementation, String serviceName)
     {
         endpoints.add(new ServiceEndpoint(serviceName, serviceInterface, serviceImplementation));
+    }
+
+    public void registerEndpoint(Class<?> serviceInterface, Object serviceImplementation, String serviceName, RpcRequestLifecycleEventHandler... eventHandlers)
+    {
+        endpoints.add(new ServiceEndpoint(serviceName, serviceInterface, serviceImplementation, eventHandlers));
     }
 
     public List<ServiceEndpoint> getEndpoints()

@@ -11,7 +11,7 @@ import org.springframework.validation.Validator;
  *        <p/>
  *        Example implementation of Spring Validation support for Fjarr RPC Server lifecycle
  */
-public class SpringValidatorRpcEventHandler implements RpcRequestLifecycleEventHandler
+public class SpringValidatorRpcEventHandler extends BaseRpcRequestLifecycleEventHandler
 {
 
     private final Validator validator;
@@ -21,17 +21,6 @@ public class SpringValidatorRpcEventHandler implements RpcRequestLifecycleEventH
         this.validator = validator;
     }
 
-    @Override
-    public LifecycleEventFlow handleReceivedRequest(RpcRequest request, RpcResponse response)
-    {
-        return LifecycleEventFlow.proceed();
-    }
-
-    @Override
-    public LifecycleEventFlow handleRequestParsed(ParsedRpcRequest request, RpcResponse response, Class<?> serviceInterface)
-    {
-        return LifecycleEventFlow.proceed();
-    }
 
     @Override
     public LifecycleEventFlow handleRpcInvocationMethodResolved(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation)
@@ -51,36 +40,6 @@ public class SpringValidatorRpcEventHandler implements RpcRequestLifecycleEventH
             }
         }
 
-        return LifecycleEventFlow.proceed();
-    }
-
-    @Override
-    public LifecycleEventFlow handleRpcInvocationMethodResolvingError(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation)
-    {
-        return LifecycleEventFlow.proceed();
-    }
-
-    @Override
-    public LifecycleEventFlow handleRpcInvocationMethodInvoked(ParsedRpcRequest request, RpcResponse response, RpcInvocation invocation)
-    {
-        return LifecycleEventFlow.proceed();
-    }
-
-    @Override
-    public LifecycleEventFlow handleRpcResponseWriting(ParsedRpcRequest request, RpcResponse response)
-    {
-        return LifecycleEventFlow.proceed();
-    }
-
-    @Override
-    public LifecycleEventFlow handleRpcResponseWritten(ParsedRpcRequest request, RpcResponse response)
-    {
-        return LifecycleEventFlow.proceed();
-    }
-
-    @Override
-    public LifecycleEventFlow handleRpcServerError(RpcRequest request, RpcResponse response, Exception exception, RpcRequestStatistics statistics)
-    {
         return LifecycleEventFlow.proceed();
     }
 }

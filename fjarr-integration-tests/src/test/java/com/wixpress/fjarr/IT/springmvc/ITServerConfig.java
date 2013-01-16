@@ -5,7 +5,9 @@ import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.example.DataStructServiceImpl;
 import com.wixpress.fjarr.example.InputDTO;
 import com.wixpress.fjarr.json.FjarrJacksonModule;
+import com.wixpress.fjarr.json.JsonRpcExtensionMethodExecutor;
 import com.wixpress.fjarr.json.JsonRpcProtocol;
+import com.wixpress.fjarr.json.extensionmethods.ServiceNameExtensionMethod;
 import com.wixpress.fjarr.server.*;
 import com.wixpress.fjarr.validation.SpringValidatorRpcEventHandler;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +39,10 @@ public class ITServerConfig
             @Override
             public void registerServices()
             {
-                registerEndpoint(DataStructService.class, dataStructService);
+                registerEndpoint(DataStructService.class, dataStructService,
+                        new JsonRpcExtensionMethodExecutor(
+                                new ServiceNameExtensionMethod(DataStructService.class)
+                        ));
             }
         };
     }
@@ -86,11 +91,11 @@ public class ITServerConfig
             {
                 if (target.getClass().equals(InputDTO.class))
                 {
-                    InputDTO t = (InputDTO)target;
+                    InputDTO t = (InputDTO) target;
 
                     if (t.getValue() == null)
                     {
-                        errors.rejectValue("value","null");
+                        errors.rejectValue("value", "null");
                     }
                 }
             }

@@ -177,12 +177,26 @@ public class RpcServer
     {
         try
         {
+            // fire Request Parsed event
+            LifecycleEventFlow flow = onEvent(new EventExecutor()
+            {
+                @Override
+                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+                {
+                    return lifecycleEventHandler.handleRpcInvocationMethodResolving(request, response, invocation);
+                }
+            });
+            // if wasn't told to stop - proceed
+            if (!(flow instanceof LifecycleEventFlow.Proceed))
+                return;
+
+
             List<Method> methods = ReflectionUtils.findMethods(serviceInterface, invocation.getMethodName());
             if (methods == null || methods.size() == 0)
             {
                 invocation.setError(new MethodNotFoundException("Method [%s] was not found", invocation.getMethodName()));
                 // hook for handling resolving error
-                LifecycleEventFlow flow = onEvent(new EventExecutor()
+                flow = onEvent(new EventExecutor()
                 {
                     @Override
                     public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
@@ -229,7 +243,6 @@ public class RpcServer
                 // if wasn't told to stop - proceed
                 if (!(flow instanceof LifecycleEventFlow.Proceed))
                     return;
-
 
 
                 Object result = invocation.getResolvedMethod().invoke(serviceImpl, invocation.getResolvedParameters());
