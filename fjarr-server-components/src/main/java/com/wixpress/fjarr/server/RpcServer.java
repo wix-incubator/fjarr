@@ -50,7 +50,7 @@ public class RpcServer
 
             // fire Request Received event
             // could be written as onEvent(lifecycleEventHandler->  lifecycleEventHandler.handleReceivedRequest(request, response))
-            // if Java would finally support lamda expressions
+            // if Java would finally support lambda expressions
 
             LifecycleEventFlow flow = onEvent(new EventExecutor()
             {
