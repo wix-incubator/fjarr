@@ -1,10 +1,12 @@
 package com.wixpress.fjarr.client;
 
+import com.wixpress.fjarr.http.ContentTypeUtils;
 import com.wixpress.fjarr.util.IOUtils;
 import com.wixpress.fjarr.util.MultiMap;
 import com.wixpress.fjarr.util.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -48,13 +50,13 @@ public class HttpComponentsInvoker implements RpcInvoker
                 p.addHeader(CONNECTION_CLOSE_HEADER);
             }
 
+            p.addHeader(HttpHeaders.ACCEPT_CHARSET, invocation.getCharacterEncoding());
             StringEntity entity = new StringEntity(invocation.getBody(), invocation.getContentType(), invocation.getCharacterEncoding());
             p.setEntity(entity);
             for (Map.Entry<String, String> entry : invocation.getAllHeaders().entrySet())
             {
                 p.addHeader(entry.getKey(), entry.getValue());
             }
-
 
             HttpResponse response = null;
 
@@ -71,8 +73,7 @@ public class HttpComponentsInvoker implements RpcInvoker
 
 
             HttpEntity responseEntity = response.getEntity();
-// read the response
-
+            // read the response
             if (responseEntity == null)
             {
                 p.abort();
@@ -83,9 +84,9 @@ public class HttpComponentsInvoker implements RpcInvoker
 
             try
             {
-                final Header contentEncoding = responseEntity.getContentEncoding();
-                if (contentEncoding != null && StringUtils.isNotBlank(contentEncoding.getValue()))
-                    body = IOUtils.toString(responseEntity.getContent(), contentEncoding.getValue());
+                final Header contentType = responseEntity.getContentType();
+                if (contentType != null && StringUtils.isNotBlank(contentType.getValue()))
+                    body = IOUtils.toString(responseEntity.getContent(), ContentTypeUtils.extractCharSet(contentType.getValue(), invocation.getCharacterEncoding()));
                 else
                     body = IOUtils.toString(responseEntity.getContent(), invocation.getCharacterEncoding());
             }

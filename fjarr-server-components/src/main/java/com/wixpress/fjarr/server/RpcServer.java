@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,19 +26,19 @@ public class RpcServer
 
     private Logger log = LoggerFactory.getLogger(RpcServer.class);
 
-    public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface)
-    {
-        this.protocol = protocol;
-        this.serviceImpl = serviceImpl;
-        this.serviceInterface = serviceInterface;
-    }
+//    public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface)
+//    {
+//        this.protocol = protocol;
+//        this.serviceImpl = serviceImpl;
+//        this.serviceInterface = serviceInterface;
+//    }
 
-    public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface, RpcRequestLifecycleEventHandler lifecycleEventHandler)
+    public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface, RpcRequestLifecycleEventHandler... lifecycleEventHandlers)
     {
         this.protocol = protocol;
         this.serviceImpl = serviceImpl;
         this.serviceInterface = serviceInterface;
-        this.lifecycleEventHandlers.add(lifecycleEventHandler);
+        Collections.addAll(this.lifecycleEventHandlers, lifecycleEventHandlers);
     }
 
     public void handleRequest(final RpcRequest request, final RpcResponse response)

@@ -1,0 +1,29 @@
+<web-app>
+    <context-param>
+       <param-name>protocolClass</param-name>
+       <param-value>com.wixpress.fjarr.json.JsonRpcProtocol</param-value>
+     </context-param>
+
+
+    <servlet>
+        <servlet-name>rpc</servlet-name>
+        <servlet-class>com.wixpress.fjarr.server.RpcServlet</servlet-class>
+        <init-param>
+            <param-name>serviceInterface</param-name>
+            <param-value>com.wixpress.fjarr.example.DataStructService</param-value>
+        </init-param>
+        <init-param>
+            <param-name>serviceImplementationClass</param-name>
+            <param-value>com.wixpress.fjarr.example.DataStructServiceImpl</param-value>
+        </init-param>
+        <!--<init-param>-->
+            <!--<param-name>protocolClass</param-name>-->
+            <!--<param-value>com.wixpress.fjarr.json.JsonRpcProtocol</param-value>-->
+        <!--</init-param>-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rpc</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+</web-app>

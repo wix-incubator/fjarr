@@ -1,10 +1,12 @@
 package com.wixpress.fjarr.IT.util;
 
+import com.wixpress.fjarr.util.StringUtils;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,8 @@ public class ITServer
     protected int port;
     protected ServletPair[] servlets;
     protected Server server;
+    protected String webAppPath;
+    private ServletContextHandler context;
 
 
     public ITServer()
@@ -36,6 +40,15 @@ public class ITServer
 
         this.port = port;
         this.servlets = servlets;
+        this.webAppPath = null;
+    }
+
+    public ITServer(int port, String webAppPath)
+    {
+
+        this.port = port;
+        this.servlets = null;
+        this.webAppPath = webAppPath;
     }
 
 
@@ -48,25 +61,61 @@ public class ITServer
         con.setPort(port);
         server.addConnector(con);
 
+        context = null;
+        if (servlets != null)
+            context = contextFromServletPairs();
+        else if (StringUtils.isNotBlank(webAppPath))
+            context = contextFromWebXml();
+
+        if (context == null)
+        {
+            logger.info("Jetty server wasn't configured properly.");
+            throw new RuntimeException("Bad configuration");
+        }
+
+        server.setHandler(context);
+        server.start();
+//        server.join();
+        logger.info("Jetty server started.");
+
+    }
+
+    private ServletContextHandler contextFromServletPairs()
+    {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(ROOT);
-        server.setHandler(context);
 
         for (ServletPair sp : servlets)
         {
             context.addServlet(new ServletHolder(sp.servlet), sp.path);
         }
-
-        server.start();
-//        server.join();
-        logger.info("Jetty server started.");
+        return context;
     }
+
+
+    public WebAppContext contextFromWebXml() throws Exception
+    {
+
+
+        WebAppContext context = new WebAppContext();
+        context.setDescriptor(webAppPath + "/WEB-INF/web.xml");
+        context.setResourceBase(webAppPath);//"../src/test/webapp");
+        context.setContextPath("/");
+        context.setParentLoaderPriority(true);
+        return context;
+    }
+
 
     public void stop() throws Exception
     {
         server.stop();
         server.destroy();
         server = null;
+    }
+
+    public Object getContextAttribute(String attrName)
+    {
+       return context.getServletContext().getAttribute(attrName);
     }
 
     public static class ServletPair

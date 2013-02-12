@@ -24,6 +24,7 @@ public class ITSpringServer extends ITServer
         this.port = port;
         this.servlets = new ServletPair[]{
                 new ServletPair("/*", servlet)};
+        this.webAppPath = null;
     }
 
 }

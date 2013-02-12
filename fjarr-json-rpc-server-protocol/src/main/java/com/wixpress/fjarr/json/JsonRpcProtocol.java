@@ -55,22 +55,15 @@ public class JsonRpcProtocol implements RpcProtocol
 
     }
 
+    public JsonRpcProtocol()
+    {
+        ObjectMapper m = new ObjectMapper();
+        m.registerModule(new FjarrJacksonModule());
+        this.objectReader = m.reader().without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        this.mapper = m;
 
-//    public JsonRpcProtocol(ObjectMapper mapper, ParameterNameDiscoverer parameterNameDiscoverer)
-//    {
-//        this.objectReader = mapper.reader().without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-//        this.mapper = mapper;
-//        this.parameterNameDiscoverer = parameterNameDiscoverer;
-//
-////        configureObjectMapper(this.mapper);
-//
-////        StdTypeResolverBuilder r = new StdTypeResolverBuilder();
-////        r.init(JsonTypeInfo.Id.MINIMAL_CLASS, null);
-////        r.inclusion(JsonTypeInfo.As.PROPERTY);
-////        mapper.setDefaultTyping(r);
-////        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, JsonTypeInfo.As.PROPERTY);
-//
-//    }
+    }
+
 
     public ParsedRpcRequest parseRequest(RpcRequest request) throws IOException, HttpMethodNotAllowedException, UnsupportedContentTypeException, BadRequestException
     {
@@ -203,7 +196,7 @@ public class JsonRpcProtocol implements RpcProtocol
         {
             for (Method method : methods)
             {
-                if ( method.getGenericParameterTypes().length == 1 &&
+                if (method.getGenericParameterTypes().length == 1 &&
                         ((method.getParameterTypes()[0]).isArray() || (Collection.class.isAssignableFrom(method.getParameterTypes()[0]))))
                 {
 
