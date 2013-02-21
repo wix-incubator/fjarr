@@ -15,7 +15,7 @@ public class NettyClientConfig
     public static final int DEFAULT_MAX_THREADS = 20;
     public static final int DEFAULT_CORE_THREADS = 4;
 
-    public static final RejectedExecutionHandler DEFAULT_REJECTION_POLICY = new ThreadPoolExecutor.DiscardOldestPolicy();
+    public static final RejectedExecutionHandler DEFAULT_REJECTION_POLICY = new ThreadPoolExecutor.DiscardPolicy();
 
 
     /**
