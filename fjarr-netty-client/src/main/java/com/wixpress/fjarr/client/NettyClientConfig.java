@@ -1,5 +1,8 @@
 package com.wixpress.fjarr.client;
 
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+
 /**
  * Created by IntelliJ IDEA.
  * User: daniels
@@ -11,6 +14,8 @@ public class NettyClientConfig
     public static final int DEFAULT_SOCKET_TIMEOUT_MILLIS = 30 * 1000;
     public static final int DEFAULT_MAX_THREADS = 20;
     public static final int DEFAULT_CORE_THREADS = 4;
+
+    public static final RejectedExecutionHandler DEFAULT_REJECTION_POLICY = new ThreadPoolExecutor.CallerRunsPolicy();
 
 
     /**
@@ -32,6 +37,8 @@ public class NettyClientConfig
      * Core Threads in pool
      */
     private int coreThreads = DEFAULT_CORE_THREADS;
+
+    private RejectedExecutionHandler rejectionPolicy = DEFAULT_REJECTION_POLICY;
 
 
     private NettyClientConfig()
@@ -107,5 +114,10 @@ public class NettyClientConfig
     public int getCoreThreads()
     {
         return coreThreads;
+    }
+
+    public RejectedExecutionHandler getRejectionPolicy()
+    {
+        return rejectionPolicy;
     }
 }

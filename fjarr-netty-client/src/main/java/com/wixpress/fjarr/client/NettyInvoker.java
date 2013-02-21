@@ -45,8 +45,8 @@ public class NettyInvoker implements RpcInvoker
         // Configure the client.
         bootstrap = new ClientBootstrap(
                 new NioClientSocketChannelFactory(
-                        threadPool(clientConfig.getCoreThreads(), clientConfig.getMaxThreads()),
-                        threadPool(clientConfig.getCoreThreads(), clientConfig.getMaxThreads()))
+                        threadPool(clientConfig.getCoreThreads(), clientConfig.getMaxThreads(), clientConfig.getRejectionPolicy()),
+                        threadPool(clientConfig.getCoreThreads(), clientConfig.getMaxThreads(), clientConfig.getRejectionPolicy()))
         );
 
         // Set up the event pipeline factory.
@@ -199,10 +199,10 @@ public class NettyInvoker implements RpcInvoker
         }
     }
 
-    private ExecutorService threadPool(int coreThreads, int maxThreads)
+    private ExecutorService threadPool(int coreThreads, int maxThreads, RejectedExecutionHandler rejectedExecutionHandler)
     {
         return new ThreadPoolExecutor(coreThreads, maxThreads,
                 60L, TimeUnit.SECONDS,
-                new SynchronousQueue<Runnable>());
+                new SynchronousQueue<Runnable>(),rejectedExecutionHandler);
     }
 }
