@@ -9,7 +9,7 @@
     <name>Fjarr common components</name>
 
     <parent>
-        <groupId>com.wixpress</groupId>
+        <groupId>org.wixpress</groupId>
         <artifactId>fjarr-modules</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>

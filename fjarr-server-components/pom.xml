@@ -9,14 +9,14 @@
     <name>Fjarr server components</name>
 
     <parent>
-        <groupId>com.wixpress</groupId>
+        <groupId>org.wixpress</groupId>
         <artifactId>fjarr-modules</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.wixpress</groupId>
+            <groupId>org.wixpress</groupId>
             <artifactId>fjarr-common</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
