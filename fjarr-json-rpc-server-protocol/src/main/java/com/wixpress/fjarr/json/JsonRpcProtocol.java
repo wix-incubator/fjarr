@@ -1,16 +1,16 @@
-package org.wixpress.fjarr.json;
+package com.wixpress.fjarr.json;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
-import org.wixpress.fjarr.server.*;
-import org.wixpress.fjarr.server.exceptions.BadRequestException;
-import org.wixpress.fjarr.server.exceptions.HttpMethodNotAllowedException;
-import org.wixpress.fjarr.server.exceptions.MethodNotFoundException;
-import org.wixpress.fjarr.server.exceptions.UnsupportedContentTypeException;
-import org.wixpress.fjarr.util.IOUtils;
+import com.wixpress.fjarr.server.*;
+import com.wixpress.fjarr.server.exceptions.BadRequestException;
+import com.wixpress.fjarr.server.exceptions.HttpMethodNotAllowedException;
+import com.wixpress.fjarr.server.exceptions.MethodNotFoundException;
+import com.wixpress.fjarr.server.exceptions.UnsupportedContentTypeException;
+import com.wixpress.fjarr.util.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
