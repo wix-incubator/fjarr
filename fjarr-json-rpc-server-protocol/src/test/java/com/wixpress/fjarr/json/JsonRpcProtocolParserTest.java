@@ -1,17 +1,17 @@
-package com.wixpress.fjarr.json;
+package org.wixpress.fjarr.json;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.wixpress.fjarr.server.ObjectRpcParameters;
-import com.wixpress.fjarr.server.ParsedRpcRequest;
-import com.wixpress.fjarr.server.PositionalRpcParameters;
-import com.wixpress.fjarr.server.RpcRequest;
-import com.wixpress.fjarr.server.exceptions.BadRequestException;
-import com.wixpress.fjarr.util.ReflectionUtils;
 import org.junit.Test;
+import org.wixpress.fjarr.server.ObjectRpcParameters;
+import org.wixpress.fjarr.server.ParsedRpcRequest;
+import org.wixpress.fjarr.server.PositionalRpcParameters;
+import org.wixpress.fjarr.server.RpcRequest;
+import org.wixpress.fjarr.server.exceptions.BadRequestException;
+import org.wixpress.fjarr.util.ReflectionUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -245,6 +245,28 @@ public class JsonRpcProtocolParserTest
     }
 
     @Test
+    public void testSingleParam() throws IOException, BadRequestException, NoSuchMethodException
+    {
+        String json = "{\"jsonrpc\": \"2.0\", \"method\": \"stringToNum\", \"params\": \"1234\", \"id\": \"1\"}";
+
+        List<Method> methods = ReflectionUtils.findMethods(Calculator.class, "stringToNum");
+
+        RpcRequest r = mock(RpcRequest.class);
+        ParsedRpcRequest request = protocol.parseRequestJson(r, mapper.readTree(json));
+
+        protocol.resolveMethod(methods, request.getInvocations().get(0), request);
+
+        request.getInvocations().get(0).setInvocationResult("1234");
+
+
+        MockRpcResponse response = new MockRpcResponse();
+        protocol.writeResponse(response, request);
+
+        assertThat(response.responseContent(), is("{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":\"1234\"}"));
+    }
+
+
+    @Test
     public void testBatchResponse() throws IOException, BadRequestException, NoSuchMethodException
     {
         String json = "[{\"jsonrpc\": \"2.0\", \"method\": \"subtract\", \"params\": [42, 23], \"id\": \"1\"}," +
@@ -292,7 +314,7 @@ public class JsonRpcProtocolParserTest
         assertThat(response.responseContent(), startsWith("{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":-32603,\"message\":\"test\",\"data\":{\"cause\":null,\"stackTrace\":[{\"methodName\":\"testErrorResponse\","));
         // i want to ignore the line number in the stack-trace
         assertThat(response.responseContent(), containsString("\"fileName\":\"JsonRpcProtocolParserTest.java\""));
-        assertThat(response.responseContent(), containsString("\"className\":\"com.wixpress.fjarr.json.JsonRpcProtocolParserTest\""));
+        assertThat(response.responseContent(), containsString("\"className\":\"org.wixpress.fjarr.json.JsonRpcProtocolParserTest\""));
         assertThat(response.responseContent(), containsString("\"message\":\"test\",\"localizedMessage\":\"test\""));
     }
 
@@ -323,7 +345,7 @@ public class JsonRpcProtocolParserTest
         assertThat(response.responseContent(), startsWith("[{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":1},{\"jsonrpc\":\"2.0\",\"id\":\"2\",\"error\":{\"code\":-32603,\"message\":\"test\",\"data\":{\"cause\":null,\"stackTrace\":[{\"methodName\":\"testBatchWithErrorResponse\","));
         // i want to ignore the line number in the stack-trace
         assertThat(response.responseContent(), containsString("\"fileName\":\"JsonRpcProtocolParserTest.java\""));
-        assertThat(response.responseContent(), containsString("\"className\":\"com.wixpress.fjarr.json.JsonRpcProtocolParserTest\""));
+        assertThat(response.responseContent(), containsString("\"className\":\"org.wixpress.fjarr.json.JsonRpcProtocolParserTest\""));
         assertThat(response.responseContent(), containsString("\"message\":\"test\",\"localizedMessage\":\"test\""));
     }
 
@@ -340,6 +362,8 @@ public class JsonRpcProtocolParserTest
         public long add(long i, long j);
 
         public String getName();
+
+        public int stringToNum(String s);
     }
 
     public static class CalculatorException extends Exception
