@@ -1,7 +1,7 @@
 package com.wixpress.fjarr.rpc.util;
 
-import com.wixpress.fjarr.util.DisjointUnion;
 import com.wixpress.fjarr.exceptions.TypeMismatch;
+import com.wixpress.fjarr.util.DisjointUnion;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -32,7 +32,10 @@ public class DisjointUnionTests
         assertThat(du.is(Long.class), is(false));
 
 
-
+        du = DisjointUnion.from(new NullPointerException());
+        assertThat(du.is(Exception.class), is(true));
+        assertThat(du.is(RuntimeException.class), is(true));
+        assertThat(du.is(NullPointerException.class), is(true));
 
     }
 

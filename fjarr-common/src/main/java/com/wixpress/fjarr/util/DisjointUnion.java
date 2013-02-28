@@ -24,9 +24,13 @@ public class DisjointUnion
         return new DisjointUnion(value);
     }
 
+    @SuppressWarnings("unchecked")
+    /**
+     * Check if the contained value is of type, or the type is a superclass of the value
+     */
     public boolean is(Class clazz)
     {
-        return type.equals(clazz);
+        return type.equals(clazz) || clazz.isAssignableFrom(type);
     }
 
     public <T> T get(Class<T> clazz) throws TypeMismatch

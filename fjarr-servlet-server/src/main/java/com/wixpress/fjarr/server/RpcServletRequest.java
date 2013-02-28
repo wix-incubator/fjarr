@@ -100,6 +100,11 @@ public class RpcServletRequest implements RpcRequest
         return baseRequest.getMethod();
     }
 
+    public HttpServletRequest getBaseRequest()
+    {
+        return baseRequest;
+    }
+
     private MultiMap<String, String> convertHeaders(HttpServletRequest request)
     {
         MultiMap<String, String> mmap = new MultiMap<String, String>();

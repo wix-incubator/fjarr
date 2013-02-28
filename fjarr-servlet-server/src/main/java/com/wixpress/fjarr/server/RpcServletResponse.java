@@ -11,26 +11,31 @@ import java.io.OutputStream;
 
 public class RpcServletResponse implements RpcResponse
 {
-    private final HttpServletResponse response;
+    private final HttpServletResponse baseResponse;
 
     public RpcServletResponse(HttpServletResponse response)
     {
-        this.response = response;
+        this.baseResponse = response;
     }
 
     public OutputStream getOutputStream() throws IOException
     {
-        return response.getOutputStream();
+        return baseResponse.getOutputStream();
     }
 
     public void setContentType(String responseContentType)
     {
-        response.setContentType(responseContentType);
+        baseResponse.setContentType(responseContentType);
     }
 
     @Override
     public void setStatusCode(int statusCode)
     {
-        response.setStatus(statusCode);
+        baseResponse.setStatus(statusCode);
+    }
+
+    public HttpServletResponse getBaseResponse()
+    {
+        return baseResponse;
     }
 }

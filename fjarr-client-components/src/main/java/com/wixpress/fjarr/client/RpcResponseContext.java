@@ -13,6 +13,7 @@ import java.util.Set;
 public class RpcResponseContext
 {
     private DisjointUnion outome;
+    private boolean error = false;
     private final RpcInvocationResponse response;
     private final long requestDurationMillis;
 
@@ -21,6 +22,7 @@ public class RpcResponseContext
         this.requestDurationMillis = requestDurationMillis;
         this.outome = DisjointUnion.from(throwable);
         this.response = response;
+        this.error = true;
     }
 
     public RpcResponseContext(Object responseObject, RpcInvocationResponse response, long requestDurationMillis)
@@ -28,17 +30,30 @@ public class RpcResponseContext
         this.outome = DisjointUnion.from(responseObject);
         this.response = response;
         this.requestDurationMillis = requestDurationMillis;
+        this.error = false;
+
     }
 
+    /**
+     * DisjointUnion that can contain an Object or a Throwable
+     * @return
+     */
     public DisjointUnion getOutome()
     {
         return outome;
     }
 
+    public boolean isError()
+    {
+        return error;
+    }
+
+
 
     public void setResult(Object result)
     {
         outome = DisjointUnion.from(result);
+        error = false;
     }
 
     public MultiMap<String, String> getAllHeaders()
