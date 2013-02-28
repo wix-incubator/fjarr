@@ -5,6 +5,7 @@ import com.wixpress.fjarr.util.DisjointUnion;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -32,10 +33,14 @@ public class DisjointUnionTests
         assertThat(du.is(Long.class), is(false));
 
 
-        du = DisjointUnion.from(new NullPointerException());
+        final NullPointerException npe = new NullPointerException();
+        du = DisjointUnion.from(npe);
         assertThat(du.is(Exception.class), is(true));
         assertThat(du.is(RuntimeException.class), is(true));
         assertThat(du.is(NullPointerException.class), is(true));
+
+        Throwable t = du.get(Throwable.class);
+        assertEquals(t,npe);
 
     }
 

@@ -197,5 +197,8 @@ public class RpcClientProxy<T> implements InvocationHandler
         }
     }
 
-
+    public RpcClient getClient()
+    {
+        return client;
+    }
 }
