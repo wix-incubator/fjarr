@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT.servletwithhttpclient;
+package com.wixpress.fjarr.IT.servlet;
 
 import com.wixpress.fjarr.IT.BaseItTest;
 import com.wixpress.fjarr.IT.util.ITServer;

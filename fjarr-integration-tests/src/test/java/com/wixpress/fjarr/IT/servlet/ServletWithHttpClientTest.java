@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT.servletwithhttpclient;
+package com.wixpress.fjarr.IT.servlet;
 
 import com.wixpress.fjarr.IT.BaseItTest;
 import com.wixpress.fjarr.IT.util.ITServer;
@@ -20,7 +20,7 @@ import java.net.URI;
  * @since 1/6/13 1:57 PM
  */
 
-public class ServletWithNettyTest extends BaseItTest
+public class ServletWithHttpClientTest extends BaseItTest
 {
 
     @BeforeClass
@@ -38,8 +38,9 @@ public class ServletWithNettyTest extends BaseItTest
         serviceRoot = "http://127.0.0.1:9191/DataStructService";
 
         final JsonRpcClientProtocol protocol = new JsonRpcClientProtocol(mapper);
-        final NettyInvoker invoker = new NettyInvoker(
-                NettyClientConfig.defaults());
+        final HttpComponentsInvoker invoker = new HttpComponentsInvoker(
+                new ApacheHttpClient4Factory(
+                        HttpClientConfig.defaults()));
         service = RpcClientProxy.create(DataStructService.class,
                 serviceRoot,
                 invoker,
