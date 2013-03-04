@@ -8,6 +8,7 @@ import com.wixpress.fjarr.example.DataStruct;
 import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.util.MultiMap;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -30,13 +31,23 @@ import static org.mockito.Mockito.*;
  * @since 12/10/12 5:07 PM
  */
 
-public class RpcClientTests
+public class RpcClientTest
 {
+
+    private final RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
+    @Before
+    public void init()
+    {
+        reset(protocolClient);
+        when(protocolClient.getAcceptType()).thenReturn("accept");
+        when(protocolClient.getContentType()).thenReturn("content");
+
+    }
 
     @Test
     public void testClient() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         final String methodName = "testMethod";
@@ -59,7 +70,10 @@ public class RpcClientTests
 
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        io.verify(invoker).invoke(eq(new RpcInvocation(client.getServiceUrl(), requestBody)));
+        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
+                       .withContentType("content");
+
+        io.verify(invoker).invoke(eq(rpcInvocation));
         io.verify(protocolClient).readResponse(List.class, responseBody);
 
         io.verifyNoMoreInteractions();
@@ -70,7 +84,7 @@ public class RpcClientTests
     @Test
     public void testClientHttpError() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         final String methodName = "testMethod";
@@ -105,7 +119,11 @@ public class RpcClientTests
 
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
+        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
+                .withContentType("content");
+        io.verify(protocolClient).getAcceptType();
+        io.verify(protocolClient).getContentType();
+
         io.verify(invoker).invoke(eq(rpcInvocation));
 
 
@@ -116,7 +134,7 @@ public class RpcClientTests
     @Test
     public void testClientEmptyResponse() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         final String methodName = "testMethod";
@@ -125,6 +143,7 @@ public class RpcClientTests
         final String requestBody = "request";
         final String responseBody = "response";
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
+
 
         RpcInvoker invoker = mock(RpcInvoker.class);
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "OK", "       ",
@@ -151,7 +170,11 @@ public class RpcClientTests
 
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
+        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody)
+                .withHeader("Accept", "accept")
+                .withContentType("content");
+        io.verify(protocolClient).getAcceptType();
+        io.verify(protocolClient).getContentType();
         io.verify(invoker).invoke(eq(rpcInvocation));
 
 
@@ -162,7 +185,7 @@ public class RpcClientTests
     @Test
     public void testClientInvokerException() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         final String methodName = "testMethod";
@@ -199,7 +222,10 @@ public class RpcClientTests
 
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
+        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
+                .withContentType("content");
+        io.verify(protocolClient).getAcceptType();
+        io.verify(protocolClient).getContentType();
         io.verify(invoker).invoke(eq(rpcInvocation));
 
 
@@ -210,7 +236,7 @@ public class RpcClientTests
     @Test
     public void testClientWriteRequest() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         final String methodName = "testMethod";
@@ -245,7 +271,7 @@ public class RpcClientTests
     @Test
     public void testClientReadResponseException() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         final String methodName = "testMethod";
@@ -281,8 +307,11 @@ public class RpcClientTests
 
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
-        io.verify(invoker).invoke(eq(new RpcInvocation(client.getServiceUrl(), requestBody)));
+        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
+                .withContentType("content");
+        io.verify(protocolClient).getAcceptType();
+        io.verify(protocolClient).getContentType();
+        io.verify(invoker).invoke(eq(rpcInvocation));
         io.verify(protocolClient).readResponse(List.class, responseBody);
 
 
@@ -293,7 +322,7 @@ public class RpcClientTests
     @Test
     public void testClientInvalidResponseException() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         final String methodName = "testMethod";
@@ -329,8 +358,11 @@ public class RpcClientTests
 
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody);
-        io.verify(invoker).invoke(eq(new RpcInvocation(client.getServiceUrl(), requestBody)));
+        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
+                .withContentType("content");
+        io.verify(protocolClient).getAcceptType();
+        io.verify(protocolClient).getContentType();
+        io.verify(invoker).invoke(eq(rpcInvocation));
         io.verify(protocolClient).readResponse(List.class, responseBody);
 
 
@@ -341,7 +373,7 @@ public class RpcClientTests
     @Test
     public void testClientWithMethod() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+
         ArrayList<Integer> integers = new ArrayList<Integer>();
 
         Method m = this.getClass().getMethod("t1", Integer.class);
@@ -367,7 +399,11 @@ public class RpcClientTests
 
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1});
-        io.verify(invoker).invoke(eq(new RpcInvocation(client.getServiceUrl(), requestBody)));
+
+        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
+                               .withContentType("content");
+
+        io.verify(invoker).invoke(eq(rpcInvocation));
         io.verify(protocolClient).readResponse(m.getGenericReturnType(), responseBody);
 
         io.verifyNoMoreInteractions();
@@ -377,15 +413,13 @@ public class RpcClientTests
     @Test
     public void testProxyWithRemote() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
-
 
         final String methodName = "getData";
         final String requestBody = "request";
         final String responseBody = "response";
 
         final DataStruct ds = new DataStruct(1, "a", 0.1, UUID.randomUUID());
-        when(protocolClient.writeRequest(methodName, null)).thenReturn(requestBody);
+        when(protocolClient.writeRequest(methodName, new Object[]{})).thenReturn(requestBody);
         when(protocolClient.readResponse(DataStruct.class, responseBody)).thenReturn(ds);
 
         RpcInvoker invoker = mock(RpcInvoker.class);
@@ -400,8 +434,10 @@ public class RpcClientTests
         assertThat(actual, sameInstance(ds));
 
         InOrder io = inOrder(protocolClient, invoker);
-        io.verify(protocolClient).writeRequest(methodName, null);
-        io.verify(invoker).invoke(eq(new RpcInvocation(new URI("www.example.com"), requestBody)));
+        io.verify(protocolClient).writeRequest(methodName, new Object[]{});
+        final RpcInvocation invocation = new RpcInvocation(new URI("www.example.com"), requestBody).withHeader("Accept", "accept")
+                                       .withContentType("content");
+        io.verify(invoker).invoke(eq(invocation));
         io.verify(protocolClient).readResponse(DataStruct.class, responseBody);
         io.verifyNoMoreInteractions();
 
@@ -411,9 +447,6 @@ public class RpcClientTests
     @Test
     public void testProxyWithLocal() throws Throwable
     {
-        RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
-
-
         final String methodName = "getData";
         final String requestBody = "request";
         final String responseBody = "response";

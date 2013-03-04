@@ -72,10 +72,6 @@ public class RpcClient
         final RpcRequestContext requestContext = new RpcRequestContext(invoker, invocation, serviceName,
                 methodName, invocationBody);
 
-
-        protocol.getAcceptType();
-        protocol.getContentType();
-
         // fire preInvoke event
         if (eventHandler != null)
             eventHandler.preInvoke(requestContext);

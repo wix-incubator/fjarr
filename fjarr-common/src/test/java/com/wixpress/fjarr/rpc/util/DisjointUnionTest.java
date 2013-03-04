@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
  * @since 12/6/12 7:14 PM
  */
 
-public class DisjointUnionTests
+public class DisjointUnionTest
 {
 
 
