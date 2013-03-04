@@ -21,8 +21,8 @@
     </properties>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@github.com:wix/fjarr.git</developerConnection>
-        <url>scm:git:ssh://git@github.com:wix/fjarr.git</url>
+        <developerConnection>scm:git:ssh://git@github.com/wix/fjarr.git</developerConnection>
+        <url>scm:git:ssh://git@github.com/wix/fjarr.git</url>
     </scm>
     <distributionManagement>
         <site>
