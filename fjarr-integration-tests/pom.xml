@@ -8,7 +8,7 @@
     <parent>
         <artifactId>fjarr-modules</artifactId>
         <groupId>com.wixpress</groupId>
-        <version>1.0.0</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
     <properties>
         <jetty.version>8.1.5.v20120716</jetty.version>
@@ -19,44 +19,44 @@
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-servlet-server</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-spring-mvc-server</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-json-rpc-server-protocol</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-json-rpc-client-protocol</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-test-common</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-ahc-client</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-netty-client</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
