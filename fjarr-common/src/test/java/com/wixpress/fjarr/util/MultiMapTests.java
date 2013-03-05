@@ -1,6 +1,5 @@
-package com.wixpress.fjarr.rpc.util;
+package com.wixpress.fjarr.util;
 
-import com.wixpress.fjarr.util.MultiMap;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;

@@ -1,6 +1,5 @@
-package com.wixpress.fjarr.rpc.util;
+package com.wixpress.fjarr.util;
 
-import com.wixpress.fjarr.util.SettableFuture;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;

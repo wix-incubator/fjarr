@@ -1,6 +1,5 @@
-package com.wixpress.fjarr.rpc;
+package com.wixpress.fjarr.client;
 
-import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.client.exceptions.InvalidRpcResponseException;
 import com.wixpress.fjarr.client.exceptions.RpcInvocationException;
 import com.wixpress.fjarr.client.exceptions.RpcTransportException;

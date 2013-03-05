@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.rpc.http;
+package com.wixpress.fjarr.http;
 
 import org.junit.Test;
 
