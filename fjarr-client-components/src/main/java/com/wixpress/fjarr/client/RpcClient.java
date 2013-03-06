@@ -112,18 +112,11 @@ public class RpcClient
             throw rpcTransportException;
         }
 
-        try
-        {
-            result = protocol.readResponse(returnType, responseBody);
+        result = protocol.readResponse(returnType, responseBody);
 
-            // fire postInvoke event
-            if (eventHandler != null)
-                eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        // fire postInvoke event
+        if (eventHandler != null)
+            eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
         return result;
     }
 
