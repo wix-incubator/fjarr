@@ -73,8 +73,7 @@ public class RpcClient
                 methodName, invocationBody);
 
         // fire preInvoke event
-        if (eventHandler != null)
-            eventHandler.preInvoke(requestContext);
+        firePreInvokeEvent(requestContext);
 
         RpcInvocationResponse response = null;
         Object result = null;
@@ -115,9 +114,20 @@ public class RpcClient
         result = protocol.readResponse(returnType, responseBody);
 
         // fire postInvoke event
+        firePostInvokeEvent(requestContext, response, result, timeSpentMillis);
+        return result;
+    }
+
+    private void firePreInvokeEvent(RpcRequestContext requestContext)
+    {
+        if (eventHandler != null)
+            eventHandler.preInvoke(requestContext);
+    }
+
+    private void firePostInvokeEvent(RpcRequestContext requestContext, RpcInvocationResponse response, Object result, long timeSpentMillis)
+    {
         if (eventHandler != null)
             eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
-        return result;
     }
 
     private void firePostInvokeError(RpcRequestContext requestContext, RpcInvocationResponse response, long timeSpentMillis, Throwable throwable)
