@@ -141,7 +141,7 @@ public class JsonRpcProtocol implements RpcProtocol
         }
         catch (Exception e)
         {
-            invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
+            invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s\ncaused by %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody(), e.getMessage()));
             return;
         }
         invocation.setError(new MethodNotFoundException("Method [%s] was not found \n %s", invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
@@ -177,7 +177,7 @@ public class JsonRpcProtocol implements RpcProtocol
         }
         catch (Exception e)
         {
-            invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
+            invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s\ncaused by %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody(), e.getMessage()));
             return;
         }
         invocation.setError(new MethodNotFoundException("Method [%s] was not found \n %s", invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
@@ -287,7 +287,7 @@ public class JsonRpcProtocol implements RpcProtocol
         }
         catch (IOException e)
         {
-            invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
+            invocation.setError(new MethodNotFoundException("Error at resolving of method [%s] \n %s\ncaused by %s", e, invocation.getMethodName(), request.getBaseRequest().getRawRequestBody(), e.getMessage()));
             return;
         }
         invocation.setError(new MethodNotFoundException("Method [%s] was not found \n %s", invocation.getMethodName(), request.getBaseRequest().getRawRequestBody()));
