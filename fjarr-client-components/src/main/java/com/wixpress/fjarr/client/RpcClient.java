@@ -73,8 +73,7 @@ public class RpcClient
                 methodName, invocationBody);
 
         // fire preInvoke event
-        if (eventHandler != null)
-            eventHandler.preInvoke(requestContext);
+        firePreInvokeEvent(requestContext);
 
         RpcInvocationResponse response = null;
         Object result = null;
@@ -112,19 +111,23 @@ public class RpcClient
             throw rpcTransportException;
         }
 
-        try
-        {
-            result = protocol.readResponse(returnType, responseBody);
+        result = protocol.readResponse(returnType, responseBody);
 
-            // fire postInvoke event
-            if (eventHandler != null)
-                eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        // fire postInvoke event
+        firePostInvokeEvent(requestContext, response, result, timeSpentMillis);
         return result;
+    }
+
+    private void firePreInvokeEvent(RpcRequestContext requestContext)
+    {
+        if (eventHandler != null)
+            eventHandler.preInvoke(requestContext);
+    }
+
+    private void firePostInvokeEvent(RpcRequestContext requestContext, RpcInvocationResponse response, Object result, long timeSpentMillis)
+    {
+        if (eventHandler != null)
+            eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
     }
 
     private void firePostInvokeError(RpcRequestContext requestContext, RpcInvocationResponse response, long timeSpentMillis, Throwable throwable)

@@ -52,6 +52,11 @@ public class LifecycleEventFlow
     }
 
 
+    public boolean isProceed()
+    {
+        return false;
+    }
+
     public static class Throw extends LifecycleEventFlow
     {
         private RuntimeException exception;
@@ -69,7 +74,11 @@ public class LifecycleEventFlow
 
     public static class Proceed extends LifecycleEventFlow
     {
-
+        @Override
+        public boolean isProceed()
+        {
+            return true;
+        }
     }
 
     public static class StopEvent extends LifecycleEventFlow

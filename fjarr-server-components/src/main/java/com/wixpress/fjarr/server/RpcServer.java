@@ -50,38 +50,12 @@ public class RpcServer
         {
 
             // fire Request Received event
-            // could be written as onEvent(lifecycleEventHandler->  lifecycleEventHandler.handleReceivedRequest(request, response))
-            // if Java would finally support lambda expressions
-
-            LifecycleEventFlow flow = onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleReceivedRequest(request, response);
-                }
-            });
-            // if wasn't told to stop - proceed
-            if (!(flow instanceof LifecycleEventFlow.Proceed))
-                return;
-
+            if (!fireReceivedRequest(request, response).isProceed()) return;
 
             final ParsedRpcRequest parsedRequest = protocol.parseRequest(request);
             stats.setRequestParsingFinishedTimestamp(System.currentTimeMillis());
 
-
-            // fire Request Parsed event
-            flow = onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRequestParsed(parsedRequest, response, serviceInterface);
-                }
-            });
-            // if wasn't told to stop - proceed
-            if (!(flow instanceof LifecycleEventFlow.Proceed))
-                return;
+            if (!fireRequestParsed(parsedRequest, response).isProceed()) return;
 
 
             for (RpcInvocation invocation : parsedRequest.getInvocations())
@@ -92,83 +66,33 @@ public class RpcServer
                 }
             }
             stats.setRequestProcessingFinishedTimestamp(System.currentTimeMillis());
-            flow = onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcResponseWriting(parsedRequest, response);
-                }
-            });
-            // if wasn't told to stop - proceed
-            if (!(flow instanceof LifecycleEventFlow.Proceed))
-                return;
+
+            if (!fireRpcResponseWriting(parsedRequest, response).isProceed()) return;
+
             protocol.writeResponse(response, parsedRequest);
 
-
-            // fire Request Parsed event
-            onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcResponseWritten(parsedRequest, response);
-                }
-            });
+            fireRpcResponseWritten(parsedRequest, response);
         }
         catch (final HttpMethodNotAllowedException e)
         {
-            stats.setRequestErrorTimestamp(System.currentTimeMillis());
-            onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcServerError(request, response, e, stats);
-                }
-            });
-
+            fireServerErrorEvent(request, response, stats, e);
             throw e;
         }
         catch (final UnsupportedContentTypeException e)
         {
-            stats.setRequestErrorTimestamp(System.currentTimeMillis());
-            onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcServerError(request, response, e, stats);
-                }
-            });
-
+            fireServerErrorEvent(request, response, stats, e);
             throw e;
         }
         catch (final BadRequestException e)
         {
-            stats.setRequestErrorTimestamp(System.currentTimeMillis());
             log.error(e.getMessage(), e);
-            onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcServerError(request, response, e, stats);
-                }
-            });
+            fireServerErrorEvent(request, response, stats, e);
             throw e;
+
         }
         catch (final Exception e)
         {
-            stats.setRequestErrorTimestamp(System.currentTimeMillis());
-            onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcServerError(request, response, e, stats);
-                }
-            });
+            fireServerErrorEvent(request, response, stats, e);
             throw new GenericRpcException(e.getMessage(), e);
         }
     }
@@ -178,33 +102,14 @@ public class RpcServer
     {
         try
         {
-            // fire Request Parsed event
-            LifecycleEventFlow flow = onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcInvocationMethodResolving(request, response, invocation);
-                }
-            });
-            // if wasn't told to stop - proceed
-            if (!(flow instanceof LifecycleEventFlow.Proceed))
-                return;
 
+            if (!fireRpcInvocationMethodResolving(request, response, invocation).isProceed()) return;
 
             List<Method> methods = ReflectionUtils.findMethods(serviceInterface, invocation.getMethodName());
             if (methods == null || methods.size() == 0)
             {
-                invocation.setError(new MethodNotFoundException("Method [%s] was not found", invocation.getMethodName()));
-                // hook for handling resolving error
-                flow = onEvent(new EventExecutor()
-                {
-                    @Override
-                    public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                    {
-                        return lifecycleEventHandler.handleRpcInvocationMethodResolvingError(request, response, invocation);
-                    }
-                });
+                fireRpcInvocationMethodResolvingError(request, response, invocation,
+                        new MethodNotFoundException("Method [%s] was not found", invocation.getMethodName()));
                 return;
             }
             protocol.resolveMethod(methods, invocation, request);
@@ -212,19 +117,7 @@ public class RpcServer
         }
         catch (Exception e)
         {
-            invocation.setError(e);
-            // hook for handling resolving error
-            LifecycleEventFlow flow = onEvent(new EventExecutor()
-            {
-                @Override
-                public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                {
-                    return lifecycleEventHandler.handleRpcInvocationMethodResolvingError(request, response, invocation);
-                }
-            });
-            // if wasn't told to stop - proceed
-            if (!(flow instanceof LifecycleEventFlow.Proceed))
-                return;
+            if (!fireRpcInvocationMethodResolvingError(request, response, invocation, e).isProceed()) return;
         }
 
 
@@ -233,30 +126,14 @@ public class RpcServer
             try
             {
                 // Resolving success - fire event
-                LifecycleEventFlow flow = onEvent(new EventExecutor()
-                {
-                    @Override
-                    public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                    {
-                        return lifecycleEventHandler.handleRpcInvocationMethodResolved(request, response, invocation);
-                    }
-                });
-                // if wasn't told to stop - proceed
-                if (!(flow instanceof LifecycleEventFlow.Proceed))
-                    return;
-
+                if (!fireRpcInvocationMethodResolved(request, response, invocation).isProceed()) return;
 
                 Object result = invocation.getResolvedMethod().invoke(serviceImpl, invocation.getResolvedParameters());
                 invocation.setInvocationResult(result);
+
+
                 // hook for handling invocation success
-                onEvent(new EventExecutor()
-                {
-                    @Override
-                    public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                    {
-                        return lifecycleEventHandler.handleRpcInvocationMethodInvoked(request, response, invocation);
-                    }
-                });
+                fireRpcInvocationMethodInvoked(request, response, invocation);
             }
             catch (Exception e)
             {
@@ -281,19 +158,13 @@ public class RpcServer
                 }
 
                 // hook for handling invocation error
-                onEvent(new EventExecutor()
-                {
-                    @Override
-                    public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
-                    {
-                        return lifecycleEventHandler.handleRpcInvocationMethodInvoked(request, response, invocation);
-                    }
-                });
+                fireRpcInvocationMethodInvoked(request, response, invocation);
             }
 
         }
 
     }
+
 
     /*  Event Handling  */
 
@@ -301,6 +172,123 @@ public class RpcServer
     {
         LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler);
     }
+
+
+    private LifecycleEventFlow fireReceivedRequest(final RpcRequest request, final RpcResponse response)
+    {
+        // could be written as onEvent(lifecycleEventHandler->  lifecycleEventHandler.handleReceivedRequest(request, response))
+        // if Java would finally support lambda expressions
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleReceivedRequest(request, response);
+            }
+        });
+    }
+
+    private LifecycleEventFlow fireRequestParsed(final ParsedRpcRequest parsedRequest, final RpcResponse response)
+    {
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRequestParsed(parsedRequest, response, serviceInterface);
+            }
+        });
+    }
+
+
+    private LifecycleEventFlow fireRpcResponseWriting(final ParsedRpcRequest parsedRequest, final RpcResponse response)
+    {
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRpcResponseWriting(parsedRequest, response);
+            }
+        });
+    }
+
+    private LifecycleEventFlow fireRpcResponseWritten(final ParsedRpcRequest parsedRequest, final RpcResponse response)
+    {
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRpcResponseWritten(parsedRequest, response);
+            }
+        });
+    }
+
+    private LifecycleEventFlow fireServerErrorEvent(final RpcRequest request, final RpcResponse response, final RpcRequestStatistics stats, final Exception e)
+    {
+        stats.setRequestErrorTimestamp(System.currentTimeMillis());
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRpcServerError(request, response, e, stats);
+            }
+        });
+    }
+
+    private LifecycleEventFlow fireRpcInvocationMethodResolving(final ParsedRpcRequest request, final RpcResponse response, final RpcInvocation invocation)
+    {
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRpcInvocationMethodResolving(request, response, invocation);
+            }
+        });
+    }
+
+    private LifecycleEventFlow fireRpcInvocationMethodResolved(final ParsedRpcRequest request, final RpcResponse response, final RpcInvocation invocation)
+    {
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRpcInvocationMethodResolved(request, response, invocation);
+            }
+        });
+    }
+
+    private void fireRpcInvocationMethodInvoked(final ParsedRpcRequest request, final RpcResponse response, final RpcInvocation invocation)
+    {
+        onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRpcInvocationMethodInvoked(request, response, invocation);
+            }
+        });
+    }
+
+    private LifecycleEventFlow fireRpcInvocationMethodResolvingError(final ParsedRpcRequest request, final RpcResponse response, final RpcInvocation invocation, Exception e)
+    {
+        invocation.setError(e);
+        // hook for handling resolving error
+        return onEvent(new EventExecutor()
+        {
+            @Override
+            public LifecycleEventFlow executeHandler(RpcRequestLifecycleEventHandler lifecycleEventHandler)
+            {
+                return lifecycleEventHandler.handleRpcInvocationMethodResolvingError(request, response, invocation);
+            }
+        });
+    }
+
+
 
     private LifecycleEventFlow onEvent(EventExecutor executor)
     {
