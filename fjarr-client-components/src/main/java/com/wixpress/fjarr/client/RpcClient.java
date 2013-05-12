@@ -39,6 +39,10 @@ public class RpcClient
         if (serviceUrl == null || protocol == null || invoker == null)
             throw new NullPointerException();
 
+        if (eventHandler == null){
+           eventHandler = new NILRpcClientEventHandler();
+        }
+
         LOGGER.info(format("Configuring RpcClient [serviceUrl='%s',protocol=%s, invoker=%s]", serviceUrl, protocol, invoker));
 
         this.serviceUrl = serviceUrl;
@@ -72,8 +76,7 @@ public class RpcClient
         final RpcRequestContext requestContext = new RpcRequestContext(invoker, invocation, serviceName,
                 methodName, invocationBody);
 
-        // fire preInvoke event
-        firePreInvokeEvent(requestContext);
+        eventHandler.preInvoke(requestContext);
 
         RpcInvocationResponse response = null;
         Object result = null;
@@ -85,7 +88,7 @@ public class RpcClient
         catch (Exception e)
         {
             long timeSpentMillis = System.currentTimeMillis() - startTimeMillis;
-            firePostInvokeError(requestContext, response, timeSpentMillis, e);
+            eventHandler.postInvoke(requestContext, new RpcResponseContext(e, response, timeSpentMillis));
             throw new RpcTransportException(format("Exception while communicating with server [endpoint=%s,timeSpentMillis=%d,invoker=%s]",
                     getEndPointDescription(serviceName, methodName), timeSpentMillis, invoker), e);
         }
@@ -96,7 +99,7 @@ public class RpcClient
         {
             final RpcTransportException rpcTransportException = new RpcTransportException(format("Unexpected server HTTP status code [endpoint=%s,httpStatusLine='%s',timeSpentMillis=%d,invoker=%s]",
                     getEndPointDescription(serviceName, methodName), formatStatusLine(response), timeSpentMillis, invoker), response.getStatusCode());
-            firePostInvokeError(requestContext, response, timeSpentMillis, rpcTransportException);
+            eventHandler.postInvoke(requestContext, new RpcResponseContext(rpcTransportException, response, timeSpentMillis));
 
             throw rpcTransportException;
         }
@@ -107,33 +110,14 @@ public class RpcClient
         {
             final RpcTransportException rpcTransportException = new RpcTransportException(format("Empty HTTP response [endpoint=%s,httpStatusLine='%s',timeSpentMillis=%d,invoker=%s]",
                     getEndPointDescription(serviceName, methodName), formatStatusLine(response), timeSpentMillis, invoker), response.getStatusCode());
-            firePostInvokeError(requestContext, response, timeSpentMillis, rpcTransportException);
+            eventHandler.postInvoke(requestContext, new RpcResponseContext(rpcTransportException, response, timeSpentMillis));
             throw rpcTransportException;
         }
 
         result = protocol.readResponse(returnType, responseBody);
 
-        // fire postInvoke event
-        firePostInvokeEvent(requestContext, response, result, timeSpentMillis);
+        eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
         return result;
-    }
-
-    private void firePreInvokeEvent(RpcRequestContext requestContext)
-    {
-        if (eventHandler != null)
-            eventHandler.preInvoke(requestContext);
-    }
-
-    private void firePostInvokeEvent(RpcRequestContext requestContext, RpcInvocationResponse response, Object result, long timeSpentMillis)
-    {
-        if (eventHandler != null)
-            eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
-    }
-
-    private void firePostInvokeError(RpcRequestContext requestContext, RpcInvocationResponse response, long timeSpentMillis, Throwable throwable)
-    {
-        if (eventHandler != null)
-            eventHandler.postInvoke(requestContext, new RpcResponseContext(throwable, response, timeSpentMillis));
     }
 
     private String formatStatusLine(RpcInvocationResponse response)
@@ -153,5 +137,12 @@ public class RpcClient
     public URI getServiceUrl()
     {
         return serviceUrl;
+    }
+
+    private static class NILRpcClientEventHandler implements RpcClientEventHandler {
+        @Override
+        public void preInvoke(RpcRequestContext context) {/*Do Nothing*/}
+        @Override
+        public void postInvoke(RpcRequestContext requestContext, RpcResponseContext responseContext) {/*Do Nothing*/}
     }
 }
