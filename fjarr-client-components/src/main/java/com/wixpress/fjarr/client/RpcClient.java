@@ -67,7 +67,6 @@ public class RpcClient
 
     private Object _invoke(String serviceName, String methodName, Type returnType, Object... arguments) throws Throwable
     {
-        StringWriter stringWriter = new StringWriter();
         // write request
         String invocationBody = protocol.writeRequest(methodName, arguments);
         RpcInvocation invocation = new RpcInvocation(serviceUrl, invocationBody)
