@@ -99,7 +99,8 @@ public class RpcServiceHandlerAdapter implements HandlerAdapter
             return exporters.get(endpoint);
         else
         {
-            List<RpcRequestLifecycleEventHandler> lifecycleEventHandlers = new ArrayList<RpcRequestLifecycleEventHandler>(Arrays.asList(endpoint.getEventHandlers()));
+            List<RpcRequestLifecycleEventHandler> lifecycleEventHandlers = new ArrayList<RpcRequestLifecycleEventHandler>();
+            Collections.addAll(lifecycleEventHandlers,endpoint.getEventHandlers());
             if (validator != null)
             {
                 SpringValidatorRpcEventHandler vh = new SpringValidatorRpcEventHandler(validator);
