@@ -26,17 +26,16 @@ public class ParsedRpcRequest
         this.invocations = invocations;
     }
 
-
-    public List<RpcInvocation> getInvocations()
-    {
-        return invocations;
-    }
-
     public static ParsedRpcRequest from(RpcRequest rpcRequest, RpcInvocation... rpcInvocations)
     {
         ArrayList<RpcInvocation> invocations = new ArrayList<RpcInvocation>();
         Collections.addAll(invocations, rpcInvocations);
         return new ParsedRpcRequest(rpcRequest, invocations);
+    }
+
+    public List<RpcInvocation> getInvocations()
+    {
+        return invocations;
     }
 
     public RpcRequest getBaseRequest()
