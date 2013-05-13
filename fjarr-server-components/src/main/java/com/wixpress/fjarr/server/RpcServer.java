@@ -26,13 +26,6 @@ public class RpcServer
 
     private Logger log = LoggerFactory.getLogger(RpcServer.class);
 
-//    public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface)
-//    {
-//        this.protocol = protocol;
-//        this.serviceImpl = serviceImpl;
-//        this.serviceInterface = serviceInterface;
-//    }
-
     public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface, RpcRequestLifecycleEventHandler... lifecycleEventHandlers)
     {
         this(protocol, serviceImpl, serviceInterface, Arrays.asList(lifecycleEventHandlers));
