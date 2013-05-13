@@ -25,7 +25,7 @@ public class RpcClient
 
     private final RpcClientProtocol protocol;
 
-    public RpcClientEventHandler eventHandler;
+    public final RpcClientEventHandler eventHandler;
     private RpcInvoker invoker;
 
     public RpcClient(URI serviceUrl, RpcClientProtocol protocol, RpcInvoker invoker)
