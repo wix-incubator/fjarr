@@ -114,8 +114,9 @@ public class RpcClient
         }
 
         result = protocol.readResponse(returnType, responseBody);
-
-        eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
+        if (result != null){
+            eventHandler.postInvoke(requestContext, new RpcResponseContext(result, response, timeSpentMillis));
+        }
         return result;
     }
 
