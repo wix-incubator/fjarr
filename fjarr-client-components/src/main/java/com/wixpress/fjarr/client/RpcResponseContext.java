@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class RpcResponseContext
 {
-    private DisjointUnion outome;
+    private DisjointUnion outcome;
     private boolean error = false;
     private final RpcInvocationResponse response;
     private final long requestDurationMillis;
@@ -20,14 +20,14 @@ public class RpcResponseContext
     public RpcResponseContext(Throwable throwable, RpcInvocationResponse response, long requestDurationMillis)
     {
         this.requestDurationMillis = requestDurationMillis;
-        this.outome = DisjointUnion.from(throwable);
+        this.outcome = DisjointUnion.from(throwable);
         this.response = response;
         this.error = true;
     }
 
     public RpcResponseContext(Object responseObject, RpcInvocationResponse response, long requestDurationMillis)
     {
-        this.outome = DisjointUnion.from(responseObject);
+        this.outcome = DisjointUnion.from(responseObject);
         this.response = response;
         this.requestDurationMillis = requestDurationMillis;
         this.error = false;
@@ -38,9 +38,9 @@ public class RpcResponseContext
      * DisjointUnion that can contain an Object or a Throwable
      * @return
      */
-    public DisjointUnion getOutome()
+    public DisjointUnion getOutcome()
     {
-        return outome;
+        return outcome;
     }
 
     public boolean isError()
@@ -52,7 +52,7 @@ public class RpcResponseContext
 
     public void setResult(Object result)
     {
-        outome = DisjointUnion.from(result);
+        outcome = DisjointUnion.from(result);
         error = false;
     }
 
