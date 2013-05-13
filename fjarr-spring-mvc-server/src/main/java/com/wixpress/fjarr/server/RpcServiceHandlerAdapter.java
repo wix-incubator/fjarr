@@ -15,8 +15,7 @@ import org.springframework.web.servlet.mvc.LastModified;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Alexeyr
@@ -100,17 +99,13 @@ public class RpcServiceHandlerAdapter implements HandlerAdapter
             return exporters.get(endpoint);
         else
         {
-            RpcServer server = new RpcServer(protocol, endpoint.getServiceImplementation(), endpoint.getServiceInterface());
-            for (RpcRequestLifecycleEventHandler eh : endpoint.getEventHandlers())
-            {
-                server.addLifecycleEventHandler(eh);
-            }
+            List<RpcRequestLifecycleEventHandler> lifecycleEventHandlers = new ArrayList<RpcRequestLifecycleEventHandler>(Arrays.asList(endpoint.getEventHandlers()));
             if (validator != null)
             {
                 SpringValidatorRpcEventHandler vh = new SpringValidatorRpcEventHandler(validator);
-                server.addLifecycleEventHandler(vh);
+                lifecycleEventHandlers.add(vh);
             }
-
+            RpcServer server = new RpcServer(protocol, endpoint.getServiceImplementation(), endpoint.getServiceInterface(),lifecycleEventHandlers);
             exporters.put(endpoint, server);
             return server;
         }

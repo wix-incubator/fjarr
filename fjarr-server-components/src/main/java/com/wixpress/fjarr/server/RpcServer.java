@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ public class RpcServer
     private final RpcProtocol protocol;
     private final Object serviceImpl;
     private final Class<?> serviceInterface;
-    List<RpcRequestLifecycleEventHandler> lifecycleEventHandlers = new ArrayList<RpcRequestLifecycleEventHandler>();
+    private final List<RpcRequestLifecycleEventHandler> lifecycleEventHandlers;
 
     private Logger log = LoggerFactory.getLogger(RpcServer.class);
 
@@ -35,10 +35,14 @@ public class RpcServer
 
     public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface, RpcRequestLifecycleEventHandler... lifecycleEventHandlers)
     {
+        this(protocol, serviceImpl, serviceInterface, Arrays.asList(lifecycleEventHandlers));
+    }
+
+    public RpcServer(RpcProtocol protocol, Object serviceImpl, Class<?> serviceInterface, List<RpcRequestLifecycleEventHandler> lifecycleEventHandlers) {
         this.protocol = protocol;
         this.serviceImpl = serviceImpl;
         this.serviceInterface = serviceInterface;
-        Collections.addAll(this.lifecycleEventHandlers, lifecycleEventHandlers);
+        this.lifecycleEventHandlers = new ArrayList<RpcRequestLifecycleEventHandler>(lifecycleEventHandlers);
     }
 
     public void handleRequest(final RpcRequest request, final RpcResponse response)
@@ -317,37 +321,5 @@ public class RpcServer
         return LifecycleEventFlow.proceed();
 
     }
-
-    public RpcProtocol getProtocol()
-    {
-        return protocol;
-    }
-
-    public Object getServiceImpl()
-    {
-        return serviceImpl;
-    }
-
-    public Class<?> getServiceInterface()
-    {
-        return serviceInterface;
-    }
-
-
-    public void addLifecycleEventHandler(RpcRequestLifecycleEventHandler handler)
-    {
-        lifecycleEventHandlers.add(handler);
-    }
-
-    public void removeLifecycleEventHandler(RpcRequestLifecycleEventHandler handler)
-    {
-        lifecycleEventHandlers.remove(handler);
-    }
-
-    public void clearLifecycleEventHandler()
-    {
-        lifecycleEventHandlers.clear();
-    }
-
 
 }
