@@ -49,7 +49,7 @@ public class ServletWithNettyTest extends BaseItTest
                 invoker,
                 protocol);
 
-        client = new RpcClient(new URI(serviceRoot), protocol, invoker, null);
+        client = new RpcClient(new URI(serviceRoot), protocol, invoker);
 
         server.start();
 

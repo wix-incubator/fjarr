@@ -48,7 +48,7 @@ public class SpringMvcWithHttpClientTest extends BaseItTest
 
         server.start();
 
-        client = new RpcClient(new URI(serviceRoot), protocol, invoker, null);
+        client = new RpcClient(new URI(serviceRoot), protocol, invoker);
 
     }
 
