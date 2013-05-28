@@ -35,4 +35,7 @@ public interface DataStructService
 
     public String toString();
 
+    void voidReturnType();
+
+    DataStruct getNullDataStruct();
 }

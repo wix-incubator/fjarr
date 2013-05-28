@@ -18,6 +18,7 @@ import java.util.*;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 /**
@@ -119,8 +120,7 @@ public abstract class BaseItTest
 
 
     @Test
-    public void testDataStructServiceWithSet()
-    {
+    public void testDataStructServiceWithSet()                           {
         DataStruct ds = service.getDataWithChildrenSet();
         assertThat(ds.getSet().size(), is(10));
         checkChildren(ds.getSet());
@@ -144,6 +144,15 @@ public abstract class BaseItTest
 
     }
 
+    @Test
+    public void testVoidMethod(){
+        service.voidReturnType();
+    }
+
+    @Test
+    public void testNullReturnValue(){
+        assertThat(service.getNullDataStruct(),is(nullValue()));
+    }
     @Test
     public void testCheckedException()
     {
