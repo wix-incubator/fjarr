@@ -28,26 +28,15 @@ public class ITServer
     protected String webAppPath;
     private ServletContextHandler context;
 
-
-    public ITServer()
-    {
-        this(DEFAULT_PORT);
-    }
-
-
     public ITServer(int port, ServletPair... servlets)
     {
-
         this.port = port;
         this.servlets = servlets;
-        this.webAppPath = null;
     }
 
     public ITServer(int port, String webAppPath)
     {
-
         this.port = port;
-        this.servlets = null;
         this.webAppPath = webAppPath;
     }
 
@@ -93,7 +82,7 @@ public class ITServer
     }
 
 
-    public WebAppContext contextFromWebXml() throws Exception
+    private WebAppContext contextFromWebXml() throws Exception
     {
 
 

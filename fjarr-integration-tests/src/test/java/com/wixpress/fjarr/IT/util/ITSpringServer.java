@@ -17,14 +17,13 @@ public class ITSpringServer extends ITServer
 
     public ITSpringServer(int port, Class<?> configClass)
     {
+        super(port);
         final DispatcherServlet servlet = new DispatcherServlet();
         servlet.setContextClass(AnnotationConfigWebApplicationContext.class);
         servlet.setContextConfigLocation(configClass.getCanonicalName());
 
-        this.port = port;
         this.servlets = new ServletPair[]{
                 new ServletPair("/*", servlet)};
-        this.webAppPath = null;
     }
 
 }
