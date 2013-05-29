@@ -2,22 +2,20 @@ package com.wixpress.fjarr.IT.servlet;
 
 import com.wixpress.fjarr.IT.BaseItTest;
 import com.wixpress.fjarr.IT.util.ITServer;
-import com.wixpress.fjarr.client.NettyClientConfig;
-import com.wixpress.fjarr.client.NettyInvoker;
-import com.wixpress.fjarr.client.RpcClient;
-import com.wixpress.fjarr.client.RpcClientProxy;
+import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.example.DataStructServiceImpl;
-import com.wixpress.fjarr.json.FjarrJacksonModule;
 import com.wixpress.fjarr.json.JsonRpc;
-import com.wixpress.fjarr.json.JsonRpcClientProtocol;
 import com.wixpress.fjarr.server.RpcServlet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 
 import javax.servlet.Servlet;
-import java.net.URI;
+
+
+import static com.wixpress.fjarr.IT.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
+import static com.wixpress.fjarr.IT.NettyInvokerFactory.aDefaultNettyInvoker;
 
 /**
  * @author alex
@@ -30,27 +28,12 @@ public class ServletWithNettyTest extends BaseItTest
     @BeforeClass
     public static void init() throws Exception
     {
-
-        mapper.registerModule(new FjarrJacksonModule());
         Servlet servlet = new RpcServlet(
                 JsonRpc.server(
-                        DataStructService.class, new DataStructServiceImpl(), mapper)
+                        DataStructService.class, new DataStructServiceImpl(), buildObjectMapperWithFjarrModule())
         );
 
         server = new ITServer(9191, new ITServer.ServletPair("/*", servlet));
-
-        serviceRoot = "http://127.0.0.1:9191/DataStructService";
-
-        final JsonRpcClientProtocol protocol = new JsonRpcClientProtocol(mapper);
-        final NettyInvoker invoker = new NettyInvoker(
-                NettyClientConfig.defaults());
-        service = RpcClientProxy.create(DataStructService.class,
-                serviceRoot,
-                invoker,
-                protocol);
-
-        client = new RpcClient(new URI(serviceRoot), protocol, invoker);
-
         server.start();
 
     }
@@ -61,5 +44,14 @@ public class ServletWithNettyTest extends BaseItTest
         server.stop();
     }
 
+    @Override
+    protected RpcClientProtocol getProtocol() {
+        return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
+    }
+
+    @Override
+    protected RpcInvoker getInvoker() {
+        return aDefaultNettyInvoker();
+    }
 
 }

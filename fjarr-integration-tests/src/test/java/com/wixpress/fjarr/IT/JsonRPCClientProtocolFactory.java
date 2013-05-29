@@ -1,0 +1,15 @@
+package com.wixpress.fjarr.IT;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wixpress.fjarr.json.JsonRpcClientProtocol;
+
+/**
+ * @author: ittaiz
+ * @since: 5/29/13
+ */
+public class JsonRPCClientProtocolFactory {
+
+    public static JsonRpcClientProtocol aJsonRpcClientProtocolFrom(ObjectMapper mapper){
+        return new JsonRpcClientProtocol(mapper);
+    }
+}

@@ -3,7 +3,12 @@ package com.wixpress.fjarr.IT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.IT.util.ITServer;
 import com.wixpress.fjarr.client.RpcClient;
+import com.wixpress.fjarr.client.RpcClientProtocol;
+import com.wixpress.fjarr.client.RpcClientProxy;
+import com.wixpress.fjarr.client.RpcInvoker;
 import com.wixpress.fjarr.example.*;
+import com.wixpress.fjarr.json.FjarrJacksonModule;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
@@ -13,12 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 /**
@@ -26,25 +31,40 @@ import static org.junit.Assert.*;
  * @since 1/6/13 5:25 PM
  */
 
-public abstract class BaseItTest
-{
-    protected static ObjectMapper mapper = new ObjectMapper();
+public abstract class BaseItTest {
     protected static ITServer server;
-    protected static DataStructService service;
-    protected static RpcClient client;
 
-    protected static String serviceRoot;
+    protected DataStructService service;
+    protected RpcClient client;
+    protected String serviceRoot;
+
+    @Before
+    public void setup() throws URISyntaxException {
+        serviceRoot = "http://127.0.0.1:9191/DataStructService";
+
+        final RpcClientProtocol protocol = getProtocol();
+        final RpcInvoker invoker = getInvoker();
+        service = RpcClientProxy.create(DataStructService.class,
+                serviceRoot,
+                invoker,
+                protocol);
+
+
+        client = new RpcClient(new URI(serviceRoot), protocol, invoker);
+    }
+
+    protected abstract RpcClientProtocol getProtocol();
+
+    protected abstract RpcInvoker getInvoker();
 
     @Test
-    public void testLocalInvocationToString()
-    {
+    public void testLocalInvocationToString() {
         String s = service.toString();
         assertThat(s, containsString("RPC Proxy for"));
     }
 
     @Test
-    public void testDataStructService()
-    {
+    public void testDataStructService() {
         DataStruct ds = service.getData();
 
         assertThat(ds.getString(), is("test with no children"));
@@ -57,9 +77,8 @@ public abstract class BaseItTest
 
 
     @Test
-    @Ignore("Fails inconsistently with java.net.SocketException: Unexpected end of file from server")
-    public void testInvalidJsonReturnsHttpStatus400() throws Exception
-    {
+    @Ignore("Fails inconsistently with java.net.SocketException: Unexpected end of file aNettyInvokerFrom server")
+    public void testInvalidJsonReturnsHttpStatus400() throws Exception {
         RestTemplate template = new RestTemplate();
         String content = "{ \"some\": \"invalid request\" ]";
 
@@ -67,20 +86,16 @@ public abstract class BaseItTest
         headers.add("Content-Type", "application/json-rpc");
         headers.add("Content-Length", Integer.toString(content.getBytes().length));
         HttpEntity<String> request = new HttpEntity<String>(content, headers);
-        try
-        {
+        try {
             template.exchange(serviceRoot, HttpMethod.POST, request, String.class);
             fail("Exception expected here");
-        }
-        catch (HttpClientErrorException e)
-        {
+        } catch (HttpClientErrorException e) {
             assertThat(e.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         }
     }
 
     @Test
-    public void testParams()
-    {
+    public void testParams() {
         ArrayList<UUID> arr = new ArrayList<UUID>();
         UUID uuid1 = UUID.fromString("3c586170-50de-4327-bc5f-d7d09cfc758a");
         UUID uuid2 = UUID.fromString("3c586170-50de-4327-bc5f-d7d09cfc7582");
@@ -97,8 +112,7 @@ public abstract class BaseItTest
 
 
     @Test
-    public void testDataStructServiceWithMap()
-    {
+    public void testDataStructServiceWithMap() {
         DataStruct ds = service.getDataWithChildrenMap();
         assertThat(ds.getString(), is("test with children in map"));
         assertThat(ds.getIteger(), is(20));
@@ -111,8 +125,7 @@ public abstract class BaseItTest
 
 
     @Test
-    public void testDataStructServiceWithList()
-    {
+    public void testDataStructServiceWithList() {
         DataStruct ds = service.getDataWithChildrenList();
         assertThat(ds.getList().size(), is(10));
         checkChildren(ds.getList());
@@ -120,15 +133,14 @@ public abstract class BaseItTest
 
 
     @Test
-    public void testDataStructServiceWithSet()                           {
+    public void testDataStructServiceWithSet() {
         DataStruct ds = service.getDataWithChildrenSet();
         assertThat(ds.getSet().size(), is(10));
         checkChildren(ds.getSet());
     }
 
     @Test
-    public void testDataStructServiceWithAll()
-    {
+    public void testDataStructServiceWithAll() {
         DataStruct[] dses = service.getDatasWithWithAll();
 
         assertThat(dses.length, is(3));
@@ -145,24 +157,21 @@ public abstract class BaseItTest
     }
 
     @Test
-    public void testVoidMethod(){
+    public void testVoidMethod() {
         service.voidReturnType();
     }
 
     @Test
-    public void testNullReturnValue(){
-        assertThat(service.getNullDataStruct(),is(nullValue()));
+    public void testNullReturnValue() {
+        assertThat(service.getNullDataStruct(), is(nullValue()));
     }
+
     @Test
-    public void testCheckedException()
-    {
-        try
-        {
+    public void testCheckedException() {
+        try {
             service.throwCheckedException();
             fail("Excption should have been thrown");
-        }
-        catch (DataStructServiceException e)
-        {
+        } catch (DataStructServiceException e) {
             assertThat(e.getMessage(), is("wrapper"));
             assertNull(e.getCause());
             //            assertNotNull(e.getCause());
@@ -174,15 +183,11 @@ public abstract class BaseItTest
 
 
     @Test
-    public void testCheckedComplexException()
-    {
-        try
-        {
+    public void testCheckedComplexException() {
+        try {
             service.throwCheckedComplexException();
             fail("Excption should have been thrown");
-        }
-        catch (DataStructServiceComplexException e)
-        {
+        } catch (DataStructServiceComplexException e) {
             assertThat(e.getMessage(), is("test"));
             assertThat(e.getI(), is(10));
 
@@ -191,46 +196,35 @@ public abstract class BaseItTest
     }
 
     @Test
-    public void testRuntimeException()
-    {
-        try
-        {
+    public void testRuntimeException() {
+        try {
             service.throwRuntimeException();
             fail("Excption should have been thrown");
-        }
-        catch (DataStructServiceRuntimeException e)
-        {
+        } catch (DataStructServiceRuntimeException e) {
             // expected
         }
     }
 
 
     @Test
-    public void testNPE()
-    {
-        try
-        {
+    public void testNPE() {
+        try {
             service.throwNPE();
             fail("Excption should have been thrown");
-        }
-        catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             // expected
         }
     }
 
     @Test
-    public void testDescribe() throws Throwable
-    {
-        String response = client.invoke("aaa","rpc.getServiceName",String.class);
-        assertThat(response,is("com.wixpress.fjarr.example.DataStructService"));
+    public void testDescribe() throws Throwable {
+        String response = client.invoke("aaa", "rpc.getServiceName", String.class);
+        assertThat(response, is("com.wixpress.fjarr.example.DataStructService"));
     }
 
 
-    private void checkChildren(Map<Integer, DataStructChild> map)
-    {
-        for (int i = 0; i < 10; i++)
-        {
+    private void checkChildren(Map<Integer, DataStructChild> map) {
+        for (int i = 0; i < 10; i++) {
             DataStructChild dsc = map.get(i);
 
             assertThat(dsc.getName(), is(Integer.toString(i)));
@@ -239,10 +233,8 @@ public abstract class BaseItTest
         }
     }
 
-    private void checkChildren(List<DataStructChild> list)
-    {
-        for (int i = 0; i < 10; i++)
-        {
+    private void checkChildren(List<DataStructChild> list) {
+        for (int i = 0; i < 10; i++) {
             DataStructChild dsc = list.get(i);
 
             assertThat(dsc.getName(), is(Integer.toString(i)));
@@ -251,20 +243,23 @@ public abstract class BaseItTest
         }
     }
 
-    private void checkChildren(Set<DataStructChild> set)
-    {
+    private void checkChildren(Set<DataStructChild> set) {
         HashMap<Integer, Boolean> map = new HashMap<Integer, Boolean>();
-        for (DataStructChild dsc : set)
-        {
+        for (DataStructChild dsc : set) {
             assertTrue(dsc.getValue() instanceof Integer);
             map.put((Integer) dsc.getValue(), true);
             assertThat((dsc.getValue()).toString(), is(dsc.getName()));
         }
 
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             assertTrue(map.containsKey(i));
             assertTrue(map.get(i));
         }
+    }
+
+    protected static ObjectMapper buildObjectMapperWithFjarrModule(){
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new FjarrJacksonModule());
+        return mapper;
     }
 }
