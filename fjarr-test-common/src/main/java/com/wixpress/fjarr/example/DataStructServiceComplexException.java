@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author alexeyr
  * @since Oct 5, 2010 11:02:09 AM
- *        IT exception
+ *        it exception
  */
 
 

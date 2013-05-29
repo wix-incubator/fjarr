@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT;
+package com.wixpress.fjarr.it;
 
 import com.wixpress.fjarr.client.NettyClientConfig;
 import com.wixpress.fjarr.client.NettyInvoker;

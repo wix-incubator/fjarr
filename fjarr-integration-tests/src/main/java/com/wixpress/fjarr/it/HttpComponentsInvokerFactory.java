@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT;
+package com.wixpress.fjarr.it;
 
 import com.wixpress.fjarr.client.ApacheHttpClient4Factory;
 import com.wixpress.fjarr.client.HttpClientConfig;

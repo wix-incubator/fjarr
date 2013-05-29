@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT.util;
+package com.wixpress.fjarr.it.util;
 
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;

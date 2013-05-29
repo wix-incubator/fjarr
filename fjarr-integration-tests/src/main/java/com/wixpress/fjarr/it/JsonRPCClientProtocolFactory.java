@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT;
+package com.wixpress.fjarr.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.json.JsonRpcClientProtocol;

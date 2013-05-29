@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT.springmvc;
+package com.wixpress.fjarr.it.springmvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.example.DataStructService;

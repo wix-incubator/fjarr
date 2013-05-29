@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.IT.util;
+package com.wixpress.fjarr.it.util;
 
 import com.wixpress.fjarr.util.StringUtils;
 import org.eclipse.jetty.server.Connector;

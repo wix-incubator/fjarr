@@ -1,7 +1,7 @@
-package com.wixpress.fjarr.IT;
+package com.wixpress.fjarr.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wixpress.fjarr.IT.util.ITServer;
+import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.client.RpcClient;
 import com.wixpress.fjarr.client.RpcClientProtocol;
 import com.wixpress.fjarr.client.RpcClientProxy;
@@ -22,7 +22,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -31,7 +30,7 @@ import static org.junit.Assert.*;
  * @since 1/6/13 5:25 PM
  */
 
-public abstract class BaseItTest {
+public abstract class BaseContractTest {
     protected static ITServer server;
 
     protected DataStructService service;
@@ -39,7 +38,7 @@ public abstract class BaseItTest {
     protected String serviceRoot;
 
     @Before
-    public void setup() throws URISyntaxException {
+    public void setupClientSide() throws URISyntaxException {
         serviceRoot = "http://127.0.0.1:9191/DataStructService";
 
         final RpcClientProtocol protocol = getProtocol();
@@ -262,4 +261,5 @@ public abstract class BaseItTest {
         mapper.registerModule(new FjarrJacksonModule());
         return mapper;
     }
+
 }

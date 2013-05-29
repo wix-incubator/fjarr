@@ -20,99 +20,79 @@
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-servlet-server</artifactId>
             <version>1.1.0-SNAPSHOT</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-spring-mvc-server</artifactId>
             <version>1.1.0-SNAPSHOT</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-json-rpc-server-protocol</artifactId>
             <version>1.1.0-SNAPSHOT</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-json-rpc-client-protocol</artifactId>
             <version>1.1.0-SNAPSHOT</version>
-            <scope>test</scope>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.wixpress</groupId>
+            <artifactId>fjarr-ahc-client</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.wixpress</groupId>
+            <artifactId>fjarr-netty-client</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.wixpress</groupId>
             <artifactId>fjarr-test-common</artifactId>
             <version>1.1.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.wixpress</groupId>
-            <artifactId>fjarr-ahc-client</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.wixpress</groupId>
-            <artifactId>fjarr-netty-client</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${org.mockito.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>${org.hamcrest.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>${jetty.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
             <version>${jetty.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
@@ -120,9 +100,6 @@
             <version>2.2.2</version>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
-
 
 </project>

@@ -3,7 +3,7 @@ package com.wixpress.fjarr.example;
 /**
  * @author alexeyr
  * @since Oct 5, 2010 11:02:09 AM
- *        IT exception
+ *        it exception
  */
 
 public class DataStructServiceRuntimeException extends RuntimeException
