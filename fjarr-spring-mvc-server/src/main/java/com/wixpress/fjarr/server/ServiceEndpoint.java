@@ -1,88 +1,74 @@
 package com.wixpress.fjarr.server;
 
+import org.springframework.util.StringUtils;
+
 /**
  * @author alexeyr
  * @since 7/5/11 3:51 PM
  */
-public class ServiceEndpoint
-{
-    private String name;
-    private Class<?> serviceInterface;
-    private Object serviceImplementation;
+public class ServiceEndpoint {
+    private final String name;
+    private final Class<?> serviceInterface;
+    private final Object serviceImplementation;
     private RpcRequestLifecycleEventHandler[] eventHandlers;
-    private String url;
+    private final String url;
 
-    public ServiceEndpoint(Class<?> serviceInterface, Object serviceImplementation)
-    {
+    public ServiceEndpoint(Class<?> serviceInterface, Object serviceImplementation) {
         this(null, serviceInterface, serviceImplementation, new RpcRequestLifecycleEventHandler[0]);
     }
 
-    public ServiceEndpoint(Class<?> serviceInterface, Object serviceImplementation, RpcRequestLifecycleEventHandler... eventHandlers)
-    {
+    public ServiceEndpoint(Class<?> serviceInterface, Object serviceImplementation, RpcRequestLifecycleEventHandler... eventHandlers) {
         this(null, serviceInterface, serviceImplementation, eventHandlers);
 
     }
 
-    public ServiceEndpoint(String name, Class<?> serviceInterface, Object serviceImplementation)
-    {
+    public ServiceEndpoint(String name, Class<?> serviceInterface, Object serviceImplementation) {
         this(name, serviceInterface, serviceImplementation, new RpcRequestLifecycleEventHandler[0]);
     }
 
-    public ServiceEndpoint(String name, Class<?> serviceInterface, Object serviceImplementation, RpcRequestLifecycleEventHandler... eventHandlers)
-    {
+    public ServiceEndpoint(String name, Class<?> serviceInterface, Object serviceImplementation, RpcRequestLifecycleEventHandler... eventHandlers) {
         this.name = name;
         this.serviceInterface = serviceInterface;
         this.serviceImplementation = serviceImplementation;
         this.eventHandlers = eventHandlers;
+        this.url = resolveUrlMapping();
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public Class<?> getServiceInterface()
-    {
+    public Class<?> getServiceInterface() {
         return serviceInterface;
     }
 
-    public void setServiceInterface(Class<?> serviceInterface)
-    {
-        this.serviceInterface = serviceInterface;
-    }
-
-    public Object getServiceImplementation()
-    {
+    public Object getServiceImplementation() {
         return serviceImplementation;
     }
 
-    public void setServiceImplementation(Object serviceImplementation)
-    {
-        this.serviceImplementation = serviceImplementation;
-    }
-
-    public String getUrl()
-    {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url)
-    {
-        this.url = url;
-    }
-
-    public RpcRequestLifecycleEventHandler[] getEventHandlers()
-    {
+    public RpcRequestLifecycleEventHandler[] getEventHandlers() {
         return eventHandlers;
     }
 
-    public void setEventHandlers(RpcRequestLifecycleEventHandler[] eventHandlers)
-    {
-        this.eventHandlers = eventHandlers;
+    private String resolveUrlMapping() {
+        String serviceName;
+        if (StringUtils.hasText(getName()))
+            serviceName = getName();
+        else
+            serviceName = getServiceInterface().getSimpleName();
+
+        return formatUrl(serviceName);
     }
+
+    private String formatUrl(String serviceName) {
+        if (serviceName.startsWith("/"))
+            return serviceName;
+        else
+            return "/" + serviceName;
+    }
+
 }

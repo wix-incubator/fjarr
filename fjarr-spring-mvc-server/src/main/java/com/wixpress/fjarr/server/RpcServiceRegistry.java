@@ -6,7 +6,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,27 +59,10 @@ public class RpcServiceRegistry implements ApplicationListener<ContextRefreshedE
     {
         for (ServiceEndpoint serviceEndpoint : endpoints)
         {
-            String serviceName;
-            if (StringUtils.hasText(serviceEndpoint.getName()))
-                serviceName = serviceEndpoint.getName();
-            else
-                serviceName = serviceEndpoint.getServiceInterface().getSimpleName();
-
-            String url = formatUrl(serviceName);
-            serviceEndpoint.setUrl(url);
-
             // save url and service interface for web-based introspection
-            this.serviceEndpoints.put(url, serviceEndpoint);
+            this.serviceEndpoints.put(serviceEndpoint.getUrl(), serviceEndpoint);
         }
 
-    }
-
-    private String formatUrl(String serviceName)
-    {
-        if (serviceName.startsWith("/"))
-            return serviceName;
-        else
-            return "/" + serviceName;
     }
 
     /**
