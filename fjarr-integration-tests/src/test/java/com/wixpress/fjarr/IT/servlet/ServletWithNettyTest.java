@@ -1,7 +1,7 @@
-package com.wixpress.fjarr.IT.servlet;
+package com.wixpress.fjarr.it.servlet;
 
-import com.wixpress.fjarr.IT.BaseItTest;
-import com.wixpress.fjarr.IT.util.ITServer;
+import com.wixpress.fjarr.it.BaseContractTest;
+import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.example.DataStructServiceImpl;
@@ -14,15 +14,15 @@ import org.junit.Ignore;
 import javax.servlet.Servlet;
 
 
-import static com.wixpress.fjarr.IT.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
-import static com.wixpress.fjarr.IT.NettyInvokerFactory.aDefaultNettyInvoker;
+import static com.wixpress.fjarr.it.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
+import static com.wixpress.fjarr.it.NettyInvokerFactory.aDefaultNettyInvoker;
 
 /**
  * @author alex
  * @since 1/6/13 1:57 PM
  */
 @Ignore("fails in team-city")
-public class ServletWithNettyTest extends BaseItTest
+public class ServletWithNettyTest extends BaseContractTest
 {
 
     @BeforeClass
@@ -33,7 +33,7 @@ public class ServletWithNettyTest extends BaseItTest
                         DataStructService.class, new DataStructServiceImpl(), buildObjectMapperWithFjarrModule())
         );
 
-        server = new ITServer(9191, new ITServer.ServletPair("/*", servlet));
+        server = new ITServer(SERVER_PORT, new ITServer.ServletPair("/*", servlet));
         server.start();
 
     }

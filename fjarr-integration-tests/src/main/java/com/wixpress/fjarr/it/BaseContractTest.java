@@ -31,6 +31,8 @@ import static org.junit.Assert.*;
  */
 
 public abstract class BaseContractTest {
+    public static final int SERVER_PORT = 9191;
+    public static final String DEFAULT_SERVICE_ROOT = "http://127.0.0.1:"+SERVER_PORT+"/DataStructService";
     protected static ITServer server;
 
     protected DataStructService service;
@@ -39,7 +41,7 @@ public abstract class BaseContractTest {
 
     @Before
     public void setupClientSide() throws URISyntaxException {
-        serviceRoot = "http://127.0.0.1:9191/DataStructService";
+        serviceRoot = DEFAULT_SERVICE_ROOT;
 
         final RpcClientProtocol protocol = getProtocol();
         final RpcInvoker invoker = getInvoker();

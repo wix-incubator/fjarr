@@ -1,7 +1,7 @@
-package com.wixpress.fjarr.IT.servlet;
+package com.wixpress.fjarr.it.servlet;
 
-import com.wixpress.fjarr.IT.BaseItTest;
-import com.wixpress.fjarr.IT.util.ITServer;
+import com.wixpress.fjarr.it.BaseContractTest;
+import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.example.DataStructServiceImpl;
@@ -12,15 +12,15 @@ import org.junit.BeforeClass;
 
 import javax.servlet.Servlet;
 
-import static com.wixpress.fjarr.IT.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
-import static com.wixpress.fjarr.IT.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
+import static com.wixpress.fjarr.it.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
+import static com.wixpress.fjarr.it.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 
 /**
  * @author alex
  * @since 1/6/13 1:57 PM
  */
 
-public class ServletWithHttpClientTest extends BaseItTest
+public class ServletWithHttpClientTest extends BaseContractTest
 {
 
     @BeforeClass
@@ -31,7 +31,7 @@ public class ServletWithHttpClientTest extends BaseItTest
                         DataStructService.class, new DataStructServiceImpl(), buildObjectMapperWithFjarrModule())
         );
 
-        server = new ITServer(9191, new ITServer.ServletPair("/*", servlet));
+        server = new ITServer(SERVER_PORT, new ITServer.ServletPair("/*", servlet));
 
         server.start();
 

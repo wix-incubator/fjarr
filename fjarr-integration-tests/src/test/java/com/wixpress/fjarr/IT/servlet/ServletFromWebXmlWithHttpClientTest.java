@@ -1,7 +1,7 @@
-package com.wixpress.fjarr.IT.servlet;
+package com.wixpress.fjarr.it.servlet;
 
-import com.wixpress.fjarr.IT.BaseItTest;
-import com.wixpress.fjarr.IT.util.ITServer;
+import com.wixpress.fjarr.it.BaseContractTest;
+import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.json.JsonRpcProtocol;
 import com.wixpress.fjarr.server.RpcServer;
@@ -10,21 +10,21 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static com.wixpress.fjarr.IT.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
-import static com.wixpress.fjarr.IT.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
+import static com.wixpress.fjarr.it.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
+import static com.wixpress.fjarr.it.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 
 /**
  * @author alex
  * @since 1/6/13 1:57 PM
  */
 
-public class ServletFromWebXmlWithHttpClientTest extends BaseItTest
+public class ServletFromWebXmlWithHttpClientTest extends BaseContractTest
 {
 
     @BeforeClass
     public static void init() throws Exception
     {
-        server = new ITServer(9191, System.getProperty("user.dir") + "/src/test/webapp");
+        server = new ITServer(SERVER_PORT, System.getProperty("user.dir") + "/src/test/webapp");
 
         server.start();
 
