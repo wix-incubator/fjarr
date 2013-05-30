@@ -1,6 +1,6 @@
 package com.wixpress.fjarr.it.springmvc;
 
-import com.wixpress.fjarr.it.BaseContractTest;
+import com.wixpress.fjarr.it.BaseJsonContractTest;
 import com.wixpress.fjarr.it.util.ITSpringServer;
 import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.client.exceptions.RpcInvocationException;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
  * @since 1/6/13 5:29 PM
  */
 
-public class SpringMvcWithHttpClientTest extends BaseContractTest {
+public class SpringMvcWithHttpClientTest extends BaseJsonContractTest {
 
     @BeforeClass
     public static void init() throws Exception {
@@ -48,12 +48,12 @@ public class SpringMvcWithHttpClientTest extends BaseContractTest {
     }
 
     @Override
-    protected RpcClientProtocol getProtocol() {
+    protected RpcClientProtocol buildProtocol() {
         return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
     }
 
     @Override
-    protected RpcInvoker getInvoker() {
+    protected RpcInvoker buildInvoker() {
         return aDefaultHttpComponentsInvoker();
     }
 }

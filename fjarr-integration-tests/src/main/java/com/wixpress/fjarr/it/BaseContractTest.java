@@ -2,7 +2,6 @@ package com.wixpress.fjarr.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.it.util.ITServer;
-import com.wixpress.fjarr.client.RpcClient;
 import com.wixpress.fjarr.client.RpcClientProtocol;
 import com.wixpress.fjarr.client.RpcClientProxy;
 import com.wixpress.fjarr.client.RpcInvoker;
@@ -11,7 +10,6 @@ import com.wixpress.fjarr.json.FjarrJacksonModule;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -36,28 +33,22 @@ public abstract class BaseContractTest {
     public static final String DEFAULT_SERVICE_ROOT = "http://127.0.0.1:"+SERVER_PORT+"/DataStructService";
     protected static ITServer server;
 
+    protected final String serviceRoot = DEFAULT_SERVICE_ROOT;
     protected DataStructService service;
-    protected RpcClient client;
-    protected String serviceRoot;
+    protected final RpcClientProtocol protocol = buildProtocol();
+    protected final RpcInvoker invoker = buildInvoker();
 
     @Before
     public void setupClientSide() throws URISyntaxException {
-        serviceRoot = DEFAULT_SERVICE_ROOT;
-
-        final RpcClientProtocol protocol = getProtocol();
-        final RpcInvoker invoker = getInvoker();
         service = RpcClientProxy.create(DataStructService.class,
                 serviceRoot,
                 invoker,
                 protocol);
-
-
-        client = new RpcClient(new URI(serviceRoot), protocol, invoker);
     }
 
-    protected abstract RpcClientProtocol getProtocol();
+    protected abstract RpcClientProtocol buildProtocol();
 
-    protected abstract RpcInvoker getInvoker();
+    protected abstract RpcInvoker buildInvoker();
 
     @Test
     public void testLocalInvocationToString() {
@@ -211,13 +202,6 @@ public abstract class BaseContractTest {
     public void testNPE() {
         service.throwNPE();
     }
-
-    @Test
-    public void testDescribe() throws Throwable {
-        String response = client.invoke("aaa", "rpc.getServiceName", String.class);
-        assertThat(response, is("com.wixpress.fjarr.example.DataStructService"));
-    }
-
 
     private void checkChildren(Map<Integer, DataStructChild> map) {
         for (int i = 0; i < 10; i++) {

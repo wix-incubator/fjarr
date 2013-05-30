@@ -1,6 +1,7 @@
 package com.wixpress.fjarr.it.springmvc;
 
 import com.wixpress.fjarr.it.BaseContractTest;
+import com.wixpress.fjarr.it.BaseJsonContractTest;
 import com.wixpress.fjarr.it.util.ITSpringServer;
 import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.client.exceptions.RpcInvocationException;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertThat;
  * @since 1/6/13 5:29 PM
  */
 @Ignore("fails in team-city")
-public class SpringMvcWithNettyClientTest extends BaseContractTest
+public class SpringMvcWithNettyClientTest extends BaseJsonContractTest
 {
 
 
@@ -58,12 +59,12 @@ public class SpringMvcWithNettyClientTest extends BaseContractTest
         }
     }
     @Override
-    protected RpcClientProtocol getProtocol() {
+    protected RpcClientProtocol buildProtocol() {
         return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
     }
 
     @Override
-    protected RpcInvoker getInvoker() {
+    protected RpcInvoker buildInvoker() {
         return aDefaultNettyInvoker();
     }
 

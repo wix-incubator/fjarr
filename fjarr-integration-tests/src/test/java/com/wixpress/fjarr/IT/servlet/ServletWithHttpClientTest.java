@@ -1,6 +1,7 @@
 package com.wixpress.fjarr.it.servlet;
 
 import com.wixpress.fjarr.it.BaseContractTest;
+import com.wixpress.fjarr.it.BaseJsonContractTest;
 import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.client.*;
 import com.wixpress.fjarr.example.DataStructService;
@@ -20,7 +21,7 @@ import static com.wixpress.fjarr.it.JsonRPCClientProtocolFactory.aJsonRpcClientP
  * @since 1/6/13 1:57 PM
  */
 
-public class ServletWithHttpClientTest extends BaseContractTest
+public class ServletWithHttpClientTest extends BaseJsonContractTest
 {
 
     @BeforeClass
@@ -44,12 +45,12 @@ public class ServletWithHttpClientTest extends BaseContractTest
     }
 
     @Override
-    protected RpcClientProtocol getProtocol() {
+    protected RpcClientProtocol buildProtocol() {
         return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
     }
 
     @Override
-    protected RpcInvoker getInvoker() {
+    protected RpcInvoker buildInvoker() {
         return aDefaultHttpComponentsInvoker();
     }
 
