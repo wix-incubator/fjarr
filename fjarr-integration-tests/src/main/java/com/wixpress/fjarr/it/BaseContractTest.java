@@ -11,6 +11,7 @@ import com.wixpress.fjarr.json.FjarrJacksonModule;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -174,14 +175,18 @@ public abstract class BaseContractTest {
             fail("Excption should have been thrown");
         } catch (DataStructServiceException e) {
             assertThat(e.getMessage(), is("wrapper"));
-            assertNull(e.getCause());
-            //            assertNotNull(e.getCause());
-            //            assertThat(e.getCause().getMessage(), is("cause"));
-            //            assertTrue(e.getCause() instanceof Throwable);
-            //            assertNull(e.getCause().getCause());
         }
     }
 
+    @Test
+    public void causeIsNotPropagatedBackToCaller() {
+        try {
+            service.throwCheckedException();
+            fail("Excption should have been thrown");
+        } catch (DataStructServiceException e) {
+            assertNull(e.getCause());
+        }
+    }
 
     @Test
     public void testCheckedComplexException() {
@@ -196,25 +201,15 @@ public abstract class BaseContractTest {
         }
     }
 
-    @Test
+    @Test(expected = DataStructServiceRuntimeException.class)
     public void testRuntimeException() {
-        try {
-            service.throwRuntimeException();
-            fail("Excption should have been thrown");
-        } catch (DataStructServiceRuntimeException e) {
-            // expected
-        }
+        service.throwRuntimeException();
     }
 
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testNPE() {
-        try {
-            service.throwNPE();
-            fail("Excption should have been thrown");
-        } catch (NullPointerException e) {
-            // expected
-        }
+        service.throwNPE();
     }
 
     @Test
