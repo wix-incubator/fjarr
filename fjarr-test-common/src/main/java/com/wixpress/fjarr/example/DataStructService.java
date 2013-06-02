@@ -42,4 +42,6 @@ public interface DataStructService
     int getOneAsPrimitiveValue();
 
     int returnsSamePrimitiveInput(int primitiveInput);
+
+    DataStruct returnsSameDataStructInput(DataStruct dataStruct);
 }

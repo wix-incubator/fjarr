@@ -49,6 +49,14 @@ public class DataStruct implements Serializable
         return ds;
     }
 
+    public static DataStruct aDataStructWithAllCollections(int anInt, String string, double dbl, UUID uuid) {
+        DataStruct ds = new DataStruct(anInt,string,dbl,uuid);
+        ds.populateMap();
+        ds.populateList();
+        ds.populateSet();
+        return ds;
+    }
+
     public int getAnInt()
     {
         return anInt;
@@ -153,6 +161,19 @@ public class DataStruct implements Serializable
         for (int i = 0; i < 10; i++) {
             getSet().add(new DataStructChild(Integer.toString(i), i));
         }
+    }
+
+    @Override
+    public String toString() {
+        return "DataStruct{" +
+                "anInt=" + anInt +
+                ", string='" + string + '\'' +
+                ", dbl=" + dbl +
+                ", uuid=" + uuid +
+                ", map=" + map +
+                ", list=" + list +
+                ", set=" + set +
+                '}';
     }
 }
 

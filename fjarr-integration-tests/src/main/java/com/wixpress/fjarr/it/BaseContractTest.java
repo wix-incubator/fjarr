@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import static com.wixpress.fjarr.example.DataStruct.aDataStructWithAllCollections;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -144,6 +145,14 @@ public abstract class BaseContractTest {
         int primitiveInput = 5;
         assertEquals(primitiveInput,service.returnsSamePrimitiveInput(primitiveInput));
     }
+
+
+    @Test
+    public void singleComplexInputPassedCorrectly(){
+        DataStruct dataStruct = aDataStructWithAllCollections(5,"someString",2.3,UUID.randomUUID());
+        assertThat(service.returnsSameDataStructInput(dataStruct),is(dataStruct));
+    }
+
 
     @Test
     public void testCheckedException() {

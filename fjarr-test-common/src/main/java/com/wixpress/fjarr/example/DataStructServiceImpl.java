@@ -110,4 +110,9 @@ public class DataStructServiceImpl implements DataStructService {
         return primitiveInput;
     }
 
+    @Override
+    public DataStruct returnsSameDataStructInput(DataStruct dataStruct) {
+        return dataStruct;
+    }
+
 }
