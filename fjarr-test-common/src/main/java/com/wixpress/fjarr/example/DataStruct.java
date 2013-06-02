@@ -31,6 +31,24 @@ public class DataStruct implements Serializable
         this.uuid = uuid;
     }
 
+    static DataStruct aDataStructWithMap(int anInt, String string, double dbl, UUID uuid) {
+        DataStruct ds = new DataStruct(anInt,string,dbl,uuid);
+        ds.populateMap();
+        return ds;
+    }
+
+    static DataStruct aDataStructWithList(int anInt, String string, double dbl, UUID uuid) {
+        DataStruct ds = new DataStruct(anInt,string,dbl,uuid);
+        ds.populateList();
+        return ds;
+    }
+
+    static DataStruct aDataStructWithSet(int anInt, String string, double dbl, UUID uuid) {
+        DataStruct ds = new DataStruct(anInt, string, dbl, uuid);
+        ds.populateSet();
+        return ds;
+    }
+
     public int getAnInt()
     {
         return anInt;
@@ -119,19 +137,19 @@ public class DataStruct implements Serializable
         return result;
     }
 
-    void populateMap() {
+    private void populateMap() {
         for (int i = 0; i < 10; i++) {
             getMap().put(i, new DataStructChild(Integer.toString(i), i));
         }
     }
 
-    void populateList() {
+    private void populateList() {
         for (int i = 0; i < 10; i++) {
             getList().add(new DataStructChild(Integer.toString(i), i));
         }
     }
 
-    void populateSet() {
+    private void populateSet() {
         for (int i = 0; i < 10; i++) {
             getSet().add(new DataStructChild(Integer.toString(i), i));
         }

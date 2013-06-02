@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.wixpress.fjarr.example.DataStruct.aDataStructWithSet;
+import static com.wixpress.fjarr.example.DataStruct.aDataStructWithList;
+import static com.wixpress.fjarr.example.DataStruct.aDataStructWithMap;
+
 /**
  * @author alexeyr
  * @since Oct 4, 2010 10:59:03 AM
@@ -22,34 +26,25 @@ public class DataStructServiceImpl implements DataStructService {
 
     @Override
     public DataStruct getDataWithChildrenMap() {
-        DataStruct ds = new DataStruct(20, "test with children in map", 2., TEST_UUID);
-        ds.populateMap();
-        return ds;
+        return aDataStructWithMap(20, "test with children in map", 2., TEST_UUID);
     }
 
     @Override
     public DataStruct getDataWithChildrenList() {
-        DataStruct ds = new DataStruct(30, "test with children in list", 3.5, TEST_UUID);
-        ds.populateList();
-        return ds;
+        return aDataStructWithList(30, "test with children in list", 3.5, TEST_UUID);
     }
 
     @Override
     public DataStruct getDataWithChildrenSet() {
-        DataStruct ds = new DataStruct(40, "test with children in set", 4.6, TEST_UUID);
-        ds.populateSet();
-        return ds;
+        return aDataStructWithSet(40, "test with children in set", 4.6, TEST_UUID);
     }
 
     @Override
     public DataStruct[] getDatasWithWithAll() {
         DataStruct[] dses = new DataStruct[3];
-        dses[0] = new DataStruct(20, "test with children in map", 2., TEST_UUID);
-        dses[0].populateMap();
-        dses[1] = new DataStruct(30, "test with children in list", 3.5, TEST_UUID);
-        dses[1].populateList();
-        dses[2] = new DataStruct(40, "test with children in set", 4.6, TEST_UUID);
-        dses[2].populateSet();
+        dses[0] = aDataStructWithMap(20, "test with children in map", 2., TEST_UUID);
+        dses[1] = aDataStructWithList(30, "test with children in list", 3.5, TEST_UUID);
+        dses[2] = aDataStructWithSet(40, "test with children in set", 4.6, TEST_UUID);
         return dses;
     }
 
