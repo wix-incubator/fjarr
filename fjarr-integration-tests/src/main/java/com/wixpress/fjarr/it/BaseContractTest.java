@@ -46,6 +46,8 @@ public abstract class BaseContractTest {
 
     protected abstract RpcInvoker buildInvoker();
 
+    //Return values
+
     @Test
     public void testLocalInvocationToString() {
         String s = service.toString();
@@ -63,7 +65,6 @@ public abstract class BaseContractTest {
         assertEquals(DataStructServiceImpl.TEST_UUID.hashCode(), ds.getUuid().hashCode());
 
     }
-
 
     @Test
     public void testParams() {
@@ -142,6 +143,8 @@ public abstract class BaseContractTest {
         assertEquals(1, service.getOneAsPrimitiveValue());
     }
 
+    //Inputs
+
     @Test
     public void singlePrimitiveInputIsPassedCorrectly(){
         int primitiveInput = 5;
@@ -163,6 +166,9 @@ public abstract class BaseContractTest {
                 hasItems(firstDataStruct,secondDataStruct));
 
     }
+
+    //Exception handling
+
     @Test
     public void testCheckedException() {
         try {
@@ -206,6 +212,10 @@ public abstract class BaseContractTest {
     public void testNPE() {
         service.throwNPE();
     }
+
+    //Error handling
+
+
 
     private void checkChildren(Map<Integer, DataStructChild> map) {
         for (int i = 0; i < 10; i++) {
