@@ -116,4 +116,9 @@ public class DataStructServiceImpl implements DataStructService {
     public DataStruct getNullDataStruct() {
         return null;
     }
+
+    @Override
+    public int getOneAsPrimitiveValue() {
+        return 1;
+    }
 }

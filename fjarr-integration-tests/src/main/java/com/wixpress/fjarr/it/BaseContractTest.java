@@ -142,6 +142,11 @@ public abstract class BaseContractTest {
     }
 
     @Test
+    public void returnsPrimitiveValue(){
+        assertEquals(1,service.getOneAsPrimitiveValue());
+    }
+
+    @Test
     public void testCheckedException() {
         try {
             service.throwCheckedException();

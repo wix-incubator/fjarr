@@ -38,4 +38,6 @@ public interface DataStructService
     void voidReturnType();
 
     DataStruct getNullDataStruct();
+
+    int getOneAsPrimitiveValue();
 }
