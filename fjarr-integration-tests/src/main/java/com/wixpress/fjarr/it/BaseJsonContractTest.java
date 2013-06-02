@@ -32,7 +32,7 @@ public abstract class BaseJsonContractTest extends BaseContractTest {
     }
 
     @Test
-    public void testDescribe() throws Throwable {
+    public void testGetServiceNameExtensionMethod() throws Throwable {
         String response = client.invoke("aaa", "rpc.getServiceName", String.class);
         assertThat(response, is("com.wixpress.fjarr.example.DataStructService"));
     }
