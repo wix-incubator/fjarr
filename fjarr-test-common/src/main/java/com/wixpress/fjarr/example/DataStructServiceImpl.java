@@ -1,9 +1,7 @@
 package com.wixpress.fjarr.example;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.wixpress.fjarr.example.DataStruct.aDataStructWithSet;
 import static com.wixpress.fjarr.example.DataStruct.aDataStructWithList;
@@ -113,6 +111,11 @@ public class DataStructServiceImpl implements DataStructService {
     @Override
     public DataStruct returnsSameDataStructInput(DataStruct dataStruct) {
         return dataStruct;
+    }
+
+    @Override
+    public Collection<DataStruct> returnsSameDataStructsMultipleInputs(DataStruct firstDataStruct, DataStruct secondDataStruct) {
+        return Arrays.asList(firstDataStruct,secondDataStruct);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.wixpress.fjarr.example;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,4 +45,6 @@ public interface DataStructService
     int returnsSamePrimitiveInput(int primitiveInput);
 
     DataStruct returnsSameDataStructInput(DataStruct dataStruct);
+
+    Collection<DataStruct> returnsSameDataStructsMultipleInputs(DataStruct firstDataStruct, DataStruct secondDataStruct);
 }

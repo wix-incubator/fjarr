@@ -31,13 +31,13 @@ public class DataStruct implements Serializable
         this.uuid = uuid;
     }
 
-    static DataStruct aDataStructWithMap(int anInt, String string, double dbl, UUID uuid) {
+    public static DataStruct aDataStructWithMap(int anInt, String string, double dbl, UUID uuid) {
         DataStruct ds = new DataStruct(anInt,string,dbl,uuid);
         ds.populateMap();
         return ds;
     }
 
-    static DataStruct aDataStructWithList(int anInt, String string, double dbl, UUID uuid) {
+    public static DataStruct aDataStructWithList(int anInt, String string, double dbl, UUID uuid) {
         DataStruct ds = new DataStruct(anInt,string,dbl,uuid);
         ds.populateList();
         return ds;

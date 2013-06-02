@@ -14,6 +14,8 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import static com.wixpress.fjarr.example.DataStruct.aDataStructWithAllCollections;
+import static com.wixpress.fjarr.example.DataStruct.aDataStructWithList;
+import static com.wixpress.fjarr.example.DataStruct.aDataStructWithMap;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -153,7 +155,14 @@ public abstract class BaseContractTest {
         assertThat(service.returnsSameDataStructInput(dataStruct),is(dataStruct));
     }
 
+    @Test
+    public void multipleComplexInputsPassedCorrectly(){
+        DataStruct firstDataStruct = aDataStructWithMap(3, "aString", 1.7, UUID.randomUUID());
+        DataStruct secondDataStruct = aDataStructWithList(7, "otherString", 4.3, UUID.randomUUID());
+        assertThat(service.returnsSameDataStructsMultipleInputs(firstDataStruct,secondDataStruct),
+                hasItems(firstDataStruct,secondDataStruct));
 
+    }
     @Test
     public void testCheckedException() {
         try {
