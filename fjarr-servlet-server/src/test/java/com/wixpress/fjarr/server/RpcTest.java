@@ -59,7 +59,7 @@ public class RpcTest
         DataStruct ds = parseJsonSingleResponse(response.getBody());
 
         assertThat(ds.getString(), is("test with no children"));
-        assertThat(ds.getIteger(), is(10));
+        assertThat(ds.getAnInt(), is(10));
         assertThat(ds.getDbl(), is(0.0));
         assertTrue(ds.getUuid().equals(DataStructServiceImpl.TEST_UUID));
         assertEquals(DataStructServiceImpl.TEST_UUID.hashCode(), ds.getUuid().hashCode());
@@ -121,7 +121,7 @@ public class RpcTest
 
         DataStruct ds = parseJsonSingleResponse(response.getBody());
         assertThat(ds.getString(), is("test with children in map"));
-        assertThat(ds.getIteger(), is(20));
+        assertThat(ds.getAnInt(), is(20));
         assertThat(ds.getDbl(), is(2.0));
         assertThat(ds.getMap().size(), is(10));
 

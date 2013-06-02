@@ -40,4 +40,6 @@ public interface DataStructService
     DataStruct getNullDataStruct();
 
     int getOneAsPrimitiveValue();
+
+    int returnsSamePrimitiveInput(int primitiveInput);
 }

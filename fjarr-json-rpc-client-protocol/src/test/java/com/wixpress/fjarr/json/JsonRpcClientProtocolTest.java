@@ -28,7 +28,7 @@ public class JsonRpcClientProtocolTest {
 
         final UUID uuid = UUID.randomUUID();
         DataStruct ds = new DataStruct(1,"a",0.3, uuid);
-        assertThat(p.writeRequest("t", new Object[]{ds}),is("{\"id\":2,\"jsonrpc\":\"2.0\",\"method\":\"t\",\"params\":{\"iteger\":1,\"string\":\"a\",\"dbl\":0.3,\"uuid\":\""+uuid.toString()+"\",\"map\":{},\"list\":[],\"set\":[]}}"));
+        assertThat(p.writeRequest("t", new Object[]{ds}),is("{\"id\":2,\"jsonrpc\":\"2.0\",\"method\":\"t\",\"params\":{\"anInt\":1,\"string\":\"a\",\"dbl\":0.3,\"uuid\":\""+uuid.toString()+"\",\"map\":{},\"list\":[],\"set\":[]}}"));
 
     }
 
@@ -47,7 +47,7 @@ public class JsonRpcClientProtocolTest {
         final UUID uuid = UUID.randomUUID();
         DataStruct ds = new DataStruct(1,"a",0.3, uuid);
         assertThat((DataStruct) p.readResponse(DataStruct.class,
-                "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":{\"iteger\":1,\"string\":\"a\",\"dbl\":0.3,\"uuid\":\""
+                "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":{\"anInt\":1,\"string\":\"a\",\"dbl\":0.3,\"uuid\":\""
                         + uuid.toString() + "\",\"map\":{},\"list\":[],\"set\":[]}}"),is(ds));
     }
 

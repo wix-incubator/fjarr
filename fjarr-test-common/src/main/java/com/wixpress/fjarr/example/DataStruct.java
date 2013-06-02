@@ -10,7 +10,7 @@ import java.util.*;
 
 public class DataStruct implements Serializable
 {
-    int iteger;
+    int anInt;
     String string;
     double dbl;
     UUID uuid;
@@ -23,22 +23,22 @@ public class DataStruct implements Serializable
     {
     }
 
-    public DataStruct(int iteger, String string, double dbl, UUID uuid)
+    public DataStruct(int anInt, String string, double dbl, UUID uuid)
     {
-        this.iteger = iteger;
+        this.anInt = anInt;
         this.string = string;
         this.dbl = dbl;
         this.uuid = uuid;
     }
 
-    public int getIteger()
+    public int getAnInt()
     {
-        return iteger;
+        return anInt;
     }
 
-    public void setIteger(int iteger)
+    public void setAnInt(int anInt)
     {
-        this.iteger = iteger;
+        this.anInt = anInt;
     }
 
     public String getString()
@@ -93,8 +93,11 @@ public class DataStruct implements Serializable
 
         DataStruct that = (DataStruct) o;
 
+        if (anInt != that.anInt) return false;
         if (Double.compare(that.dbl, dbl) != 0) return false;
-        if (iteger != that.iteger) return false;
+        if (list != null ? !list.equals(that.list) : that.list != null) return false;
+        if (map != null ? !map.equals(that.map) : that.map != null) return false;
+        if (set != null ? !set.equals(that.set) : that.set != null) return false;
         if (string != null ? !string.equals(that.string) : that.string != null) return false;
         if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
 
@@ -105,12 +108,33 @@ public class DataStruct implements Serializable
     public int hashCode() {
         int result;
         long temp;
-        result = iteger;
+        result = anInt;
         result = 31 * result + (string != null ? string.hashCode() : 0);
-        temp = dbl != +0.0d ? Double.doubleToLongBits(dbl) : 0L;
+        temp = Double.doubleToLongBits(dbl);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
+        result = 31 * result + (map != null ? map.hashCode() : 0);
+        result = 31 * result + (list != null ? list.hashCode() : 0);
+        result = 31 * result + (set != null ? set.hashCode() : 0);
         return result;
+    }
+
+    void populateMap() {
+        for (int i = 0; i < 10; i++) {
+            getMap().put(i, new DataStructChild(Integer.toString(i), i));
+        }
+    }
+
+    void populateList() {
+        for (int i = 0; i < 10; i++) {
+            getList().add(new DataStructChild(Integer.toString(i), i));
+        }
+    }
+
+    void populateSet() {
+        for (int i = 0; i < 10; i++) {
+            getSet().add(new DataStructChild(Integer.toString(i), i));
+        }
     }
 }
 

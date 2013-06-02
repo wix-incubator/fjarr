@@ -8,14 +8,7 @@ import com.wixpress.fjarr.client.RpcInvoker;
 import com.wixpress.fjarr.example.*;
 import com.wixpress.fjarr.json.FjarrJacksonModule;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.net.URISyntaxException;
 import java.util.*;
@@ -61,7 +54,7 @@ public abstract class BaseContractTest {
         DataStruct ds = service.getData();
 
         assertThat(ds.getString(), is("test with no children"));
-        assertThat(ds.getIteger(), is(10));
+        assertThat(ds.getAnInt(), is(10));
         assertThat(ds.getDbl(), is(0.0));
         assertTrue(ds.getUuid().equals(DataStructServiceImpl.TEST_UUID));
         assertEquals(DataStructServiceImpl.TEST_UUID.hashCode(), ds.getUuid().hashCode());
@@ -90,7 +83,7 @@ public abstract class BaseContractTest {
     public void testDataStructServiceWithMap() {
         DataStruct ds = service.getDataWithChildrenMap();
         assertThat(ds.getString(), is("test with children in map"));
-        assertThat(ds.getIteger(), is(20));
+        assertThat(ds.getAnInt(), is(20));
         assertThat(ds.getDbl(), is(2.0));
         assertThat(ds.getMap().size(), is(10));
 
@@ -143,7 +136,13 @@ public abstract class BaseContractTest {
 
     @Test
     public void returnsPrimitiveValue(){
-        assertEquals(1,service.getOneAsPrimitiveValue());
+        assertEquals(1, service.getOneAsPrimitiveValue());
+    }
+
+    @Test
+    public void singlePrimitiveInputIsPassedCorrectly(){
+        int primitiveInput = 5;
+        assertEquals(primitiveInput,service.returnsSamePrimitiveInput(primitiveInput));
     }
 
     @Test

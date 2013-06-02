@@ -23,27 +23,21 @@ public class DataStructServiceImpl implements DataStructService {
     @Override
     public DataStruct getDataWithChildrenMap() {
         DataStruct ds = new DataStruct(20, "test with children in map", 2., TEST_UUID);
-        for (int i = 0; i < 10; i++) {
-            ds.getMap().put(i, new DataStructChild(Integer.toString(i), i));
-        }
+        ds.populateMap();
         return ds;
     }
 
     @Override
     public DataStruct getDataWithChildrenList() {
         DataStruct ds = new DataStruct(30, "test with children in list", 3.5, TEST_UUID);
-        for (int i = 0; i < 10; i++) {
-            ds.getList().add(new DataStructChild(Integer.toString(i), i));
-        }
+        ds.populateList();
         return ds;
     }
 
     @Override
     public DataStruct getDataWithChildrenSet() {
         DataStruct ds = new DataStruct(40, "test with children in set", 4.6, TEST_UUID);
-        for (int i = 0; i < 10; i++) {
-            ds.getSet().add(new DataStructChild(Integer.toString(i), i));
-        }
+        ds.populateSet();
         return ds;
     }
 
@@ -51,17 +45,11 @@ public class DataStructServiceImpl implements DataStructService {
     public DataStruct[] getDatasWithWithAll() {
         DataStruct[] dses = new DataStruct[3];
         dses[0] = new DataStruct(20, "test with children in map", 2., TEST_UUID);
-        for (int i = 0; i < 10; i++) {
-            dses[0].getMap().put(i, new DataStructChild(Integer.toString(i), i));
-        }
+        dses[0].populateMap();
         dses[1] = new DataStruct(30, "test with children in list", 3.5, TEST_UUID);
-        for (int i = 0; i < 10; i++) {
-            dses[1].getList().add(new DataStructChild(Integer.toString(i), i));
-        }
+        dses[1].populateList();
         dses[2] = new DataStruct(40, "test with children in set", 4.6, TEST_UUID);
-        for (int i = 0; i < 10; i++) {
-            dses[2].getSet().add(new DataStructChild(Integer.toString(i), i));
-        }
+        dses[2].populateSet();
         return dses;
     }
 
@@ -121,4 +109,10 @@ public class DataStructServiceImpl implements DataStructService {
     public int getOneAsPrimitiveValue() {
         return 1;
     }
+
+    @Override
+    public int returnsSamePrimitiveInput(int primitiveInput) {
+        return primitiveInput;
+    }
+
 }
