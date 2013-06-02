@@ -36,13 +36,6 @@ public class ServletFromWebXmlWithHttpClientTest extends BaseContractTest
         server.stop();
     }
 
-    @Override
-    @Test
-    public void testDescribe() throws Throwable
-    {
-        // This dest doesn't apply
-    }
-
     @Test
     public void checkServletContextValues()
     {
@@ -52,12 +45,12 @@ public class ServletFromWebXmlWithHttpClientTest extends BaseContractTest
     }
 
     @Override
-    protected RpcClientProtocol getProtocol() {
+    protected RpcClientProtocol buildProtocol() {
         return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
     }
 
     @Override
-    protected RpcInvoker getInvoker() {
+    protected RpcInvoker buildInvoker() {
         return aDefaultHttpComponentsInvoker();
     }
 }
