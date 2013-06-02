@@ -70,24 +70,6 @@ public abstract class BaseContractTest {
 
 
     @Test
-    @Ignore("Fails inconsistently with java.net.SocketException: Unexpected end of file aNettyInvokerFrom server")
-    public void testInvalidJsonReturnsHttpStatus400() throws Exception {
-        RestTemplate template = new RestTemplate();
-        String content = "{ \"some\": \"invalid request\" ]";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json-rpc");
-        headers.add("Content-Length", Integer.toString(content.getBytes().length));
-        HttpEntity<String> request = new HttpEntity<String>(content, headers);
-        try {
-            template.exchange(serviceRoot, HttpMethod.POST, request, String.class);
-            fail("Exception expected here");
-        } catch (HttpClientErrorException e) {
-            assertThat(e.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-        }
-    }
-
-    @Test
     public void testParams() {
         ArrayList<UUID> arr = new ArrayList<UUID>();
         UUID uuid1 = UUID.fromString("3c586170-50de-4327-bc5f-d7d09cfc758a");
