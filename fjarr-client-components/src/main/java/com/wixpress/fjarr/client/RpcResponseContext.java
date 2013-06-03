@@ -12,28 +12,29 @@ import java.util.Set;
 
 public class RpcResponseContext
 {
-    private DisjointUnion outcome;
-    private boolean error = false;
+    private final DisjointUnion outcome;
+    private final boolean error;
     private final RpcInvocationResponse response;
     private final long requestDurationMillis;
 
     public RpcResponseContext(Throwable throwable, RpcInvocationResponse response, long requestDurationMillis)
     {
-        this.requestDurationMillis = requestDurationMillis;
-        this.outcome = DisjointUnion.from(throwable);
-        this.response = response;
-        this.error = true;
+        this(throwable,null,response,requestDurationMillis,true);
     }
 
     public RpcResponseContext(Object responseObject, RpcInvocationResponse response, long requestDurationMillis)
     {
-        this.outcome = DisjointUnion.from(responseObject);
-        this.response = response;
-        this.requestDurationMillis = requestDurationMillis;
-        this.error = false;
-
+        this(null,responseObject,response,requestDurationMillis,false);
     }
 
+    private RpcResponseContext(Throwable throwable, Object responseObject, RpcInvocationResponse response,
+                               long requestDurationMillis,boolean error){
+        this.outcome = DisjointUnion.from( error ? throwable : responseObject);
+        this.response = (response != null ? response : new RpcInvocationResponse(-1,"","",new MultiMap<String, String>()));
+        this.requestDurationMillis = requestDurationMillis;
+        this.error = error;
+
+    }
     /**
      * DisjointUnion that can contain an Object or a Throwable
      * @return
@@ -46,12 +47,6 @@ public class RpcResponseContext
     public boolean isError()
     {
         return error;
-    }
-
-    public void setResult(Object result)
-    {
-        outcome = DisjointUnion.from(result);
-        error = false;
     }
 
     public Set<String> getHeaders(String name)
