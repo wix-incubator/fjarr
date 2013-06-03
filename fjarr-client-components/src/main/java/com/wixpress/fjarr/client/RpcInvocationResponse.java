@@ -1,6 +1,7 @@
 package com.wixpress.fjarr.client;
 
 import com.wixpress.fjarr.util.MultiMap;
+import com.wixpress.fjarr.util.ReadOnlyMultiMap;
 
 /**
  * @author AlexeyR
@@ -36,7 +37,7 @@ public class RpcInvocationResponse
         return body;
     }
 
-    public MultiMap<String,String> getAllHeaders()
+    public ReadOnlyMultiMap<String,String> getAllHeaders()
     {
         return headers;
     }

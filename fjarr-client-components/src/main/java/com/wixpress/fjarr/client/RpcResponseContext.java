@@ -48,17 +48,10 @@ public class RpcResponseContext
         return error;
     }
 
-
-
     public void setResult(Object result)
     {
         outcome = DisjointUnion.from(result);
         error = false;
-    }
-
-    public MultiMap<String, String> getAllHeaders()
-    {
-        return response.getAllHeaders();
     }
 
     public Set<String> getHeaders(String name)
