@@ -26,9 +26,12 @@ public abstract class BaseJsonContractTest extends BaseContractTest {
     protected RpcClient client;
 
     @Before
-    public void setupClientSide() throws URISyntaxException {
-        super.setupClientSide();
-        client = new RpcClient(new URI(serviceRoot), protocol, invoker);
+    public final void setupClient() throws URISyntaxException {
+        client = anRpcClient();
+    }
+
+    protected RpcClient anRpcClient() throws URISyntaxException {
+        return new RpcClient(new URI(serviceRoot), protocol, invoker);
     }
 
     @Test

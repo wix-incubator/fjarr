@@ -1,6 +1,8 @@
 package com.wixpress.fjarr.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wixpress.fjarr.client.exceptions.RpcTransportException;
+import com.wixpress.fjarr.exceptions.RpcReadTimeoutException;
 import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.client.RpcClientProtocol;
 import com.wixpress.fjarr.client.RpcClientProxy;
@@ -8,6 +10,7 @@ import com.wixpress.fjarr.client.RpcInvoker;
 import com.wixpress.fjarr.example.*;
 import com.wixpress.fjarr.json.FjarrJacksonModule;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -26,7 +29,9 @@ import static org.junit.Assert.*;
 
 public abstract class BaseContractTest {
     public static final int SERVER_PORT = 9191;
-    public static final String DEFAULT_SERVICE_ROOT = "http://127.0.0.1:"+SERVER_PORT+"/DataStructService";
+    public static final String DEFAULT_SERVICE_PORT_FORMAT ="http://127.0.0.1:%d/DataStructService";
+    public static final String DEFAULT_SERVICE_ROOT = String.format(DEFAULT_SERVICE_PORT_FORMAT,SERVER_PORT);
+    private static final String DEFAULT_SERVICE_ROOT_WRONG_PORT = String.format(DEFAULT_SERVICE_PORT_FORMAT,SERVER_PORT+1);
     protected static ITServer server;
 
     protected final String serviceRoot = DEFAULT_SERVICE_ROOT;
@@ -35,9 +40,13 @@ public abstract class BaseContractTest {
     protected final RpcInvoker invoker = buildInvoker();
 
     @Before
-    public void setupClientSide() throws URISyntaxException {
-        service = RpcClientProxy.create(DataStructService.class,
-                serviceRoot,
+    public final void setupService() throws URISyntaxException {
+        service = aDataStructServiceWith(serviceRoot);
+    }
+
+    protected DataStructService aDataStructServiceWith(String currentServiceRoot) {
+        return RpcClientProxy.create(DataStructService.class,
+                currentServiceRoot,
                 invoker,
                 protocol);
     }
@@ -162,12 +171,12 @@ public abstract class BaseContractTest {
     public void multipleComplexInputsPassedCorrectly(){
         DataStruct firstDataStruct = aDataStructWithMap(3, "aString", 1.7, UUID.randomUUID());
         DataStruct secondDataStruct = aDataStructWithList(7, "otherString", 4.3, UUID.randomUUID());
-        assertThat(service.returnsSameDataStructsMultipleInputs(firstDataStruct,secondDataStruct),
+        assertThat(service.returnsSameDataStructsMultipleInputs(firstDataStruct, secondDataStruct),
                 hasItems(firstDataStruct,secondDataStruct));
 
     }
 
-    //Exception handling
+    //Service Exception handling
 
     @Test
     public void testCheckedException() {
@@ -213,9 +222,12 @@ public abstract class BaseContractTest {
         service.throwNPE();
     }
 
-    //Error handling
-
-
+    //Fjarr Error handling
+   @Test(expected = RpcTransportException.class)
+    public void ifNoServerExistsATransportErrorIsThrown(){
+        service = aDataStructServiceWith(DEFAULT_SERVICE_ROOT_WRONG_PORT);
+        service.getData();
+    }
 
     private void checkChildren(Map<Integer, DataStructChild> map) {
         for (int i = 0; i < 10; i++) {
