@@ -1,6 +1,5 @@
 package com.wixpress.fjarr.client;
 
-import com.wixpress.fjarr.util.DisjointUnion;
 import com.wixpress.fjarr.util.MultiMap;
 
 import java.util.Set;
@@ -12,36 +11,33 @@ import java.util.Set;
 
 public class RpcResponseContext
 {
-    private final DisjointUnion outcome;
+    private final Throwable thrown;
     private final boolean error;
     private final RpcInvocationResponse response;
     private final long requestDurationMillis;
 
     public RpcResponseContext(Throwable throwable, RpcInvocationResponse response, long requestDurationMillis)
     {
-        this(throwable,null,response,requestDurationMillis,true);
+        this(throwable,response,requestDurationMillis,true);
     }
 
-    public RpcResponseContext(Object responseObject, RpcInvocationResponse response, long requestDurationMillis)
+    public RpcResponseContext(RpcInvocationResponse response, long requestDurationMillis)
     {
-        this(null,responseObject,response,requestDurationMillis,false);
+        this(null,response,requestDurationMillis,false);
     }
 
-    private RpcResponseContext(Throwable throwable, Object responseObject, RpcInvocationResponse response,
+    private RpcResponseContext(Throwable throwable, RpcInvocationResponse response,
                                long requestDurationMillis,boolean error){
-        this.outcome = DisjointUnion.from( error ? throwable : responseObject);
+        this.thrown = throwable;
         this.response = (response != null ? response : new RpcInvocationResponse(-1,"","",new MultiMap<String, String>()));
         this.requestDurationMillis = requestDurationMillis;
         this.error = error;
 
     }
-    /**
-     * DisjointUnion that can contain an Object or a Throwable
-     * @return
-     */
-    public DisjointUnion getOutcome()
+
+    public Throwable getThrown()
     {
-        return outcome;
+        return thrown;
     }
 
     public boolean isError()
