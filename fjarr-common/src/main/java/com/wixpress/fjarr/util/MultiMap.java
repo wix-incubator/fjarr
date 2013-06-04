@@ -87,7 +87,6 @@ public class MultiMap<KType, VType> implements Map<KType, VType>, ReadOnlyMultiM
     }
 
 
-
     public void clear() {
         map.clear();
     }
@@ -172,5 +171,12 @@ public class MultiMap<KType, VType> implements Map<KType, VType>, ReadOnlyMultiM
     @Override
     public int hashCode() {
         return map != null ? map.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "MultiMap{" +
+                "map=" + map +
+                '}';
     }
 }

@@ -129,4 +129,15 @@ public class RpcInvocation {
         result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RpcInvocation{" +
+                "serviceUri=" + serviceUri +
+                ", body='" + body + '\'' +
+                ", headers=" + headers +
+                ", queryParams=" + queryParams +
+                ", contentType='" + contentType + '\'' +
+                '}';
+    }
 }

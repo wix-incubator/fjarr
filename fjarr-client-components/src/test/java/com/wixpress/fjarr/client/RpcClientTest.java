@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,13 +34,16 @@ public class RpcClientTest {
     public static final String TEST_METHOD = "testMethod";
     public static final String REQUEST = "request";
     public static final String RESPONSE = "response";
+
     private final int statusCode = 200;
     private final String statusDescription = "OK";
+    private final String testService = "testService";
+    private final String requestBody = REQUEST;
+    private final String responseBody = RESPONSE;
+    private final List<Integer> integers = Arrays.asList(1);
+    private URI serviceUri;
 
     private String methodName = TEST_METHOD;
-    private String requestBody = REQUEST;
-    private String responseBody = RESPONSE;
-    private List<Integer> integers = Arrays.asList(1);
 
     private final RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
     private final RpcInvoker invoker = mock(RpcInvoker.class);
@@ -47,10 +51,11 @@ public class RpcClientTest {
 
     @Before
     public void init() throws URISyntaxException {
+        serviceUri = new URI("www.example.com");
         when(protocolClient.getAcceptType()).thenReturn("accept");
         when(protocolClient.getContentType()).thenReturn("content");
 
-        client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
+        client = aDefaultRpcClient();
     }
 
     @Test
@@ -60,13 +65,12 @@ public class RpcClientTest {
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(aDefaultRpcInvocationResponse());
 
 
-        Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
+        Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
 
         assertThat(o, instanceOf(List.class));
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
-                .withContentType("content");
+        final RpcInvocation rpcInvocation = anRpcInvocationWithContentTypeAndAcceptHeader();
         io.verify(invoker).invoke(eq(rpcInvocation));
         io.verify(protocolClient).readResponse(List.class, responseBody);
         io.verifyNoMoreInteractions();
@@ -82,7 +86,7 @@ public class RpcClientTest {
 
         try {
 
-            Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
+            Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
 
         } catch (RpcTransportException e) {
             assertThat(e.getStatusCode(), is(400));
@@ -92,8 +96,7 @@ public class RpcClientTest {
         }
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
-                .withContentType("content");
+        final RpcInvocation rpcInvocation = anRpcInvocationWithContentTypeAndAcceptHeader();
         io.verify(protocolClient).getAcceptType();
         io.verify(protocolClient).getContentType();
         io.verify(invoker).invoke(eq(rpcInvocation));
@@ -109,7 +112,7 @@ public class RpcClientTest {
 
         try {
 
-            Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
+            Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
 
         } catch (RpcTransportException e) {
             assertThat(e.getStatusCode(), is(statusCode));
@@ -119,9 +122,7 @@ public class RpcClientTest {
         }
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody)
-                .withHeader("Accept", "accept")
-                .withContentType("content");
+        final RpcInvocation rpcInvocation = anRpcInvocationWithContentTypeAndAcceptHeader();
         io.verify(protocolClient).getAcceptType();
         io.verify(protocolClient).getContentType();
         io.verify(invoker).invoke(eq(rpcInvocation));
@@ -138,7 +139,7 @@ public class RpcClientTest {
 
         try {
 
-            Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
+            Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
 
         } catch (RpcTransportException e) {
             assertThat(e.getStatusCode(), is(0));
@@ -149,8 +150,7 @@ public class RpcClientTest {
         }
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
-                .withContentType("content");
+        final RpcInvocation rpcInvocation = anRpcInvocationWithContentTypeAndAcceptHeader();
         io.verify(protocolClient).getAcceptType();
         io.verify(protocolClient).getContentType();
         io.verify(invoker).invoke(eq(rpcInvocation));
@@ -165,7 +165,7 @@ public class RpcClientTest {
 
         try {
 
-            Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
+            Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
 
         } catch (Throwable t) {
             assertThat(t, sameInstance(mockProtocolException));
@@ -185,15 +185,14 @@ public class RpcClientTest {
 
         try {
 
-            Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
+            Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
 
         } catch (Throwable t) {
             assertThat(t, sameInstance(mockProtocolException));
         }
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
-                .withContentType("content");
+        final RpcInvocation rpcInvocation = anRpcInvocationWithContentTypeAndAcceptHeader();
         io.verify(protocolClient).getAcceptType();
         io.verify(protocolClient).getContentType();
         io.verify(invoker).invoke(eq(rpcInvocation));
@@ -211,15 +210,14 @@ public class RpcClientTest {
 
         try {
 
-            Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
+            Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
 
         } catch (Throwable t) {
             assertThat(t, sameInstance(mockProtocolException));
         }
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
-                .withContentType("content");
+        final RpcInvocation rpcInvocation = anRpcInvocationWithContentTypeAndAcceptHeader();
         io.verify(protocolClient).getAcceptType();
         io.verify(protocolClient).getContentType();
         io.verify(invoker).invoke(eq(rpcInvocation));
@@ -241,16 +239,60 @@ public class RpcClientTest {
         assertThat(o, instanceOf(List.class));
         InOrder io = inOrder(protocolClient, invoker);
         io.verify(protocolClient).writeRequest(methodName, new Object[]{1, 2, 3});
-        final RpcInvocation rpcInvocation = new RpcInvocation(client.getServiceUrl(), requestBody).withHeader("Accept", "accept")
-                .withContentType("content");
+        final RpcInvocation rpcInvocation = anRpcInvocationWithContentTypeAndAcceptHeader();
         io.verify(invoker).invoke(eq(rpcInvocation));
         io.verify(protocolClient).readResponse(m.getGenericReturnType(), responseBody);
         io.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void shouldInvokePostEventHandlerOnInvocationException() throws IOException {
+        RpcClientEventHandler eventHandler = mock(RpcClientEventHandler.class);
+        client = anRpcClientWithHandler(eventHandler);
+        when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
+        when(invoker.invoke(any(RpcInvocation.class))).thenReturn(aDefaultRpcInvocationResponse());
+        Throwable mockProtocolException = new RpcInvocationException("MockInvocation");
+        when(protocolClient.readResponse(List.class, responseBody)).thenThrow(mockProtocolException);
+
+        try {
+            Object o = client.invoke(testService, methodName, List.class, 1, 2, 3);
+        } catch (Throwable t) {
+            //Testing for side effect in event handler
+        }
+
+        verify(eventHandler).postInvoke(eq(
+                new RpcRequestContext(invoker,
+                        anRpcInvocationWithContentTypeAndAcceptHeader(),
+                        testService, methodName, requestBody)),
+                eq(new RpcResponseContext(mockProtocolException,
+                        aDefaultRpcInvocationResponse(), 0))
+        );
+
+    }
+
+    private RpcInvocation anRpcInvocationWithContentTypeAndAcceptHeader() {
+        return anRpcInvocationWithContent().withHeader("Accept", "accept");
+    }
+
+    private RpcInvocation anRpcInvocationWithContent() {
+        return aDefaultRpcInvocation().withContentType("content");
+    }
+
+    private RpcInvocation aDefaultRpcInvocation() {
+        return new RpcInvocation(client.getServiceUrl(), requestBody);
+    }
+
     //Used by testClientWithMethod
     public List<String> t1(Integer a) {
         return null;
+    }
+
+    private RpcClient aDefaultRpcClient() {
+        return anRpcClientWithHandler(null);
+    }
+
+    private RpcClient anRpcClientWithHandler(RpcClientEventHandler eventHandler) {
+        return new RpcClient(serviceUri, protocolClient, invoker, eventHandler);
     }
 
     private RpcInvocationResponse aDefaultRpcInvocationResponse() {
