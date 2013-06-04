@@ -3,7 +3,6 @@ package com.wixpress.fjarr.server;
 
 import com.wixpress.fjarr.server.example.ParamObject;
 import com.wixpress.fjarr.server.example.TestService;
-import com.wixpress.fjarr.server.example.TestServiceImpl;
 import com.wixpress.fjarr.server.exceptions.BadRequestException;
 import com.wixpress.fjarr.server.exceptions.HttpMethodNotAllowedException;
 import com.wixpress.fjarr.server.exceptions.UnsupportedContentTypeException;
@@ -41,15 +40,12 @@ import static org.mockito.Mockito.*;
 /**
  * @author alex
  * @since 12/24/12 12:51 PM
- *
- *
  */
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = {ITConfiguration.class})
-public class SpringMVCIntegrationTest
-{
+public class SpringMVCIntegrationTest {
 
     @Autowired
     protected ApplicationContext applicationContext;
@@ -68,8 +64,7 @@ public class SpringMVCIntegrationTest
 
 
     @Before
-    public void initMvc() throws ServletException
-    {
+    public void initMvc() throws ServletException {
         StaticWebApplicationContext wac = new StaticWebApplicationContext();
         wac.setParent(applicationContext);
         MockServletConfig servletConfig = new MockServletConfig("springapp");
@@ -79,30 +74,24 @@ public class SpringMVCIntegrationTest
     }
 
     @After
-    public void fini()
-    {
+    public void fini() {
         reset(protocol, validator);
     }
 
     @Test
-    public void testNormal() throws IOException, ServletException, UnsupportedContentTypeException, BadRequestException, HttpMethodNotAllowedException
-    {
-        when(protocol.parseRequest(any(RpcRequest.class))).thenAnswer(new Answer<ParsedRpcRequest>()
-        {
+    public void testNormal() throws IOException, ServletException, UnsupportedContentTypeException, BadRequestException, HttpMethodNotAllowedException {
+        when(protocol.parseRequest(any(RpcRequest.class))).thenAnswer(new Answer<ParsedRpcRequest>() {
             @Override
-            public ParsedRpcRequest answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
+            public ParsedRpcRequest answer(InvocationOnMock invocationOnMock) throws Throwable {
                 RpcInvocation invocation = new RpcInvocation("getData", new PositionalRpcParameters(new Object[]{}));
-                invocation.setResolvedMethod(TestServiceImpl.class.getMethod("getData", new Class[0]));
+                invocation.setResolvedMethod(TestService.class.getMethod("getData", new Class[0]));
                 invocation.setResolvedParameters(new Object[0]);
                 return ParsedRpcRequest.from((RpcRequest) invocationOnMock.getArguments()[0], invocation);
             }
         });
-        doAnswer(new Answer<Object>()
-        {
+        doAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
 
                 RpcResponse response = (RpcResponse) invocationOnMock.getArguments()[0];
 
@@ -135,25 +124,20 @@ public class SpringMVCIntegrationTest
     }
 
     @Test
-    public void testWithValidation() throws IOException, ServletException, UnsupportedContentTypeException, BadRequestException, HttpMethodNotAllowedException
-    {
+    public void testWithValidation() throws IOException, ServletException, UnsupportedContentTypeException, BadRequestException, HttpMethodNotAllowedException {
         final ParamObject paramObject = new ParamObject("testValidation");
-        when(protocol.parseRequest(any(RpcRequest.class))).thenAnswer(new Answer<ParsedRpcRequest>()
-        {
+        when(protocol.parseRequest(any(RpcRequest.class))).thenAnswer(new Answer<ParsedRpcRequest>() {
             @Override
-            public ParsedRpcRequest answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
+            public ParsedRpcRequest answer(InvocationOnMock invocationOnMock) throws Throwable {
                 RpcInvocation invocation = new RpcInvocation("getDataWithParam", new PositionalRpcParameters(new Object[]{}));
-                invocation.setResolvedMethod(TestServiceImpl.class.getMethod("getDataWithParam", new Class[]{ParamObject.class}));
+                invocation.setResolvedMethod(TestService.class.getMethod("getDataWithParam", new Class[]{ParamObject.class}));
                 invocation.setResolvedParameters(new Object[]{paramObject});
                 return ParsedRpcRequest.from((RpcRequest) invocationOnMock.getArguments()[0], invocation);
             }
         });
-        doAnswer(new Answer<Object>()
-        {
+        doAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
 
                 RpcResponse response = (RpcResponse) invocationOnMock.getArguments()[0];
 
@@ -186,25 +170,20 @@ public class SpringMVCIntegrationTest
 
 
     @Test
-    public void testWithValidationError() throws IOException, ServletException, UnsupportedContentTypeException, BadRequestException, HttpMethodNotAllowedException
-    {
+    public void testWithValidationError() throws IOException, ServletException, UnsupportedContentTypeException, BadRequestException, HttpMethodNotAllowedException {
         final ParamObject paramObject = new ParamObject("testValidation");
-        when(protocol.parseRequest(any(RpcRequest.class))).thenAnswer(new Answer<ParsedRpcRequest>()
-        {
+        when(protocol.parseRequest(any(RpcRequest.class))).thenAnswer(new Answer<ParsedRpcRequest>() {
             @Override
-            public ParsedRpcRequest answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
+            public ParsedRpcRequest answer(InvocationOnMock invocationOnMock) throws Throwable {
                 RpcInvocation invocation = new RpcInvocation("getDataWithParam", new PositionalRpcParameters(new Object[]{}));
-                invocation.setResolvedMethod(TestServiceImpl.class.getMethod("getDataWithParam", new Class[]{ParamObject.class}));
+                invocation.setResolvedMethod(TestService.class.getMethod("getDataWithParam", new Class[]{ParamObject.class}));
                 invocation.setResolvedParameters(new Object[]{paramObject});
                 return ParsedRpcRequest.from((RpcRequest) invocationOnMock.getArguments()[0], invocation);
             }
         });
-        doAnswer(new Answer<Object>()
-        {
+        doAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
 
                 RpcResponse response = (RpcResponse) invocationOnMock.getArguments()[0];
                 ParsedRpcRequest request = (ParsedRpcRequest) invocationOnMock.getArguments()[1];
@@ -218,11 +197,9 @@ public class SpringMVCIntegrationTest
         }).when(protocol).writeResponse(any(RpcResponse.class), any(ParsedRpcRequest.class));
 
 
-        doAnswer(new Answer<Object>()
-        {
+        doAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 ((BindingResult) invocationOnMock.getArguments()[1]).addError(new ObjectError("p", "error"));
                 return null;
             }
