@@ -13,6 +13,7 @@ import org.mockito.InOrder;
 
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,14 +35,16 @@ public class RpcClientTest
 {
 
     private final RpcClientProtocol protocolClient = mock(RpcClientProtocol.class);
+    private final RpcInvoker invoker = mock(RpcInvoker.class);
+    private RpcClient client;
 
     @Before
-    public void init()
-    {
+    public void init() throws URISyntaxException {
         reset(protocolClient);
         when(protocolClient.getAcceptType()).thenReturn("accept");
         when(protocolClient.getContentType()).thenReturn("content");
 
+        client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
     }
 
     @Test
@@ -57,12 +60,10 @@ public class RpcClientTest
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
         when(protocolClient.readResponse(List.class, responseBody)).thenReturn(integers);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "", responseBody,
                 new MultiMap<String, String>()
                         .with("header", "value")));
 
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
         Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
         assertThat(o, instanceOf(List.class));
@@ -93,13 +94,11 @@ public class RpcClientTest
         final String responseBody = "response";
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(400, "ERROR", responseBody,
                 new MultiMap<String, String>()
                         .with("header", "value")));
         when(invoker.toString()).thenReturn("MockInvoker");
 
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
         try
         {
@@ -144,13 +143,10 @@ public class RpcClientTest
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
 
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "OK", "       ",
                 new MultiMap<String, String>()
                         .with("header", "value")));
         when(invoker.toString()).thenReturn("MockInvoker");
-
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
         try
         {
@@ -194,14 +190,10 @@ public class RpcClientTest
         final String responseBody = "response";
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
-
         Throwable mockInvokerException = new RuntimeException("MockInvokerException");
 
         when(invoker.invoke(any(RpcInvocation.class))).thenThrow(mockInvokerException);
         when(invoker.toString()).thenReturn("MockInvoker");
-
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
         try
         {
@@ -246,11 +238,6 @@ public class RpcClientTest
         Throwable mockProtocolException = new RuntimeException("MockProtocolException");
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenThrow(mockProtocolException);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
-
-
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
-
         try
         {
             Object o = client.invoke("testService", methodName, List.class, 1, 2, 3);
@@ -280,8 +267,6 @@ public class RpcClientTest
         final String responseBody = "response";
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
-
         Throwable mockProtocolException = new RpcInvocationException("MockInvocation");
 
 
@@ -292,8 +277,6 @@ public class RpcClientTest
                 new MultiMap<String, String>()
                         .with("header", "value")));
 
-
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
         try
         {
@@ -331,8 +314,6 @@ public class RpcClientTest
         final String responseBody = "response";
         when(protocolClient.writeRequest(methodName, new Object[]{1, 2, 3})).thenReturn(requestBody);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
-
         Throwable mockProtocolException = new InvalidRpcResponseException("MockInvocation");
 
 
@@ -343,8 +324,6 @@ public class RpcClientTest
                 new MultiMap<String, String>()
                         .with("header", "value")));
 
-
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
         try
         {
@@ -385,12 +364,9 @@ public class RpcClientTest
         when(protocolClient.writeRequest(methodName, new Object[]{1})).thenReturn(requestBody);
         when(protocolClient.readResponse(m.getGenericReturnType(), responseBody)).thenReturn(integers);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "", responseBody,
                 new MultiMap<String, String>()
                         .with("header", "value")));
-
-        RpcClient client = new RpcClient(new URI("www.example.com"), protocolClient, invoker);
 
 
         Object o = client.invoke(m, 1);
@@ -421,7 +397,6 @@ public class RpcClientTest
         when(protocolClient.writeRequest(methodName, new Object[]{})).thenReturn(requestBody);
         when(protocolClient.readResponse(DataStruct.class, responseBody)).thenReturn(ds);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "", responseBody,
                 new MultiMap<String, String>()
                         .with("header", "value")));
@@ -454,7 +429,6 @@ public class RpcClientTest
         when(protocolClient.writeRequest(methodName, new Object[]{})).thenReturn(requestBody);
         when(protocolClient.readResponse(DataStruct.class, responseBody)).thenReturn(ds);
 
-        RpcInvoker invoker = mock(RpcInvoker.class);
         when(invoker.invoke(any(RpcInvocation.class))).thenReturn(new RpcInvocationResponse(200, "", responseBody,
                 new MultiMap<String, String>()
                         .with("header", "value")));
@@ -469,7 +443,6 @@ public class RpcClientTest
         io.verifyNoMoreInteractions();
 
     }
-
 
     public List<String> t1(Integer a)
     {
