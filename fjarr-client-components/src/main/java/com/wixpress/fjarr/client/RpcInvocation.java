@@ -17,8 +17,7 @@ import static java.net.URLEncoder.encode;
  * @since 12/6/12 6:06 PM
  */
 
-public class RpcInvocation
-{
+public class RpcInvocation {
     public static final String UTF_8 = "UTF-8";
     private final URI serviceUri;
     private final String body;
@@ -26,8 +25,7 @@ public class RpcInvocation
     private final Map<String, String> queryParams = new HashMap<String, String>();
     private String contentType = "";
 
-    public RpcInvocation(URI serviceUri, String body)
-    {
+    public RpcInvocation(URI serviceUri, String body) {
         if (serviceUri == null || isBlank(body))
             throw new NullPointerException("ServiceUri and body must not ber null or empty");
         this.serviceUri = serviceUri;
@@ -35,42 +33,31 @@ public class RpcInvocation
     }
 
 
-    public String getHttpMethod()
-    {
+    public String getHttpMethod() {
         return "POST";
     }
 
-    public String getCharacterEncoding()
-    {
+    public String getCharacterEncoding() {
         return UTF_8;
     }
 
-    public URI getServiceUri()
-    {
-        try
-        {
+    public URI getServiceUri() {
+        try {
             return formatServiceUri();
-        }
-        catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             // swallow
-        }
-        catch (URISyntaxException e)
-        {
+        } catch (URISyntaxException e) {
             // swallow
         }
         return serviceUri;
     }
 
-    private URI formatServiceUri() throws UnsupportedEncodingException, URISyntaxException
-    {
+    private URI formatServiceUri() throws UnsupportedEncodingException, URISyntaxException {
         StringBuilder sb = new StringBuilder();
-        if (StringUtils.isNotBlank(serviceUri.getQuery()))
-        {
+        if (StringUtils.isNotBlank(serviceUri.getQuery())) {
             sb.append(serviceUri.getQuery());
         }
-        for (Map.Entry<String, String> entry : queryParams.entrySet())
-        {
+        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
 
             final String encodedName = encode(entry.getKey(), UTF_8);
             final String value = entry.getValue();
@@ -81,51 +68,44 @@ public class RpcInvocation
             sb.append("=");
             sb.append(encodedValue);
         }
-        return new URI(serviceUri.getScheme(),serviceUri.getUserInfo(),
-                serviceUri.getHost(),serviceUri.getPort(),serviceUri.getPath(),
-                sb.toString(),serviceUri.getFragment());
+        return new URI(serviceUri.getScheme(), serviceUri.getUserInfo(),
+                serviceUri.getHost(), serviceUri.getPort(), serviceUri.getPath(),
+                sb.toString(), serviceUri.getFragment());
 
     }
 
 
-    public MultiMap<String, String> getAllHeaders()
-    {
+    public MultiMap<String, String> getAllHeaders() {
         return headers;
     }
 
-    public String getBody()
-    {
+    public String getBody() {
         return body;
     }
 
 
-    public String getContentType()
-    {
+    public String getContentType() {
         return contentType;
     }
 
-    public RpcInvocation withHeader(String name, String value)
-    {
+    public RpcInvocation withHeader(String name, String value) {
         headers.put(name, value);
         return this;
     }
 
-    public RpcInvocation withContentType(String contentType)
-    {
+    public RpcInvocation withContentType(String contentType) {
         this.contentType = contentType;
         return this;
     }
 
 
-    public RpcInvocation withQueryParameter(String name, String value)
-    {
+    public RpcInvocation withQueryParameter(String name, String value) {
         queryParams.put(name, value);
         return this;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -133,20 +113,19 @@ public class RpcInvocation
 
         if (!body.equals(that.body)) return false;
         if (contentType != null ? !contentType.equals(that.contentType) : that.contentType != null) return false;
-        if (headers != null ? !headers.equals(that.headers) : that.headers != null) return false;
-        if (queryParams != null ? !queryParams.equals(that.queryParams) : that.queryParams != null) return false;
+        if (!headers.equals(that.headers)) return false;
+        if (!queryParams.equals(that.queryParams)) return false;
         if (!serviceUri.equals(that.serviceUri)) return false;
 
         return true;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = serviceUri.hashCode();
         result = 31 * result + body.hashCode();
-        result = 31 * result + (headers != null ? headers.hashCode() : 0);
-        result = 31 * result + (queryParams != null ? queryParams.hashCode() : 0);
+        result = 31 * result + (headers.hashCode());
+        result = 31 * result + (queryParams.hashCode());
         result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
         return result;
     }
