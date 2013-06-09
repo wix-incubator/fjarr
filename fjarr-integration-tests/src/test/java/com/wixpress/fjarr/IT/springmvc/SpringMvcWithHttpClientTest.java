@@ -1,14 +1,16 @@
 package com.wixpress.fjarr.it.springmvc;
 
-import com.wixpress.fjarr.it.BaseJsonContractTest;
-import com.wixpress.fjarr.it.util.ITSpringServer;
-import com.wixpress.fjarr.client.*;
+import com.wixpress.fjarr.client.RpcClientProtocol;
+import com.wixpress.fjarr.client.RpcInvoker;
 import com.wixpress.fjarr.client.exceptions.RpcInvocationException;
 import com.wixpress.fjarr.example.InputDTO;
+import com.wixpress.fjarr.it.BaseJsonContractTest;
+import com.wixpress.fjarr.it.util.ITSpringServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static com.wixpress.fjarr.it.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static com.wixpress.fjarr.it.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
 import static com.wixpress.fjarr.it.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static org.hamcrest.core.Is.is;
@@ -48,12 +50,12 @@ public class SpringMvcWithHttpClientTest extends BaseJsonContractTest {
     }
 
     @Override
-    protected RpcClientProtocol buildProtocol() {
-        return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
+    protected RpcClientProtocol anRpcProtocol() {
+        return aJsonRpcClientProtocolFrom(anObjectMapperWithFjarrModule());
     }
 
     @Override
-    protected RpcInvoker buildInvoker() {
+    protected RpcInvoker anRpcInvoker() {
         return aDefaultHttpComponentsInvoker();
     }
 }

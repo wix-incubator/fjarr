@@ -1,11 +1,11 @@
 package com.wixpress.fjarr.it.servlet;
 
-import com.wixpress.fjarr.it.BaseContractTest;
-import com.wixpress.fjarr.it.BaseJsonContractTest;
-import com.wixpress.fjarr.it.util.ITServer;
-import com.wixpress.fjarr.client.*;
+import com.wixpress.fjarr.client.RpcClientProtocol;
+import com.wixpress.fjarr.client.RpcInvoker;
 import com.wixpress.fjarr.example.DataStructService;
 import com.wixpress.fjarr.example.DataStructServiceImpl;
+import com.wixpress.fjarr.it.BaseJsonContractTest;
+import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.json.JsonRpc;
 import com.wixpress.fjarr.server.RpcServlet;
 import org.junit.AfterClass;
@@ -14,7 +14,7 @@ import org.junit.Ignore;
 
 import javax.servlet.Servlet;
 
-
+import static com.wixpress.fjarr.it.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static com.wixpress.fjarr.it.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.NettyInvokerFactory.aDefaultNettyInvoker;
 
@@ -23,15 +23,13 @@ import static com.wixpress.fjarr.it.NettyInvokerFactory.aDefaultNettyInvoker;
  * @since 1/6/13 1:57 PM
  */
 @Ignore("fails in team-city")
-public class ServletWithNettyTest extends BaseJsonContractTest
-{
+public class ServletWithNettyTest extends BaseJsonContractTest {
 
     @BeforeClass
-    public static void init() throws Exception
-    {
+    public static void init() throws Exception {
         Servlet servlet = new RpcServlet(
                 JsonRpc.server(
-                        DataStructService.class, new DataStructServiceImpl(), buildObjectMapperWithFjarrModule())
+                        DataStructService.class, new DataStructServiceImpl(), anObjectMapperWithFjarrModule())
         );
 
         server = new ITServer(SERVER_PORT, new ITServer.ServletPair("/*", servlet));
@@ -40,18 +38,17 @@ public class ServletWithNettyTest extends BaseJsonContractTest
     }
 
     @AfterClass
-    public static void fini() throws Exception
-    {
+    public static void fini() throws Exception {
         server.stop();
     }
 
     @Override
-    protected RpcClientProtocol buildProtocol() {
-        return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
+    protected RpcClientProtocol anRpcProtocol() {
+        return aJsonRpcClientProtocolFrom(anObjectMapperWithFjarrModule());
     }
 
     @Override
-    protected RpcInvoker buildInvoker() {
+    protected RpcInvoker anRpcInvoker() {
         return aDefaultNettyInvoker();
     }
 

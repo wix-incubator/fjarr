@@ -1,13 +1,11 @@
 package com.wixpress.fjarr.it;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.client.RpcClientProtocol;
 import com.wixpress.fjarr.client.RpcClientProxy;
 import com.wixpress.fjarr.client.RpcInvoker;
 import com.wixpress.fjarr.client.exceptions.RpcTransportException;
 import com.wixpress.fjarr.example.*;
 import com.wixpress.fjarr.it.util.ITServer;
-import com.wixpress.fjarr.json.FjarrJacksonModule;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,8 +31,8 @@ public abstract class BaseContractTest {
 
     protected final String serviceRoot = DEFAULT_SERVICE_ROOT;
     protected DataStructService service;
-    protected final RpcClientProtocol protocol = buildProtocol();
-    protected final RpcInvoker invoker = buildInvoker();
+    protected final RpcClientProtocol protocol = anRpcProtocol();
+    protected final RpcInvoker invoker = anRpcInvoker();
 
     @Before
     public final void setupService() throws URISyntaxException {
@@ -48,9 +46,9 @@ public abstract class BaseContractTest {
                 protocol);
     }
 
-    protected abstract RpcClientProtocol buildProtocol();
+    protected abstract RpcClientProtocol anRpcProtocol();
 
-    protected abstract RpcInvoker buildInvoker();
+    protected abstract RpcInvoker anRpcInvoker();
 
     //Return values
 
@@ -268,12 +266,6 @@ public abstract class BaseContractTest {
             assertTrue(map.containsKey(i));
             assertTrue(map.get(i));
         }
-    }
-
-    protected static ObjectMapper buildObjectMapperWithFjarrModule() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new FjarrJacksonModule());
-        return mapper;
     }
 
 }

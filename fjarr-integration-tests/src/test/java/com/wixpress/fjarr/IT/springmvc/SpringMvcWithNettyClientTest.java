@@ -1,16 +1,17 @@
 package com.wixpress.fjarr.it.springmvc;
 
-import com.wixpress.fjarr.it.BaseContractTest;
-import com.wixpress.fjarr.it.BaseJsonContractTest;
-import com.wixpress.fjarr.it.util.ITSpringServer;
-import com.wixpress.fjarr.client.*;
+import com.wixpress.fjarr.client.RpcClientProtocol;
+import com.wixpress.fjarr.client.RpcInvoker;
 import com.wixpress.fjarr.client.exceptions.RpcInvocationException;
 import com.wixpress.fjarr.example.InputDTO;
+import com.wixpress.fjarr.it.BaseJsonContractTest;
+import com.wixpress.fjarr.it.util.ITSpringServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static com.wixpress.fjarr.it.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static com.wixpress.fjarr.it.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.NettyInvokerFactory.aDefaultNettyInvoker;
 import static org.hamcrest.core.Is.is;
@@ -21,50 +22,42 @@ import static org.junit.Assert.assertThat;
  * @since 1/6/13 5:29 PM
  */
 @Ignore("fails in team-city")
-public class SpringMvcWithNettyClientTest extends BaseJsonContractTest
-{
-
+public class SpringMvcWithNettyClientTest extends BaseJsonContractTest {
 
 
     @BeforeClass
-    public static void init() throws Exception
-    {
+    public static void init() throws Exception {
         server = new ITSpringServer(SERVER_PORT, ITServerConfig.class);
         server.start();
     }
 
     @AfterClass
-    public static void fini() throws Exception
-    {
+    public static void fini() throws Exception {
         server.stop();
     }
 
 
     @Test
-    public void testValidationSuccess()
-    {
+    public void testValidationSuccess() {
         service.withInputThatNeedsValidation(new InputDTO(""));
     }
 
     @Test
-    public void testValidationFailure()
-    {
-        try
-        {
+    public void testValidationFailure() {
+        try {
             service.withInputThatNeedsValidation(new InputDTO());
-        }
-        catch (RpcInvocationException e)
-        {
+        } catch (RpcInvocationException e) {
             assertThat(e.getMessage(), is("JSON-RPC Error -32603: \"Validation failed\""));
         }
     }
+
     @Override
-    protected RpcClientProtocol buildProtocol() {
-        return aJsonRpcClientProtocolFrom(buildObjectMapperWithFjarrModule());
+    protected RpcClientProtocol anRpcProtocol() {
+        return aJsonRpcClientProtocolFrom(anObjectMapperWithFjarrModule());
     }
 
     @Override
-    protected RpcInvoker buildInvoker() {
+    protected RpcInvoker anRpcInvoker() {
         return aDefaultNettyInvoker();
     }
 
