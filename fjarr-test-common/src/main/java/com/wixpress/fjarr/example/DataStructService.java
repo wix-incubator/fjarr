@@ -9,8 +9,7 @@ import java.util.UUID;
  * @since Oct 4, 2010 11:01:17 AM
  */
 
-public interface DataStructService
-{
+public interface DataStructService {
     DataStruct getData();
 
     DataStruct getDataWithChildrenMap();
@@ -47,4 +46,6 @@ public interface DataStructService
     DataStruct returnsSameDataStructInput(DataStruct dataStruct);
 
     Collection<DataStruct> returnsSameDataStructsMultipleInputs(DataStruct firstDataStruct, DataStruct secondDataStruct);
+
+    void callLongRunningMethod(long durationToSleep);
 }

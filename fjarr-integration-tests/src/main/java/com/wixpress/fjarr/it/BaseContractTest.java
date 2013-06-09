@@ -1,24 +1,21 @@
 package com.wixpress.fjarr.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wixpress.fjarr.client.exceptions.RpcTransportException;
-import com.wixpress.fjarr.exceptions.RpcReadTimeoutException;
-import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.client.RpcClientProtocol;
 import com.wixpress.fjarr.client.RpcClientProxy;
 import com.wixpress.fjarr.client.RpcInvoker;
+import com.wixpress.fjarr.client.exceptions.RpcTransportException;
 import com.wixpress.fjarr.example.*;
+import com.wixpress.fjarr.it.util.ITServer;
 import com.wixpress.fjarr.json.FjarrJacksonModule;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import static com.wixpress.fjarr.example.DataStruct.aDataStructWithAllCollections;
-import static com.wixpress.fjarr.example.DataStruct.aDataStructWithList;
-import static com.wixpress.fjarr.example.DataStruct.aDataStructWithMap;
+import static com.wixpress.fjarr.example.DataStruct.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -29,9 +26,9 @@ import static org.junit.Assert.*;
 
 public abstract class BaseContractTest {
     public static final int SERVER_PORT = 9191;
-    public static final String DEFAULT_SERVICE_PORT_FORMAT ="http://127.0.0.1:%d/DataStructService";
-    public static final String DEFAULT_SERVICE_ROOT = String.format(DEFAULT_SERVICE_PORT_FORMAT,SERVER_PORT);
-    private static final String DEFAULT_SERVICE_ROOT_WRONG_PORT = String.format(DEFAULT_SERVICE_PORT_FORMAT,SERVER_PORT+1);
+    public static final String DEFAULT_SERVICE_PORT_FORMAT = "http://127.0.0.1:%d/DataStructService";
+    public static final String DEFAULT_SERVICE_ROOT = String.format(DEFAULT_SERVICE_PORT_FORMAT, SERVER_PORT);
+    private static final String DEFAULT_SERVICE_ROOT_WRONG_PORT = String.format(DEFAULT_SERVICE_PORT_FORMAT, SERVER_PORT + 1);
     protected static ITServer server;
 
     protected final String serviceRoot = DEFAULT_SERVICE_ROOT;
@@ -148,31 +145,31 @@ public abstract class BaseContractTest {
     }
 
     @Test
-    public void returnsPrimitiveValue(){
+    public void returnsPrimitiveValue() {
         assertEquals(1, service.getOneAsPrimitiveValue());
     }
 
     //Inputs
 
     @Test
-    public void singlePrimitiveInputIsPassedCorrectly(){
+    public void singlePrimitiveInputIsPassedCorrectly() {
         int primitiveInput = 5;
-        assertEquals(primitiveInput,service.returnsSamePrimitiveInput(primitiveInput));
+        assertEquals(primitiveInput, service.returnsSamePrimitiveInput(primitiveInput));
     }
 
 
     @Test
-    public void singleComplexInputPassedCorrectly(){
-        DataStruct dataStruct = aDataStructWithAllCollections(5,"someString",2.3,UUID.randomUUID());
-        assertThat(service.returnsSameDataStructInput(dataStruct),is(dataStruct));
+    public void singleComplexInputPassedCorrectly() {
+        DataStruct dataStruct = aDataStructWithAllCollections(5, "someString", 2.3, UUID.randomUUID());
+        assertThat(service.returnsSameDataStructInput(dataStruct), is(dataStruct));
     }
 
     @Test
-    public void multipleComplexInputsPassedCorrectly(){
+    public void multipleComplexInputsPassedCorrectly() {
         DataStruct firstDataStruct = aDataStructWithMap(3, "aString", 1.7, UUID.randomUUID());
         DataStruct secondDataStruct = aDataStructWithList(7, "otherString", 4.3, UUID.randomUUID());
         assertThat(service.returnsSameDataStructsMultipleInputs(firstDataStruct, secondDataStruct),
-                hasItems(firstDataStruct,secondDataStruct));
+                hasItems(firstDataStruct, secondDataStruct));
 
     }
 
@@ -223,10 +220,20 @@ public abstract class BaseContractTest {
     }
 
     //Fjarr Error handling
-   @Test(expected = RpcTransportException.class)
-    public void ifNoServerExistsATransportErrorIsThrown(){
+    @Test(expected = RpcTransportException.class)
+    public void ifNoServerExistsATransportErrorIsThrown() {
         service = aDataStructServiceWith(DEFAULT_SERVICE_ROOT_WRONG_PORT);
         service.getData();
+    }
+
+    @Test
+    public void shouldThrowSocketTimeoutExceptionForLongRunningMethod() {
+        try {
+            service.callLongRunningMethod(10000);
+            fail("should have thrown an RpcTransportationException");
+        } catch (RpcTransportException rpcTransportationException) {
+            assertThat(rpcTransportationException.getCause(), instanceOf(SocketTimeoutException.class));
+        }
     }
 
     private void checkChildren(Map<Integer, DataStructChild> map) {
@@ -263,7 +270,7 @@ public abstract class BaseContractTest {
         }
     }
 
-    protected static ObjectMapper buildObjectMapperWithFjarrModule(){
+    protected static ObjectMapper buildObjectMapperWithFjarrModule() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new FjarrJacksonModule());
         return mapper;
