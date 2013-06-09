@@ -8,15 +8,12 @@ import org.springframework.web.servlet.DispatcherServlet;
  * @since 1/6/13 1:29 PM
  */
 
-public class ITSpringServer extends ITServer
-{
-    public ITSpringServer(Class<?> configClass)
-    {
+public class ITSpringServer extends ITServer {
+    public ITSpringServer(Class<?> configClass) {
         this(DEFAULT_PORT, configClass);
     }
 
-    public ITSpringServer(int port, Class<?> configClass)
-    {
+    public ITSpringServer(int port, Class<?> configClass) {
         super(port);
         final DispatcherServlet servlet = new DispatcherServlet();
         servlet.setContextClass(AnnotationConfigWebApplicationContext.class);

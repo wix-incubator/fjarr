@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.it;
+package com.wixpress.fjarr.it.factories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.json.JsonRpcClientProtocol;
@@ -9,7 +9,7 @@ import com.wixpress.fjarr.json.JsonRpcClientProtocol;
  */
 public class JsonRPCClientProtocolFactory {
 
-    public static JsonRpcClientProtocol aJsonRpcClientProtocolFrom(ObjectMapper mapper){
+    public static JsonRpcClientProtocol aJsonRpcClientProtocolFrom(ObjectMapper mapper) {
         return new JsonRpcClientProtocol(mapper);
     }
 }

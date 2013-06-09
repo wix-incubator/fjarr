@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.it;
+package com.wixpress.fjarr.it.factories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wixpress.fjarr.json.FjarrJacksonModule;

@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.it;
+package com.wixpress.fjarr.it.factories;
 
 import com.wixpress.fjarr.client.NettyClientConfig;
 import com.wixpress.fjarr.client.NettyInvoker;
@@ -11,7 +11,8 @@ public class NettyInvokerFactory {
     public static NettyInvoker aDefaultNettyInvoker() {
         return aNettyInvokerFrom(NettyClientConfig.defaults());
     }
+
     public static NettyInvoker aNettyInvokerFrom(NettyClientConfig config) {
-        return new NettyInvoker( config);
+        return new NettyInvoker(config);
     }
 }

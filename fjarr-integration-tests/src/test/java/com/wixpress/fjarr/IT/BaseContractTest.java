@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import static com.wixpress.fjarr.example.DataStruct.*;
+import static com.wixpress.fjarr.it.factories.ServiceRootFactory.aServiceRootFor;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -24,12 +25,9 @@ import static org.junit.Assert.*;
 
 public abstract class BaseContractTest {
     public static final int SERVER_PORT = 9191;
-    public static final String DEFAULT_SERVICE_PORT_FORMAT = "http://127.0.0.1:%d/DataStructService";
-    public static final String DEFAULT_SERVICE_ROOT = String.format(DEFAULT_SERVICE_PORT_FORMAT, SERVER_PORT);
-    private static final String DEFAULT_SERVICE_ROOT_WRONG_PORT = String.format(DEFAULT_SERVICE_PORT_FORMAT, SERVER_PORT + 1);
     protected static ITServer server;
 
-    protected final String serviceRoot = DEFAULT_SERVICE_ROOT;
+    protected final String serviceRoot = aServiceRootFor(DataStructService.class, SERVER_PORT);
     protected DataStructService service;
     protected final RpcClientProtocol protocol = anRpcProtocol();
     protected final RpcInvoker invoker = anRpcInvoker();
@@ -220,7 +218,7 @@ public abstract class BaseContractTest {
     //Fjarr Error handling
     @Test(expected = RpcTransportException.class)
     public void ifNoServerExistsATransportErrorIsThrown() {
-        service = aDataStructServiceWith(DEFAULT_SERVICE_ROOT_WRONG_PORT);
+        service = aDataStructServiceWith(aServiceRootFor(DataStructService.class, SERVER_PORT + 1));
         service.getData();
     }
 
