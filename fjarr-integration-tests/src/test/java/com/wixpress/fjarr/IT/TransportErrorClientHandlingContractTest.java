@@ -2,23 +2,17 @@ package com.wixpress.fjarr.it;
 
 import com.wixpress.fjarr.client.RpcClientProxy;
 import com.wixpress.fjarr.client.exceptions.RpcTransportException;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
+import static com.wixpress.fjarr.it.JEmbeddedJettyResponder.*;
 import static com.wixpress.fjarr.it.factories.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static com.wixpress.fjarr.it.factories.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
 import static com.wixpress.fjarr.it.factories.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
@@ -36,35 +30,12 @@ import static org.junit.Assert.fail;
 public class TransportErrorClientHandlingContractTest {
     public static final int SERVER_PORT = 9191;
     public static final String SHOULD_HAVE_THROWN_AN_RPC_TRANSPORTATION_EXCEPTION = "should have thrown an RpcTransportationException";
-    private static Server server;
-    private static ResponseAction responseAction;
-    private final static CountDownLatch KEEP_BUSY_LATCH = new CountDownLatch(1);
+    private static JEmbeddedJettyResponder server;
     protected ReturnOneService service;
 
     @BeforeClass
     public static void init() throws Exception {
-        server = new Server(SERVER_PORT);
-        server.setHandler(new AbstractHandler() {
-            @Override
-            public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-                switch (responseAction) {
-                    case EMPTY:
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        break;
-                    case FORBIDDEN:
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                        break;
-                    case BUSY_WAIT:
-                        try {
-                            KEEP_BUSY_LATCH.await();
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                        break;
-                }
-                baseRequest.setHandled(true);
-            }
-        });
+        server = new JEmbeddedJettyResponder(SERVER_PORT);
         server.start();
     }
 
@@ -93,20 +64,21 @@ public class TransportErrorClientHandlingContractTest {
 
     @Test
     public void shouldThrowSocketTimeoutExceptionForLongRunningMethod() {
-        responseAction = ResponseAction.BUSY_WAIT;
+        CountDownLatch busyWait = new CountDownLatch(1);
+        server.respondWith(busyWaitingResponse(busyWait));
         try {
             service.getOne();
             fail(SHOULD_HAVE_THROWN_AN_RPC_TRANSPORTATION_EXCEPTION);
         } catch (RpcTransportException rpcTransportationException) {
             assertThat(rpcTransportationException.getCause(), instanceOf(SocketTimeoutException.class));
         } finally {
-            KEEP_BUSY_LATCH.countDown();
+            busyWait.countDown();
         }
     }
 
     @Test
     public void shouldThrowTransportExceptionIfNotStatusOk() {
-        responseAction = ResponseAction.FORBIDDEN;
+        server.respondWith(forbiddenResponse());
         try {
             service.getOne();
             fail(SHOULD_HAVE_THROWN_AN_RPC_TRANSPORTATION_EXCEPTION);
@@ -117,11 +89,8 @@ public class TransportErrorClientHandlingContractTest {
 
     @Test(expected = RpcTransportException.class)
     public void shouldThrowTransportExceptionIfEmptyResponse() {
-        responseAction = ResponseAction.EMPTY;
+        server.respondWith(emptyResponse());
         service.getOne();
     }
 
-    private static enum ResponseAction {
-        EMPTY, FORBIDDEN, BUSY_WAIT
-    }
 }
