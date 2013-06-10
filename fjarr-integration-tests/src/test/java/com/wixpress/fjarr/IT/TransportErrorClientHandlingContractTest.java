@@ -28,7 +28,7 @@ import static org.junit.Assert.fail;
  */
 
 public class TransportErrorClientHandlingContractTest {
-    public static final int SERVER_PORT = 9090;
+    public static final int SERVER_PORT = 9191;
     public static final String SHOULD_HAVE_THROWN_AN_RPC_TRANSPORTATION_EXCEPTION = "should have thrown an RpcTransportationException";
     private static JEmbeddedJettyResponder server;
     protected ReturnOneService service;
