@@ -3,13 +3,11 @@ package com.wixpress.fjarr.it;
 import com.wixpress.fjarr.client.RpcClientProtocol;
 import com.wixpress.fjarr.client.RpcClientProxy;
 import com.wixpress.fjarr.client.RpcInvoker;
-import com.wixpress.fjarr.client.exceptions.RpcTransportException;
 import com.wixpress.fjarr.example.*;
 import com.wixpress.fjarr.it.util.ITServer;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -213,23 +211,6 @@ public abstract class BaseContractTest {
     @Test(expected = NullPointerException.class)
     public void testNPE() {
         service.throwNPE();
-    }
-
-    //Fjarr Error handling
-    @Test(expected = RpcTransportException.class)
-    public void ifNoServerExistsATransportErrorIsThrown() {
-        service = aDataStructServiceWith(aServiceRootFor(DataStructService.class, SERVER_PORT + 1));
-        service.getData();
-    }
-
-    @Test
-    public void shouldThrowSocketTimeoutExceptionForLongRunningMethod() {
-        try {
-            service.callLongRunningMethod(10000);
-            fail("should have thrown an RpcTransportationException");
-        } catch (RpcTransportException rpcTransportationException) {
-            assertThat(rpcTransportationException.getCause(), instanceOf(SocketTimeoutException.class));
-        }
     }
 
     private void checkChildren(Map<Integer, DataStructChild> map) {

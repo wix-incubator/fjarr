@@ -5,10 +5,9 @@ package com.wixpress.fjarr.client;
  * User: daniels
  * Date: 3/6/12
  */
-public class HttpClientConfig
-{
+public class HttpClientConfig {
     public static final int DEFAULT_CONNECTION_TIMEOUT_MILLIS = 2 * 1000;
-    public static final int DEFAULT_SOCKET_TIMEOUT_MILLIS = 30 * 1000;
+    public static final int DEFAULT_SOCKET_TIMEOUT_MILLIS = 1 * 1000;
     public static final int DEFAULT_POOL_CONNECTION_TTL_MILLIS = 5 * 1000;
     public static final int DEFAULT_POOL_MAX_TOTAL = 100;
     public static final int DEFAULT_POOL_DEFAULT_MAX_PER_HOST = 100;
@@ -47,115 +46,94 @@ public class HttpClientConfig
      */
     private boolean useConnectionPool = DEFAULT_USE_CONNECTION_POOL;
 
-    private HttpClientConfig()
-    {
+    private HttpClientConfig() {
 
     }
 
-    public static HttpClientConfig defaults()
-    {
+    public static HttpClientConfig defaults() {
         return new HttpClientConfig();
     }
 
-    public HttpClientConfig withConnectionTimeoutMillis(int connectionTimeoutMillis)
-    {
+    public HttpClientConfig withConnectionTimeoutMillis(int connectionTimeoutMillis) {
         setConnectionTimeoutMillis(connectionTimeoutMillis);
         return this;
     }
 
-    public HttpClientConfig withSocketTimeoutMillis(int socketTimeoutMillis)
-    {
+    public HttpClientConfig withSocketTimeoutMillis(int socketTimeoutMillis) {
         setSocketTimeoutMillis(socketTimeoutMillis);
         return this;
     }
 
-    public HttpClientConfig withPoolConnectionTTLMillis(int poolConnectionTTLSeconds)
-    {
+    public HttpClientConfig withPoolConnectionTTLMillis(int poolConnectionTTLSeconds) {
         setPoolConnectionTTLMillis(poolConnectionTTLSeconds);
         return this;
     }
 
-    public HttpClientConfig withPoolMaxTotal(int poolMaxTotal)
-    {
+    public HttpClientConfig withPoolMaxTotal(int poolMaxTotal) {
         setPoolMaxTotal(poolMaxTotal);
         return this;
     }
 
-    public HttpClientConfig withPoolDefaultMaxPerHost(int poolMaxPerHost)
-    {
+    public HttpClientConfig withPoolDefaultMaxPerHost(int poolMaxPerHost) {
         setPoolDefaultMaxPerHost(poolMaxPerHost);
         return this;
     }
 
-    public HttpClientConfig withUseConnectionPool(boolean useConnectionPool)
-    {
+    public HttpClientConfig withUseConnectionPool(boolean useConnectionPool) {
         setUseConnectionPool(useConnectionPool);
         return this;
     }
 
-    public void setConnectionTimeoutMillis(int connectionTimeoutMillis)
-    {
+    public void setConnectionTimeoutMillis(int connectionTimeoutMillis) {
         this.connectionTimeoutMillis = connectionTimeoutMillis;
     }
 
-    public void setSocketTimeoutMillis(int socketTimeoutMillis)
-    {
+    public void setSocketTimeoutMillis(int socketTimeoutMillis) {
         this.socketTimeoutMillis = socketTimeoutMillis;
     }
 
-    public void setPoolConnectionTTLMillis(int poolConnectionTTLMillis)
-    {
+    public void setPoolConnectionTTLMillis(int poolConnectionTTLMillis) {
         this.poolConnectionTTLMillis = poolConnectionTTLMillis;
     }
 
-    public void setPoolMaxTotal(int poolMaxTotal)
-    {
+    public void setPoolMaxTotal(int poolMaxTotal) {
         this.poolMaxTotal = poolMaxTotal;
     }
 
-    public void setPoolDefaultMaxPerHost(int poolDefaultMaxPerHost)
-    {
+    public void setPoolDefaultMaxPerHost(int poolDefaultMaxPerHost) {
         this.poolDefaultMaxPerHost = poolDefaultMaxPerHost;
     }
 
-    public void setUseConnectionPool(boolean useConnectionPool)
-    {
+    public void setUseConnectionPool(boolean useConnectionPool) {
         this.useConnectionPool = useConnectionPool;
     }
 
-    public int getConnectionTimeoutMillis()
-    {
+    public int getConnectionTimeoutMillis() {
         return connectionTimeoutMillis;
     }
 
-    public int getSocketTimeoutMillis()
-    {
+    public int getSocketTimeoutMillis() {
         return socketTimeoutMillis;
     }
 
-    public int getPoolConnectionTTLMillis()
-    {
+    public int getPoolConnectionTTLMillis() {
         return poolConnectionTTLMillis;
     }
 
-    public int getPoolMaxTotal()
-    {
+    public int getPoolMaxTotal() {
         return poolMaxTotal;
     }
 
-    public int getPoolDefaultMaxPerHost()
-    {
+    public int getPoolDefaultMaxPerHost() {
         return poolDefaultMaxPerHost;
     }
 
-    public boolean isUseConnectionPool()
-    {
+    public boolean isUseConnectionPool() {
         return useConnectionPool;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "HttpClientConfig{" +
                 "connectionTimeoutMillis=" + connectionTimeoutMillis +
                 ", socketTimeoutMillis=" + socketTimeoutMillis +

@@ -16,7 +16,7 @@ import java.util.concurrent.CountDownLatch;
  * @since: 6/9/13
  */
 public class JEmbeddedJettyResponder {
-    private ServerResponse serverResponse;
+    private volatile ServerResponse serverResponse;
     private final Server server;
 
     public JEmbeddedJettyResponder(int serverPort) {
