@@ -60,7 +60,6 @@ public class RpcResponseContext {
         RpcResponseContext that = (RpcResponseContext) o;
 
         if (error != that.error) return false;
-        if (requestDurationMillis != that.requestDurationMillis) return false;
         if (response != null ? !response.equals(that.response) : that.response != null) return false;
         if (thrown != null ? !thrown.equals(that.thrown) : that.thrown != null) return false;
 
@@ -72,7 +71,6 @@ public class RpcResponseContext {
         int result = thrown != null ? thrown.hashCode() : 0;
         result = 31 * result + (error ? 1 : 0);
         result = 31 * result + (response != null ? response.hashCode() : 0);
-        result = 31 * result + (int) (requestDurationMillis ^ (requestDurationMillis >>> 32));
         return result;
     }
 
