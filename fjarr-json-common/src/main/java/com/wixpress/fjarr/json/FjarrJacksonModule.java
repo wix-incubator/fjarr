@@ -36,7 +36,6 @@ public class FjarrJacksonModule extends SimpleModule
         addSerializer(DateTime.class, new DateTimeSerializer());
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setupModule(SetupContext context)
     {
