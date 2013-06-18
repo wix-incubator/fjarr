@@ -8,6 +8,9 @@ import com.wixpress.fjarr.json.JsonRpcClientProtocol;
  * @since: 5/29/13
  */
 public class JsonRPCClientProtocolFactory {
+    public static JsonRpcClientProtocol aDefaultJsonRpcClientProtocolFrom() {
+        return aJsonRpcClientProtocolFrom(new ObjectMapper());
+    }
 
     public static JsonRpcClientProtocol aJsonRpcClientProtocolFrom(ObjectMapper mapper) {
         return new JsonRpcClientProtocol(mapper);
