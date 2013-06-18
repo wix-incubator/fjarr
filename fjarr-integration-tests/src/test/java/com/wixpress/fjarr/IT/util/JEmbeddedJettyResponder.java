@@ -1,4 +1,4 @@
-package com.wixpress.fjarr.it;
+package com.wixpress.fjarr.it.util;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
