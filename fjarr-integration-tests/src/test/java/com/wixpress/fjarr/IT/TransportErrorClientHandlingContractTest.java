@@ -13,7 +13,7 @@ import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
-import static com.wixpress.fjarr.it.factories.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static com.wixpress.fjarr.it.factories.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
 import static com.wixpress.fjarr.it.factories.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.factories.ServiceRootFactory.aServiceRootFor;

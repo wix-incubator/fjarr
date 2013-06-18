@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -21,8 +22,7 @@ public class JodaIntervalMixinTest
     @Test
     public void test() throws IOException
     {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new FjarrJacksonModule());
+        ObjectMapper mapper = anObjectMapperWithFjarrModule();
 
         SomeObject o = new SomeObject();
         String payload = mapper.writer().withDefaultPrettyPrinter().writeValueAsString(o);

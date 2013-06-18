@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -32,13 +33,11 @@ public class RpcTest
 
 
     private static RpcServlet servlet;
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapper = anObjectMapperWithFjarrModule();
 
     @BeforeClass
     public static void init()
     {
-        objectMapper.registerModule(new FjarrJacksonModule());
-
         servlet = new RpcServlet(
                 new RpcServer(
                         new JsonRpcProtocol(

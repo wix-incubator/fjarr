@@ -17,6 +17,8 @@ import org.springframework.validation.Validator;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.HandlerMapping;
 
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
+
 /**
  * @author alex
  * @since 1/6/13 5:30 PM
@@ -62,11 +64,8 @@ public class ITServerConfig
     @Bean
     public RpcProtocol rpcProtocol()
     {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new FjarrJacksonModule());
-
         return new JsonRpcProtocol(
-                mapper);
+                anObjectMapperWithFjarrModule());
     }
 
     @Bean

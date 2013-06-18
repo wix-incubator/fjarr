@@ -11,42 +11,36 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class JsonRpcClientProtocolTest {
 
+    private final ObjectMapper mapper = anObjectMapperWithFjarrModule();
+    private final JsonRpcClientProtocol protocol = new JsonRpcClientProtocol(mapper);
+
     @Test
     public void testWriteRequest() throws IOException {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new FjarrJacksonModule());
-        JsonRpcClientProtocol p = new JsonRpcClientProtocol(mapper);
-
-
-        assertThat(p.writeRequest("t1", new Object[]{1, 2, 3}),is("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"t1\",\"params\":[1,2,3]}"));
-        assertThat(p.writeRequest("t2", new Object[]{"a","b", "c"}),is("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"t2\",\"params\":[\"a\",\"b\",\"c\"]}"));
+        assertThat(protocol.writeRequest("t1", new Object[]{1, 2, 3}),is("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"t1\",\"params\":[1,2,3]}"));
+        assertThat(protocol.writeRequest("t2", new Object[]{"a", "b", "c"}),is("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"t2\",\"params\":[\"a\",\"b\",\"c\"]}"));
 
         final UUID uuid = UUID.randomUUID();
         DataStruct ds = new DataStruct(1,"a",0.3, uuid);
-        assertThat(p.writeRequest("t", new Object[]{ds}),is("{\"id\":2,\"jsonrpc\":\"2.0\",\"method\":\"t\",\"params\":{\"anInt\":1,\"string\":\"a\",\"dbl\":0.3,\"uuid\":\""+uuid.toString()+"\",\"map\":{},\"list\":[],\"set\":[]}}"));
-
+        assertThat(protocol.writeRequest("t", new Object[]{ds}),is("{\"id\":2,\"jsonrpc\":\"2.0\",\"method\":\"t\",\"params\":{\"anInt\":1,\"string\":\"a\",\"dbl\":0.3,\"uuid\":\""+uuid.toString()+"\",\"map\":{},\"list\":[],\"set\":[]}}"));
     }
 
     @Test
     public void testReadResponse()
     {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new FjarrJacksonModule());
-        JsonRpcClientProtocol p = new JsonRpcClientProtocol(mapper);
-
-        assertThat((Integer) p.readResponse(Integer.TYPE, "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":1}"), is(1));
-        assertThat((Long)p.readResponse(Long.TYPE,"{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":1}"),is(1l));
-        assertThat((String)p.readResponse(String.class,"{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":\"aaa\"}"),is("aaa"));
+        assertThat((Integer) protocol.readResponse(Integer.TYPE, "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":1}"), is(1));
+        assertThat((Long) protocol.readResponse(Long.TYPE,"{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":1}"),is(1l));
+        assertThat((String) protocol.readResponse(String.class,"{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":\"aaa\"}"),is("aaa"));
 
 
         final UUID uuid = UUID.randomUUID();
         DataStruct ds = new DataStruct(1,"a",0.3, uuid);
-        assertThat((DataStruct) p.readResponse(DataStruct.class,
+        assertThat((DataStruct) protocol.readResponse(DataStruct.class,
                 "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":{\"anInt\":1,\"string\":\"a\",\"dbl\":0.3,\"uuid\":\""
                         + uuid.toString() + "\",\"map\":{},\"list\":[],\"set\":[]}}"),is(ds));
     }
@@ -54,13 +48,9 @@ public class JsonRpcClientProtocolTest {
     @Test
     public void testReadErrorResponse()
     {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new FjarrJacksonModule());
-        JsonRpcClientProtocol p = new JsonRpcClientProtocol(mapper);
-
         try
         {
-        p.readResponse(Integer.TYPE, "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":-32603,\"message\":\"test\",\"data\":{" +
+        protocol.readResponse(Integer.TYPE, "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":-32603,\"message\":\"test\",\"data\":{" +
                 "\"cause\":null,\"stackTrace\":[{\"methodName\":\"testErrorResponse\",\"fileName\":\"JsonRpcProtocolParserTest.java\"," +
                 "\"lineNumber\":258,\"className\":\"com.wixpress.fjarr.rpc.json.JsonRpcProtocolParserTest\",\"nativeMethod\":false}," +
                 "{\"methodName\":\"invoke0\",\"fileName\":\"NativeMethodAccessorImpl.java\",\"lineNumber\":-2,\"className\":" +
@@ -104,15 +94,10 @@ public class JsonRpcClientProtocolTest {
 
     @Test
     public void testReadKnownErrorResponse() throws JsonProcessingException {
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new FjarrJacksonModule());
-        JsonRpcClientProtocol p = new JsonRpcClientProtocol(mapper);
-
-
         String exception = mapper.writeValueAsString(new DataStructServiceException("abc"));
         try
         {
-            p.readResponse(Integer.TYPE, "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":-32603,\"message\":\"test\",\"data\":" +
+            protocol.readResponse(Integer.TYPE, "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"error\":{\"code\":-32603,\"message\":\"test\",\"data\":" +
                     exception +
                     "}}");
         }
@@ -127,6 +112,4 @@ public class JsonRpcClientProtocolTest {
         }
 
     }
-
-
 }

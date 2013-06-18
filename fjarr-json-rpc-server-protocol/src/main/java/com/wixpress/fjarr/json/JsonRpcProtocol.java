@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
+
 /**
  * @author alexeyr
  * @author DanielS
@@ -41,28 +43,12 @@ public class JsonRpcProtocol implements RpcProtocol
     //    ParameterNameDiscoverer parameterNameDiscoverer = new AnnotationParameterNameDiscoverer();
     public static final List<String> allowedMethods = Arrays.asList("POST");
 
-    public JsonRpcProtocol(ObjectMapper mapper)
-    {
-        //this.objectReader = mapper.reader().without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        this.mapper = mapper;
-
-        //        configureObjectMapper(this.mapper);
-
-        //        StdTypeResolverBuilder r = new StdTypeResolverBuilder();
-        //        r.init(JsonTypeInfo.Id.MINIMAL_CLASS, null);
-        //        r.inclusion(JsonTypeInfo.As.PROPERTY);
-        //        mapper.setDefaultTyping(r);
-        //        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT, JsonTypeInfo.As.PROPERTY);
-
+    public JsonRpcProtocol(){
+        this(anObjectMapperWithFjarrModule());
     }
 
-    public JsonRpcProtocol()
-    {
-        ObjectMapper m = new ObjectMapper();
-        m.registerModule(new FjarrJacksonModule());
-//        this.objectReader = m.reader().without(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        this.mapper = m;
-
+    public JsonRpcProtocol(ObjectMapper mapper){
+        this.mapper = mapper;
     }
 
 

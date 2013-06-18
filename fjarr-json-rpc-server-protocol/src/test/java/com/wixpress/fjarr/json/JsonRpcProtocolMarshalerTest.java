@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.mock;
 public class JsonRpcProtocolMarshalerTest
 {
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper = anObjectMapperWithFjarrModule();
     //private ParameterNameDiscoverer d = new AnnotationParameterNameDiscoverer();
     JsonRpcProtocol protocol = new JsonRpcProtocol(mapper);
 
@@ -37,12 +38,6 @@ public class JsonRpcProtocolMarshalerTest
         int substract(int x, int y);
 
         void t();
-    }
-
-    @BeforeClass
-    public static void init()
-    {
-        mapper.registerModule(new FjarrJacksonModule());
     }
 
     @Test
