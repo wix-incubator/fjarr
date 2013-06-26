@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
-import static com.wixpress.fjarr.it.factories.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
+import static com.wixpress.fjarr.client.factory.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
 import static com.wixpress.fjarr.it.factories.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 
 /**
