@@ -15,7 +15,7 @@ import org.junit.Ignore;
 import javax.servlet.Servlet;
 
 import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
-import static com.wixpress.fjarr.it.factories.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
+import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.factories.NettyInvokerFactory.aDefaultNettyInvoker;
 
 /**

@@ -12,7 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
-import static com.wixpress.fjarr.it.factories.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
+import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.factories.NettyInvokerFactory.aDefaultNettyInvoker;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
