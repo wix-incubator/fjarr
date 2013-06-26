@@ -90,7 +90,6 @@ public class ITServer {
     public void stop() throws Exception {
         server.stop();
         server.destroy();
-        server = null;
     }
 
     public Object getContextAttribute(String attrName) {
