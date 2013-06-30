@@ -11,9 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
-import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.factories.NettyInvokerFactory.aDefaultNettyInvoker;
+import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aDefaultJsonRpcClientProtocol;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -53,7 +52,7 @@ public class SpringMvcWithNettyClientTest extends BaseJsonContractTest {
 
     @Override
     protected RpcClientProtocol anRpcProtocol() {
-        return aJsonRpcClientProtocolFrom(anObjectMapperWithFjarrModule());
+        return aDefaultJsonRpcClientProtocol();
     }
 
     @Override

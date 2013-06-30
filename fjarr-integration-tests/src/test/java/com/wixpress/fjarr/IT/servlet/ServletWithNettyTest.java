@@ -14,9 +14,9 @@ import org.junit.Ignore;
 
 import javax.servlet.Servlet;
 
-import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
-import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.factories.NettyInvokerFactory.aDefaultNettyInvoker;
+import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
+import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aDefaultJsonRpcClientProtocol;
 
 /**
  * @author alex
@@ -44,7 +44,7 @@ public class ServletWithNettyTest extends BaseJsonContractTest {
 
     @Override
     protected RpcClientProtocol anRpcProtocol() {
-        return aJsonRpcClientProtocolFrom(anObjectMapperWithFjarrModule());
+        return aDefaultJsonRpcClientProtocol();
     }
 
     @Override

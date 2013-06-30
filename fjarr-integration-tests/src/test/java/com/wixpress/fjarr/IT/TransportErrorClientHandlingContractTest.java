@@ -13,11 +13,10 @@ import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
-import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static com.wixpress.fjarr.client.factory.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
-import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
 import static com.wixpress.fjarr.it.factories.ServiceRootFactory.aServiceRootFor;
 import static com.wixpress.fjarr.it.util.JEmbeddedJettyResponder.*;
+import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aDefaultJsonRpcClientProtocol;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -54,7 +53,7 @@ public class TransportErrorClientHandlingContractTest {
         return RpcClientProxy.create(ReturnOneService.class,
                 currentServiceRoot,
                 aDefaultHttpComponentsInvoker(),
-                aJsonRpcClientProtocolFrom(anObjectMapperWithFjarrModule()));
+                aDefaultJsonRpcClientProtocol());
     }
 
     @Test(expected = RpcTransportException.class)

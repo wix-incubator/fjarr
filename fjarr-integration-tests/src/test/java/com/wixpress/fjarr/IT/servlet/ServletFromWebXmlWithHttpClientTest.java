@@ -11,9 +11,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static com.wixpress.fjarr.json.factory.FjarrObjectMapperFactory.anObjectMapperWithFjarrModule;
 import static com.wixpress.fjarr.client.factory.HttpComponentsInvokerFactory.aDefaultHttpComponentsInvoker;
-import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aJsonRpcClientProtocolFrom;
+import static com.wixpress.fjarr.json.factory.JsonRPCClientProtocolFactory.aDefaultJsonRpcClientProtocol;
 
 /**
  * @author alex
@@ -44,7 +43,7 @@ public class ServletFromWebXmlWithHttpClientTest extends BaseContractTest {
 
     @Override
     protected RpcClientProtocol anRpcProtocol() {
-        return aJsonRpcClientProtocolFrom(anObjectMapperWithFjarrModule());
+        return aDefaultJsonRpcClientProtocol();
     }
 
     @Override
