@@ -69,7 +69,7 @@ public class InvokerTest
                 assertThat(post.getAllHeaders(), allOf(hasItemInArray(isHeader("Test-Header", "header value")),
                         hasItemInArray(isHeader("Connection", "close"))));
 
-                assertThat(post.getURI(), isUri(new URI("www.example.com?a+b=b+c&a=b")));
+                assertThat(post.getURI(), isUri(new URI("www.example.com?a=b&a+b=b+c")));
 
 
                 final BasicHttpResponse response = new BasicHttpResponse(
@@ -122,7 +122,7 @@ public class InvokerTest
                         hasItemInArray(isHeader("Test-Header", "header value")),
                         hasItemInArray(isHeader("Connection", "close"))));
 
-                assertThat(post.getURI(), isUri(new URI("www.example.com?a+b=b+c&a=b")));
+                assertThat(post.getURI(), isUri(new URI("www.example.com?a=b&a+b=b+c")));
 
 
                 final BasicHttpResponse response = new BasicHttpResponse(
@@ -173,7 +173,7 @@ public class InvokerTest
                 assertThat(post.getAllHeaders(), allOf(hasItemInArray(isHeader("Test-Header", "header value")),
                         hasItemInArray(isHeader("Connection", "close"))));
 
-                assertThat(post.getURI(), isUri(new URI("www.example.com?a+b=b+c&a=b")));
+                assertThat(post.getURI(), isUri(new URI("www.example.com?a=b&a+b=b+c")));
 
 
                 throw new IOException("test test test");
@@ -222,7 +222,7 @@ public class InvokerTest
                 assertThat(post.getAllHeaders(), allOf(hasItemInArray(isHeader("Test-Header", "header value")),
                         hasItemInArray(isHeader("Connection", "close"))));
 
-                assertThat(post.getURI(), isUri(new URI("www.example.com?a+b=b+c&a=b")));
+                assertThat(post.getURI(), isUri(new URI("www.example.com?a=b&a+b=b+c")));
 
                 final BasicHttpResponse response = new BasicHttpResponse(
                         new BasicStatusLine(HttpVersion.HTTP_1_0, 500, "Server Error"));
@@ -274,7 +274,7 @@ public class InvokerTest
                 assertThat(post.getAllHeaders(), allOf(hasItemInArray(isHeader("Test-Header", "header value")),
                         hasItemInArray(isHeader("Connection", "close"))));
 
-                assertThat(post.getURI(), isUri(new URI("www.example.com?a+b=b+c&a=b")));
+                assertThat(post.getURI(), isUri(new URI("www.example.com?a=b&a+b=b+c")));
 
                 final BasicHttpResponse response = new BasicHttpResponse(
                         new BasicStatusLine(HttpVersion.HTTP_1_0, 500, "Server Error"));
